@@ -15,7 +15,6 @@
 }
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--tp);font-size:13px;line-height:1.5}
 .wrap{max-width:1140px;margin:0 auto;padding:1rem 1.25rem 2.5rem}
-
 /* HEADER */
 .hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--bd)}
 .hdr-l .eye{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--fern);font-weight:500;margin-bottom:3px}
@@ -28,17 +27,30 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--tp);fo
 .sc-btn:hover{border-color:var(--fern);color:var(--fern)}
 .sc-btn.active{background:var(--fern);color:#fff;border-color:var(--fern);font-weight:500}
 .sc-btn.custom{background:var(--sbg);color:var(--amber);border-color:var(--amber);font-weight:500}
-/* action buttons */
 .act-btns{display:flex;gap:5px;justify-content:flex-end}
 .act-btn{padding:5px 11px;border:1px solid var(--bd);border-radius:7px;background:#fff;color:var(--ts);cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;transition:all .15s;display:flex;align-items:center;gap:4px}
 .act-btn:hover{border-color:var(--fern);color:var(--fern)}
 .act-btn.dl{background:var(--forest);color:#fff;border-color:var(--forest)}
 .act-btn.dl:hover{background:var(--fern);border-color:var(--fern)}
-
+.act-btn.intl{border-color:var(--sky);color:var(--sky);font-size:13px}
+.act-btn.intl.open{background:var(--sky);color:#fff;border-color:var(--sky)}
+/* INTL PANEL */
+.intl-panel{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.875rem 1rem;margin-bottom:12px;display:none}
+.intl-panel.show{display:block}
+.intl-sec-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--tm);font-weight:500;margin-bottom:7px}
+.u-btn{padding:4px 11px;border:1px solid var(--bd);border-radius:7px;background:#fff;color:var(--ts);cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:all .12s}
+.u-btn:hover{border-color:var(--fern);color:var(--fern)}
+.u-btn.active{background:var(--fern);color:#fff;border-color:var(--fern);font-weight:500}
+.c-btn{padding:5px 9px;border:1px solid var(--bd);border-radius:7px;background:#fff;color:var(--ts);cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:all .12s;display:inline-flex;align-items:center;gap:6px;font-weight:500}
+.c-btn:hover{border-color:var(--sky);color:var(--sky)}
+.c-btn.active{background:var(--sky);color:#fff;border-color:var(--sky)}
+.intl-disc{background:#FFF8EC;border:1px solid #E8D4A0;border-radius:7px;padding:7px 10px;margin-top:10px;font-size:11px;color:#6B3D00;line-height:1.55;display:none}
+.intl-disc.show{display:block}
+.intl-disc a{color:#8A5200;font-weight:500}
+.rate-note{font-size:10px;color:var(--tm);margin-top:4px}
 /* LAYOUT */
 .grid{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:start}
 .panel{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto}
-
 /* INPUT CARD + TABS */
 .icard{background:var(--bg);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
 .tab-bar{display:flex;border-bottom:1px solid var(--bd);background:var(--sbg)}
@@ -47,7 +59,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--tp);fo
 .tab.active{color:var(--fern);border-bottom-color:var(--fern);background:var(--bg)}
 .tab-pane{display:none;padding:.875rem}
 .tab-pane.active{display:block}
-
 /* SLIDERS */
 .sr{margin-bottom:11px}
 .sr:last-child{margin-bottom:0}
@@ -60,25 +71,18 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .sec-ttl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);font-weight:500;margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .dot{width:5px;height:5px;border-radius:50%;display:inline-block;flex-shrink:0}
 .divider{border:none;border-top:1px solid var(--bdl);margin:10px 0}
-
-/* grant derived display */
 .grant-derived{font-size:10px;margin-top:3px;padding:4px 7px;background:#FFF8EC;border:1px solid #E8D4A0;border-radius:4px;color:#6B4C1A;line-height:1.4}
-
 /* INFLATION PILLS */
 .pl-lbl{font-size:12px;color:var(--ts);margin-bottom:5px}
 .pl-grp{display:flex;flex-wrap:wrap;gap:4px}
 .pill{padding:3px 9px;border:1px solid var(--bd);border-radius:12px;background:#fff;color:var(--ts);cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;transition:all .12s}
 .pill:hover{border-color:var(--fern);color:var(--fern)}
 .pill.active{background:var(--fern);color:#fff;border-color:var(--fern);font-weight:500}
-
-/* NL NOTE */
 .nl-note{font-size:10px;color:var(--tm);margin-top:3px;padding:4px 7px;background:#F5F2EC;border-radius:4px;line-height:1.4}
-
 /* ASSUMPTION BANNER */
 .ab{background:#EFF5EF;border:1px solid #B5D4B8;border-radius:7px;padding:6px 10px;margin-bottom:10px;font-size:11px;color:#2D5A30;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
 .at{background:#fff;border:1px solid #B5D4B8;border-radius:9px;padding:1px 7px;font-size:10px;font-weight:500}
 .at-custom{background:#FFF3E0;border:1px solid #E8C570;border-radius:9px;padding:1px 7px;font-size:10px;font-weight:500;color:#8A5C00;display:none}
-
 /* METRIC CARDS */
 .mc-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
 .mc{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:.6rem .75rem}
@@ -90,7 +94,6 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .mc-val.caution{color:var(--amber)}
 .mc-val.ok{color:var(--sky)}
 .mc-sub{font-size:10px;color:var(--tm);margin-top:3px}
-
 /* CHART CARDS */
 .cc{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:.875rem;margin-bottom:10px}
 .cc-t{font-size:13px;font-weight:500;color:var(--tp);margin-bottom:2px}
@@ -101,24 +104,17 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .badge{font-size:9px;padding:1px 5px;border-radius:8px;font-weight:500}
 .bd-d{background:#DFF2E4;color:#1B6B35}
 .bd-i{background:#DBE9F7;color:#1B4F80}
-
-/* CALLOUT */
 .callout{background:#EDF5ED;border:1px solid #A8D4AE;border-radius:8px;padding:.6rem .875rem;margin-bottom:10px}
 .co-t{font-size:10px;font-weight:500;color:var(--fern);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
 .co-b{font-size:11px;color:#2A5A2D;line-height:1.5}
-
-/* 3-COL CHARTS */
 .c3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
-
 /* HIGHWAY BARS */
-.ci{margin-bottom:8px}
-.ci:last-child{margin-bottom:0}
+.ci{margin-bottom:8px}.ci:last-child{margin-bottom:0}
 .ci-lr{display:flex;justify-content:space-between;font-size:11px;color:var(--ts);margin-bottom:3px}
 .ci-v{font-weight:500;color:var(--tp)}
 .bt{height:18px;background:var(--parchment);border-radius:3px;overflow:hidden}
 .bf{height:100%;border-radius:3px;transition:width .4s;display:flex;align-items:center;padding-left:6px}
 .bfl{font-size:9px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden}
-
 /* TABLE */
 .tbl-wrap{overflow:auto;max-height:210px}
 table{width:100%;border-collapse:collapse;font-size:11px}
@@ -126,19 +122,14 @@ th{text-align:right;padding:5px 6px;color:var(--tm);font-weight:500;border-botto
 th:first-child{text-align:left}
 td{text-align:right;padding:5px 6px}
 td:first-child{text-align:left}
-
-/* BREAKEVEN NOTE */
 .be-note{font-size:11px;color:var(--ts);background:var(--sbg);border-radius:5px;padding:5px 8px;margin-top:6px;display:inline-block}
-
-/* SOURCES (collapsible) */
 details{margin-top:8px}
 details summary{font-size:11px;color:var(--tm);cursor:pointer;padding:6px 8px;background:var(--sbg);border-radius:6px;user-select:none;list-style:none}
 details summary::before{content:'▶  ';font-size:9px}
 details[open] summary::before{content:'▼  '}
 .src-body{font-size:10px;color:var(--tm);padding:8px;line-height:1.65;border:1px solid var(--bdl);border-top:none;border-radius:0 0 6px 6px}
 .src-body strong{color:var(--ts)}
-
-/* ── PRINT REPORT ── */
+/* PRINT REPORT */
 #rpt{display:none}
 .rpt-pg{padding:28px 32px;font-family:'DM Sans',sans-serif}
 .rpt-hdr{border-bottom:3px solid #2D6A30;padding-bottom:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end}
@@ -153,8 +144,7 @@ details[open] summary::before{content:'▼  '}
 .rpt-kpi-sub{font-size:7.5pt;color:#7A7A70;margin-top:2px}
 .rpt-assume-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin-bottom:14px}
 .rpt-arow{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #E8E3D8;font-size:8.5pt}
-.rpt-akey{color:#4A4A42}
-.rpt-aval{font-weight:600;color:#1E3A1F}
+.rpt-akey{color:#4A4A42}.rpt-aval{font-weight:600;color:#1E3A1F}
 .rpt-chart-full{width:100%;border:1px solid #E8E3D8;border-radius:4px;margin-bottom:10px}
 .rpt-chart-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .rpt-chart-row img{width:100%;border:1px solid #E8E3D8;border-radius:4px}
@@ -167,7 +157,6 @@ details[open] summary::before{content:'▼  '}
 .rpt-tbl td:first-child{text-align:left}
 .rpt-footer{font-size:7.5pt;color:#7A7A70;border-top:1px solid #D5CFBF;padding-top:8px;margin-top:16px;line-height:1.6}
 .rpt-grant-banner{background:#FFF8EC;border:1px solid #E8D4A0;border-radius:6px;padding:7px 12px;margin-bottom:10px;font-size:8.5pt;color:#6B4C1A}
-
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body{background:#fff!important;margin:0}
@@ -176,7 +165,6 @@ details[open] summary::before{content:'▼  '}
   .rpt-pg{page-break-after:always}
   .rpt-pg:last-child{page-break-after:auto}
 }
-
 @media(max-width:820px){
   .grid{grid-template-columns:1fr}
   .panel{position:static;max-height:none}
@@ -206,9 +194,112 @@ details[open] summary::before{content:'▼  '}
     <div class="act-btns">
       <button class="act-btn" onclick="copyLink()" id="copy-btn">🔗 Copy Link</button>
       <button class="act-btn dl" onclick="downloadReport()">📄 Download Report</button>
+      <button class="act-btn intl" id="intl-btn" onclick="toggleIntlPanel()" title="Units &amp; currency">€</button>
     </div>
   </div>
 </header>
+
+<!-- INTERNATIONAL PANEL -->
+<div class="intl-panel" id="intl-panel">
+  <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+
+    <!-- UNITS -->
+    <div>
+      <p class="intl-sec-lbl">Units</p>
+      <div style="display:flex;gap:5px">
+        <button class="u-btn active" id="u-imperial" onclick="setUnit('imperial')">Imperial</button>
+        <button class="u-btn" id="u-metric" onclick="setUnit('metric')">Metric</button>
+        <button class="u-btn" id="u-both" onclick="setUnit('both')">Both</button>
+      </div>
+    </div>
+
+    <!-- CURRENCY -->
+    <div style="flex:1">
+      <p class="intl-sec-lbl">Currency &nbsp;<span id="rate-note" style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--tm)"></span></p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+
+        <button class="c-btn active" id="c-USD" onclick="setCurrency('USD')">$ USD</button>
+
+        <!-- AUD - Australian flag -->
+        <button class="c-btn" id="c-AUD" onclick="setCurrency('AUD')">
+          <svg viewBox="0 0 30 15" width="30" height="15" aria-hidden="true" style="border-radius:2px;flex-shrink:0">
+            <rect width="30" height="15" fill="#00235D"/>
+            <line x1="0" y1="0" x2="15" y2="7.5" stroke="white" stroke-width="3.2"/>
+            <line x1="15" y1="0" x2="0" y2="7.5" stroke="white" stroke-width="3.2"/>
+            <line x1="0" y1="0" x2="15" y2="7.5" stroke="#CC0000" stroke-width="1.6"/>
+            <line x1="15" y1="0" x2="0" y2="7.5" stroke="#CC0000" stroke-width="1.6"/>
+            <rect x="5.5" y="0" width="4" height="7.5" fill="white"/>
+            <rect x="0" y="1.75" width="15" height="4" fill="white"/>
+            <rect x="6.5" y="0" width="2" height="7.5" fill="#CC0000"/>
+            <rect x="0" y="2.75" width="15" height="2" fill="#CC0000"/>
+            <rect x="0" y="7.5" width="15" height="7.5" fill="#00235D"/>
+            <circle cx="7.5" cy="12" r="1.6" fill="white"/>
+            <circle cx="23" cy="11.5" r="1.3" fill="white"/>
+            <circle cx="19.5" cy="7.5" r="1.3" fill="white"/>
+            <circle cx="23" cy="3.5" r="1.3" fill="white"/>
+            <circle cx="26.5" cy="8" r="1.3" fill="white"/>
+            <circle cx="25.5" cy="5" r="0.9" fill="white"/>
+          </svg>
+          A$
+        </button>
+
+        <!-- CAD - Canadian flag -->
+        <button class="c-btn" id="c-CAD" onclick="setCurrency('CAD')">
+          <svg viewBox="0 0 30 20" width="24" height="16" aria-hidden="true" style="border-radius:2px;flex-shrink:0">
+            <rect width="30" height="20" fill="#D52B1E"/>
+            <rect x="7.5" y="0" width="15" height="20" fill="white"/>
+            <path d="M15,3 L16.8,7.8 L21,6.5 L18.2,10.2 L20,13.8 L15,11.5 L10,13.8 L11.8,10.2 L9,6.5 L13.2,7.8 Z" fill="#D52B1E"/>
+            <rect x="14.3" y="13.8" width="1.4" height="3" fill="#D52B1E"/>
+          </svg>
+          CA$
+        </button>
+
+        <!-- EUR - EU flag -->
+        <button class="c-btn" id="c-EUR" onclick="setCurrency('EUR')">
+          <svg viewBox="0 0 30 20" width="24" height="16" aria-hidden="true" style="border-radius:2px;flex-shrink:0">
+            <rect width="30" height="20" fill="#003399"/>
+            <circle cx="15" cy="3" r="1.25" fill="#FFCC00"/>
+            <circle cx="18.5" cy="3.96" r="1.25" fill="#FFCC00"/>
+            <circle cx="21.06" cy="6.5" r="1.25" fill="#FFCC00"/>
+            <circle cx="22" cy="10" r="1.25" fill="#FFCC00"/>
+            <circle cx="21.06" cy="13.5" r="1.25" fill="#FFCC00"/>
+            <circle cx="18.5" cy="16.04" r="1.25" fill="#FFCC00"/>
+            <circle cx="15" cy="17" r="1.25" fill="#FFCC00"/>
+            <circle cx="11.5" cy="16.04" r="1.25" fill="#FFCC00"/>
+            <circle cx="8.94" cy="13.5" r="1.25" fill="#FFCC00"/>
+            <circle cx="8" cy="10" r="1.25" fill="#FFCC00"/>
+            <circle cx="8.94" cy="6.5" r="1.25" fill="#FFCC00"/>
+            <circle cx="11.5" cy="3.96" r="1.25" fill="#FFCC00"/>
+          </svg>
+          €
+        </button>
+
+        <!-- GBP - Union Jack -->
+        <button class="c-btn" id="c-GBP" onclick="setCurrency('GBP')">
+          <svg viewBox="0 0 30 20" width="24" height="16" aria-hidden="true" style="border-radius:2px;flex-shrink:0">
+            <rect width="30" height="20" fill="#012169"/>
+            <line x1="0" y1="0" x2="30" y2="20" stroke="white" stroke-width="5.5"/>
+            <line x1="30" y1="0" x2="0" y2="20" stroke="white" stroke-width="5.5"/>
+            <line x1="0" y1="0" x2="30" y2="20" stroke="#C8102E" stroke-width="2.5"/>
+            <line x1="30" y1="0" x2="0" y2="20" stroke="#C8102E" stroke-width="2.5"/>
+            <rect x="12" y="0" width="6" height="20" fill="white"/>
+            <rect x="0" y="7" width="30" height="6" fill="white"/>
+            <rect x="13.5" y="0" width="3" height="20" fill="#C8102E"/>
+            <rect x="0" y="8.5" width="30" height="3" fill="#C8102E"/>
+          </svg>
+          £
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="intl-disc" id="intl-disc">
+    Note: All spending benchmarks, construction costs, and property value research are drawn from studies conducted in the United States. Values shown here are approximate conversions — the underlying research data is USD-based and imperial units. Treat converted figures as directional context, not locally validated estimates.
+    <a href="#" onclick="openMethods();return false">See data sources &amp; methodology ↓</a>
+  </div>
+</div>
 
 <div class="grid">
 
@@ -230,12 +321,12 @@ details[open] summary::before{content:'▼  '}
       <input type="range" id="s-miles" min="1" max="60" step="1" value="10" oninput="sv('miles',this.value);recalcD()">
     </div>
     <div class="sr">
-      <div class="sl">Construction cost / mile <span class="sv" id="v-buildcost">$50K</span></div>
+      <div class="sl">Construction cost / mile <span class="sv" id="v-buildcost">$50K/mi</span></div>
       <input type="range" id="s-buildcost" min="10000" max="120000" step="5000" value="50000" oninput="sv('buildcost',this.value);recalcD()">
-      <p class="sh">Volunteer: ~$5–15K &nbsp;·&nbsp; Pro-built: $60–80K (2026)</p>
+      <p class="sh">Volunteer: ~$5–15K · Pro-built: $60–80K (2026)</p>
     </div>
     <div class="sr">
-      <div class="sl">Maintenance / mile / year <span class="sv" id="v-maint">$2,500</span></div>
+      <div class="sl">Maintenance / mile / year <span class="sv" id="v-maint">$2,500/mi</span></div>
       <input type="range" id="s-maint" min="500" max="8000" step="250" value="2500" oninput="sv('maint',this.value);recalcD()">
       <p class="sh">Typical: $1,500–$5,000 · escalates with inflation (Modeling tab)</p>
     </div>
@@ -251,7 +342,7 @@ details[open] summary::before{content:'▼  '}
   <div class="tab-pane" id="tab-visitors">
     <p class="sec-ttl"><span class="dot" style="background:#2A5F8A"></span>Visitor activity</p>
     <div class="sr">
-      <div class="sl">Annual visitors / mile (at full capacity) <span class="sv" id="v-visitors">1,000</span></div>
+      <div class="sl">Annual visitors / mile (at full capacity) <span class="sv" id="v-visitors">1,000/mi</span></div>
       <input type="range" id="s-visitors" min="100" max="5000" step="50" value="1000" oninput="sv('visitors',this.value);recalcD()">
     </div>
     <div class="sr">
@@ -340,7 +431,6 @@ details[open] summary::before{content:'▼  '}
 
 <!-- RIGHT: RESULTS -->
 <main>
-  <!-- ASSUMPTION BANNER -->
   <div class="ab">
     <span style="font-weight:500">Active:</span>
     <span class="at" id="ab-inflation">Inflation: 3%</span>
@@ -350,9 +440,10 @@ details[open] summary::before{content:'▼  '}
     <span class="at" id="ab-salestax">Sales tax: 4.25%</span>
     <span class="at" id="ab-grant" style="display:none;background:#FFF8EC;border-color:#E8D4A0;color:#8A5C00"></span>
     <span class="at-custom" id="ab-custom">● Modified</span>
+    <span class="at" id="ab-unit" style="display:none;background:#EBF3FB;border-color:#A8C8E8;color:#1A4F7A"></span>
+    <span class="at" id="ab-currency" style="display:none;background:#EBF3FB;border-color:#A8C8E8;color:#1A4F7A"></span>
   </div>
 
-  <!-- METRIC CARDS -->
   <div class="mc-row">
     <div class="mc" id="card-be">
       <p class="mc-lbl">Breakeven year<br>(municipal revenue)</p>
@@ -376,35 +467,32 @@ details[open] summary::before{content:'▼  '}
     </div>
   </div>
 
-  <!-- BREAKEVEN CHART -->
   <div class="cc">
     <p class="cc-t">Cumulative investment vs. return — <span id="yr-lbl">20</span>-year projection</p>
     <p class="cc-s">Year-by-year with ramp-up, visitor growth, and maintenance inflation applied</p>
     <div class="leg">
-      <span class="li"><span class="ld" style="background:#555;border-radius:0;height:3px;width:14px;border-top:2px dashed #555;background:none"></span>Total cost (construction + inflating maintenance)</span>
+      <span class="li"><svg width="18" height="10" aria-hidden="true"><line x1="0" y1="5" x2="18" y2="5" stroke="#555" stroke-width="2" stroke-dasharray="5,3"/></svg>Total cost (construction + inflating maintenance)</span>
       <span class="li"><span class="ld" style="background:#1A8C3E"></span>Cumulative municipal revenue <span class="badge bd-d" style="margin-left:3px">direct</span></span>
       <span class="li"><span class="ld" style="background:#2A5F8A;opacity:.75"></span>Economic impact <span class="badge bd-i" style="margin-left:3px">indirect</span></span>
     </div>
     <div style="position:relative;height:200px">
-      <canvas id="chartBE" role="img" aria-label="Breakeven line chart">Breakeven chart</canvas>
+      <canvas id="chartBE" role="img" aria-label="Breakeven line chart showing cumulative investment vs return over time">Breakeven chart</canvas>
     </div>
     <p class="be-note" id="be-note"></p>
   </div>
 
-  <!-- PROPERTY VALUE CALLOUT -->
   <div class="callout">
     <p class="co-t">&#127968; Property value impact</p>
     <p class="co-b" id="prop-txt">Calculating…</p>
   </div>
 
-  <!-- 3-COL CHARTS -->
   <div class="c3">
     <div class="cc" style="margin-bottom:0">
       <p class="cc-t">Annual benefit breakdown</p>
       <p class="cc-s" id="donut-sub">Mature year</p>
       <div id="donut-leg" class="leg"></div>
       <div style="position:relative;height:155px">
-        <canvas id="chartDonut" role="img" aria-label="Revenue breakdown donut">Donut</canvas>
+        <canvas id="chartDonut" role="img" aria-label="Revenue breakdown donut chart">Donut</canvas>
       </div>
     </div>
     <div class="cc" style="margin-bottom:0">
@@ -423,7 +511,6 @@ details[open] summary::before{content:'▼  '}
     </div>
   </div>
 
-  <!-- HIGHWAY COMPARISON -->
   <div class="cc" style="margin-top:10px">
     <p class="cc-t">Infrastructure cost comparison — per mile (log scale)</p>
     <p class="cc-s">Your trail vs. conventional road infrastructure</p>
@@ -431,10 +518,9 @@ details[open] summary::before{content:'▼  '}
     <p style="font-size:10px;color:var(--tm);margin-top:6px">Sources: FHWA/DOT 2020–2024 · Singletracks.com contractor survey April 2026 · American Trails database</p>
   </div>
 
-  <!-- TABLE -->
   <div class="cc" style="margin-top:10px">
     <p class="cc-t">Year-by-year detail (first 15 years)</p>
-    <p class="cc-s">↗ = ramp-up phase &nbsp;·&nbsp; ✓ = breakeven year &nbsp;·&nbsp; scroll for more</p>
+    <p class="cc-s">↗ = ramp-up phase · ✓ = breakeven year · scroll for more</p>
     <div class="tbl-wrap">
       <table>
         <thead><tr>
@@ -447,139 +533,144 @@ details[open] summary::before{content:'▼  '}
     </div>
   </div>
 
-  <!-- SOURCES -->
   <details>
     <summary>Data sources &amp; methodology notes</summary>
     <div class="src-body">
       <strong>Visitor spending:</strong> TPL/IMBA <em>Economic Benefits of Mountain Biking</em> (2025), 50-study meta-analysis. Conservative $103/trip = Duluth, MN; moderate $175/trip = regional avg; optimistic $416/trip = TPL national avg.<br><br>
       <strong>Property value premiums:</strong> Crompton &amp; Nicholls (2019); NAR Field Guide (2020). Typical: 3–5%. Indianapolis Cultural Trail: $1B added within 500 ft, 2008–2014.<br><br>
-      <strong>Trail build &amp; maintenance costs:</strong> Singletracks.com contractor survey (Apr 2026); American Trails database ($1,500–$5,000/mi/yr).<br><br>
-      <strong>Grants:</strong> RTP (Recreational Trails Program) funds up to 80% of trail construction costs. RAISE, CMAQ, and state-level programs also apply. Grant percentage reduces the municipal capital contribution used in breakeven and ROI calculations; total project cost is unchanged.<br><br>
-      <strong>Color accessibility:</strong> The breakeven chart uses charcoal (#555, dashed) for costs and green (#1A8C3E, with markers) for revenue — distinguishable under deuteranopia and protanopia.<br><br>
-      <strong>Breakeven:</strong> Year when cumulative municipal revenue (sales tax + property tax) ≥ municipal share of construction cost (after grants). Maintenance excluded from breakeven denominator.<br><br>
-      <strong>This tool is for planning and advocacy.</strong> Validate with local data before formal presentation. Investments over $1M should commission a formal IMPLAN or REMI study.
+      <strong>Trail build &amp; maintenance costs:</strong> Singletracks.com contractor survey (Apr 2026); American Trails database ($1,500–$5,000/mi/yr). <strong>Highway costs:</strong> FHWA / DOT data (2020–2024). <strong>Jobs:</strong> IMBA ~$45,000 labor income per FTE.<br><br>
+      <strong>Local vs. out-of-town:</strong> Out-of-town visitors bring new money — full multiplier applied. Local visitors recirculate existing spending — multiplier = 1.0. Per Savolt (2017) Duluth study and Buning &amp; Lamont (2021).<br><br>
+      <strong>Grants:</strong> RTP (Recreational Trails Program) up to 80% · RAISE · CMAQ · state programs. Grant % reduces municipal capital contribution for ROI and breakeven calculations.<br><br>
+      <strong>Units &amp; currency:</strong> All research benchmarks are USD/imperial. Metric and foreign-currency displays are conversions for directional reference only. Exchange rates fetched daily from fawazahmed0/currency-api (jsdelivr CDN); fallback rates used if unavailable.<br><br>
+      <strong>Breakeven:</strong> Year when cumulative municipal tax revenue ≥ municipal share of construction cost. Maintenance excluded from breakeven denominator.<br><br>
+      <em>This tool is for planning and advocacy. Validate assumptions with local data before formal presentation.</em>
     </div>
   </details>
 </main>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     PRINT REPORT (hidden; shown only on print)
-═══════════════════════════════════════════ -->
 <div id="rpt"></div>
-
-</div><!-- /wrap -->
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-/* ══════════════════════════════════════════
-   STATE
-══════════════════════════════════════════ */
-let curInfl = 3;
-let curSc   = 'moderate';
-let dTimer  = null;
+/* ══ STATE ══ */
+let curInfl=3, curSc='moderate', dTimer=null;
+let curUnit='imperial'; // 'imperial' | 'metric' | 'both'
+let curCurrency='USD';  // 'USD' | 'AUD' | 'CAD' | 'EUR' | 'GBP'
+let exRates={USD:1,AUD:1.546,CAD:1.362,EUR:0.918,GBP:0.783};
+let ratesDate=null;
 
-/* ══════════════════════════════════════════
-   SCENARIOS (sales tax locked to 4.25)
-══════════════════════════════════════════ */
-const SC = {
-  conservative:{miles:15,buildcost:35000,maint:1500,visitors:500,spend:103,
-    overnight:15,nonlocal:40,salestax:4.25,homes:50,homeval:280000,propprem:3,proptax:1.0,
-    multiplier:1.2,years:20,visitorgrowth:1,rampup:3,inflation:2,grant:0},
-  moderate:{miles:10,buildcost:50000,maint:2500,visitors:1000,spend:175,
-    overnight:30,nonlocal:60,salestax:4.25,homes:100,homeval:350000,propprem:5,proptax:1.2,
-    multiplier:1.5,years:20,visitorgrowth:3,rampup:2,inflation:3,grant:0},
-  optimistic:{miles:20,buildcost:60000,maint:3000,visitors:2000,spend:416,
-    overnight:50,nonlocal:75,salestax:4.25,homes:200,homeval:420000,propprem:8,proptax:1.4,
-    multiplier:1.8,years:20,visitorgrowth:6,rampup:1,inflation:4,grant:0}
+/* ══ SCENARIOS ══ */
+const SC={
+  conservative:{miles:15,buildcost:35000,maint:1500,visitors:500,spend:103,overnight:15,nonlocal:40,salestax:4.25,homes:50,homeval:280000,propprem:3,proptax:1.0,multiplier:1.2,years:20,visitorgrowth:1,rampup:3,inflation:2,grant:0},
+  moderate:{miles:10,buildcost:50000,maint:2500,visitors:1000,spend:175,overnight:30,nonlocal:60,salestax:4.25,homes:100,homeval:350000,propprem:5,proptax:1.2,multiplier:1.5,years:20,visitorgrowth:3,rampup:2,inflation:3,grant:0},
+  optimistic:{miles:20,buildcost:60000,maint:3000,visitors:2000,spend:416,overnight:50,nonlocal:75,salestax:4.25,homes:200,homeval:420000,propprem:8,proptax:1.4,multiplier:1.8,years:20,visitorgrowth:6,rampup:1,inflation:4,grant:0}
 };
 
-/* ══════════════════════════════════════════
-   FORMATTERS
-══════════════════════════════════════════ */
-const fc=n=>{if(n>=1e9)return'$'+(n/1e9).toFixed(2)+'B';if(n>=1e6)return'$'+(n/1e6).toFixed(2)+'M';if(n>=1e3)return'$'+Math.round(n/1000)+'K';return'$'+Math.round(n)};
+/* ══ CURRENCY / UNIT FORMATTERS ══ */
+const CUR_SYM={USD:'$',AUD:'A$',CAD:'CA$',EUR:'€',GBP:'£'};
+
+function fcd(usdVal){
+  const n=usdVal*(exRates[curCurrency]||1);
+  const s=CUR_SYM[curCurrency]||'$';
+  if(n>=1e9) return s+(n/1e9).toFixed(2)+'B';
+  if(n>=1e6) return s+(n/1e6).toFixed(2)+'M';
+  if(n>=1e3) return s+Math.round(n/1000)+'K';
+  return s+Math.round(n);
+}
+
+function dst(milesVal){
+  const v=+milesVal, km=(v*1.60934).toFixed(1);
+  if(curUnit==='metric') return km+' km';
+  if(curUnit==='both') return v+' mi | '+km+' km';
+  return v+' mi';
+}
+
+function cpd(usdPerMile){
+  const u=+usdPerMile;
+  if(curUnit==='metric') return fcd(u/1.60934)+'/km';
+  if(curUnit==='both') return fcd(u)+'/mi | '+fcd(u/1.60934)+'/km';
+  return fcd(u)+'/mi';
+}
+
+function halfMile(){
+  if(curUnit==='metric') return '0.8 km';
+  if(curUnit==='both') return '½ mile (0.8 km)';
+  return '½ mile';
+}
+
+/* ══ GENERIC FORMATTERS ══ */
 const fn=n=>Math.round(n).toLocaleString();
 const fp=n=>(n>=0?'+':'')+Math.round(n)+'%';
 
-/* ══════════════════════════════════════════
-   SLIDER DISPLAY
-══════════════════════════════════════════ */
+/* ══ SLIDER DISPLAY ══ */
 const FMT={
-  miles:v=>v+' mi', buildcost:v=>fc(+v), maint:v=>'$'+fn(+v),
-  visitors:v=>fn(+v), spend:v=>'$'+v, overnight:v=>v+'%', nonlocal:v=>v+'%',
-  salestax:v=>(+v).toFixed(2)+'%', homes:v=>fn(+v), homeval:v=>fc(+v),
-  propprem:v=>(+v).toFixed(1)+'%', proptax:v=>(+v).toFixed(1)+'%',
-  multiplier:v=>(+v).toFixed(1)+'×', years:v=>v+' yrs',
-  visitorgrowth:v=>(+v).toFixed(1)+'%', rampup:v=>+v===0?'None':v+' yrs',
+  miles:v=>dst(v),
+  buildcost:v=>cpd(v),
+  maint:v=>cpd(v)+'/yr',
+  visitors:v=>{const n=fn(+v);if(curUnit==='metric')return n+'/km';if(curUnit==='both')return n+'/mi | '+fn(Math.round(+v/1.60934))+'/km';return n+'/mi';},
+  spend:v=>fcd(+v),
+  overnight:v=>v+'%',
+  nonlocal:v=>v+'%',
+  salestax:v=>(+v).toFixed(2)+'%',
+  homes:v=>fn(+v),
+  homeval:v=>fcd(+v),
+  propprem:v=>(+v).toFixed(1)+'%',
+  proptax:v=>(+v).toFixed(1)+'%',
+  multiplier:v=>(+v).toFixed(1)+'×',
+  years:v=>v+' yrs',
+  visitorgrowth:v=>(+v).toFixed(1)+'%',
+  rampup:v=>+v===0?'None':v+' yrs',
   grant:v=>v+'%'
 };
 function sv(id,val){const el=document.getElementById('v-'+id);if(el&&FMT[id])el.textContent=FMT[id](val)}
 
-/* ══════════════════════════════════════════
-   GET VALUES
-══════════════════════════════════════════ */
+/* ══ GET VALUES ══ */
 function getV(){
   const g=id=>parseFloat(document.getElementById('s-'+id).value);
-  return{miles:g('miles'),buildcost:g('buildcost'),maint:g('maint'),
-    visitors:g('visitors'),spend:g('spend'),overnight:g('overnight'),
-    nonlocal:g('nonlocal'),salestax:g('salestax'),
-    homes:g('homes'),homeval:g('homeval'),propprem:g('propprem'),proptax:g('proptax'),
-    multiplier:g('multiplier'),years:Math.round(g('years')),
-    visitorgrowth:g('visitorgrowth'),rampup:Math.round(g('rampup')),
-    inflation:curInfl, grant:g('grant')};
+  return{miles:g('miles'),buildcost:g('buildcost'),maint:g('maint'),visitors:g('visitors'),spend:g('spend'),overnight:g('overnight'),nonlocal:g('nonlocal'),salestax:g('salestax'),homes:g('homes'),homeval:g('homeval'),propprem:g('propprem'),proptax:g('proptax'),multiplier:g('multiplier'),years:Math.round(g('years')),visitorgrowth:g('visitorgrowth'),rampup:Math.round(g('rampup')),inflation:curInfl,grant:g('grant')};
 }
 
-/* ══════════════════════════════════════════
-   DEBOUNCE WRAPPER (80ms)
-══════════════════════════════════════════ */
+/* ══ DEBOUNCE ══ */
 function recalcD(){clearTimeout(dTimer);dTimer=setTimeout(recalc,80)}
 
-/* ══════════════════════════════════════════
-   YEAR-BY-YEAR MODEL
-══════════════════════════════════════════ */
+/* ══ YEAR-BY-YEAR MODEL ══ */
 function buildData(v){
-  const ir=v.inflation/100, gr=v.visitorgrowth/100, nf=v.nonlocal/100;
+  const ir=v.inflation/100,gr=v.visitorgrowth/100,nf=v.nonlocal/100;
   const effSpend=v.spend*(1+v.overnight/100);
-  const cap=v.miles*v.buildcost;
-  const municipalCap=cap*(1-v.grant/100);  // ← what city actually pays
+  const cap=v.miles*v.buildcost, municipalCap=cap*(1-v.grant/100);
   const mbBase=v.miles*v.maint, bVis=v.miles*v.visitors;
   const ptAnn=v.homes*v.homeval*(v.propprem/100)*(v.proptax/100);
   const maxYrs=Math.max(65,v.years);
   const rows=[];
   let cMuni=0,cEcon=0,cCost=municipalCap,be=null;
-
   for(let yr=1;yr<=maxYrs;yr++){
     let ramp=1;
     if(v.rampup>0&&yr<=v.rampup) ramp=v.rampup===1?0.4:0.4+0.6*(yr-1)/(v.rampup-1);
     const gYrs=v.rampup>0?Math.max(0,yr-v.rampup):yr-1;
     const vis=bVis*ramp*Math.pow(1+gr,gYrs);
-    const tSpend=vis*effSpend, nlSpend=tSpend*nf, lSpend=tSpend*(1-nf);
+    const tSpend=vis*effSpend,nlSpend=tSpend*nf,lSpend=tSpend*(1-nf);
     const stax=tSpend*(v.salestax/100);
     const muniYr=stax+ptAnn;
     const econYr=nlSpend*v.multiplier+lSpend;
     const maintYr=mbBase*Math.pow(1+ir,yr-1);
-    cMuni+=muniYr; cEcon+=econYr; cCost+=maintYr;
-    if(!be&&cMuni>=municipalCap) be=yr;
+    cMuni+=muniYr;cEcon+=econYr;cCost+=maintYr;
+    if(!be&&cMuni>=municipalCap)be=yr;
     rows.push({yr,vis,tSpend,nlSpend,lSpend,stax,ptAnn,muniYr,econYr,maintYr,cMuni,cEcon,cCost,cap,municipalCap});
   }
   const mRow=rows[Math.max(0,v.rampup)]||rows[0];
   const r10=rows[9];
   const roi10=municipalCap>0?((r10?.cMuni??0)/municipalCap-1)*100:0;
   const jobs=Math.round(mRow.econYr/45000);
-  return{rows,cap,municipalCap,be,ptAnn,mRow,r10,roi10,jobs,
-    propVal:v.homes*v.homeval*(v.propprem/100),
-    maint20:mbBase*Math.pow(1+ir,19)};
+  return{rows,cap,municipalCap,be,ptAnn,mRow,r10,roi10,jobs,propVal:v.homes*v.homeval*(v.propprem/100),maint20:mbBase*Math.pow(1+ir,19)};
 }
 
-/* ══════════════════════════════════════════
-   CHARTS REGISTRY
-══════════════════════════════════════════ */
+/* ══ CHARTS REGISTRY ══ */
 const CH={};
 function kc(id){if(CH[id]){CH[id].destroy();delete CH[id]}}
 
-/* ══════════════════════════════════════════
-   TABS
-══════════════════════════════════════════ */
+/* ══ TABS ══ */
 function showTab(id,btn){
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -587,69 +678,111 @@ function showTab(id,btn){
   btn.classList.add('active');
 }
 
-/* ══════════════════════════════════════════
-   INFLATION PILLS
-══════════════════════════════════════════ */
+/* ══ INFLATION ══ */
 function setInflation(r){
   curInfl=r;
   document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('active',+b.dataset.rate===r));
   recalc();
 }
 
-/* ══════════════════════════════════════════
-   CUSTOM SCENARIO DETECTION
-══════════════════════════════════════════ */
+/* ══ INTERNATIONAL PANEL ══ */
+function toggleIntlPanel(){
+  const p=document.getElementById('intl-panel');
+  const b=document.getElementById('intl-btn');
+  const show=!p.classList.contains('show');
+  p.classList.toggle('show',show);
+  b.classList.toggle('open',show);
+}
+
+function setUnit(u){
+  curUnit=u;
+  ['imperial','metric','both'].forEach(x=>document.getElementById('u-'+x).classList.toggle('active',x===u));
+  updateIntlDisclaimer();
+  // refresh all slider displays
+  const keys=['miles','buildcost','maint','visitors','spend','overnight','nonlocal','salestax','homes','homeval','propprem','proptax','multiplier','years','visitorgrowth','rampup','grant'];
+  keys.forEach(k=>{const el=document.getElementById('s-'+k);if(el)sv(k,el.value);});
+  recalc();
+}
+
+function setCurrency(c){
+  curCurrency=c;
+  ['USD','AUD','CAD','EUR','GBP'].forEach(x=>document.getElementById('c-'+x).classList.toggle('active',x===c));
+  updateIntlDisclaimer();
+  const keys=['miles','buildcost','maint','visitors','spend','overnight','nonlocal','salestax','homes','homeval','propprem','proptax','multiplier','years','visitorgrowth','rampup','grant'];
+  keys.forEach(k=>{const el=document.getElementById('s-'+k);if(el)sv(k,el.value);});
+  recalc();
+}
+
+function updateIntlDisclaimer(){
+  const nonUS=curUnit!=='imperial'||curCurrency!=='USD';
+  document.getElementById('intl-disc').classList.toggle('show',nonUS);
+  // banner tags
+  const uTag=document.getElementById('ab-unit');
+  const cTag=document.getElementById('ab-currency');
+  if(curUnit!=='imperial'){uTag.style.display='inline-block';uTag.textContent=curUnit==='metric'?'Metric':'Both units';}
+  else uTag.style.display='none';
+  if(curCurrency!=='USD'){cTag.style.display='inline-block';cTag.textContent=CUR_SYM[curCurrency]+' '+curCurrency;}
+  else cTag.style.display='none';
+}
+
+function openMethods(){
+  try{const d=document.querySelector('details');if(d){d.open=true;setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),50);}}catch(e){}
+}
+
+/* ══ EXCHANGE RATES (daily update via jsdelivr CDN) ══ */
+async function fetchRates(){
+  try{
+    const r=await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
+    const d=await r.json();
+    if(d&&d.usd){
+      if(d.usd.aud)exRates.AUD=d.usd.aud;
+      if(d.usd.cad)exRates.CAD=d.usd.cad;
+      if(d.usd.eur)exRates.EUR=d.usd.eur;
+      if(d.usd.gbp)exRates.GBP=d.usd.gbp;
+      ratesDate=d.date||null;
+      const note=document.getElementById('rate-note');
+      if(note&&ratesDate)note.textContent='· rates as of '+ratesDate;
+    }
+  }catch(e){/* use fallback rates */}
+}
+
+/* ══ CUSTOM SCENARIO DETECTION ══ */
 function checkCustomState(){
   let matched=null;
-  for(const [name,sc] of Object.entries(SC)){
+  for(const[name,sc]of Object.entries(SC)){
     const ok=Object.entries(sc).every(([k,val])=>{
-      if(k==='inflation') return curInfl===val;
+      if(k==='inflation')return curInfl===val;
       const el=document.getElementById('s-'+k);
       return el&&Math.abs(parseFloat(el.value)-val)<0.001;
     });
     if(ok){matched=name;break;}
   }
   curSc=matched||'custom';
-  // scenario buttons
-  ['conservative','moderate','optimistic'].forEach(s=>{
-    document.getElementById('btn-'+s).classList.toggle('active',s===matched);
-  });
+  ['conservative','moderate','optimistic'].forEach(s=>document.getElementById('btn-'+s).classList.toggle('active',s===matched));
   const customBtn=document.getElementById('btn-custom');
   customBtn.style.display=matched?'none':'inline-block';
-  // banner custom tag
-  const ct=document.getElementById('ab-custom');
-  ct.style.display=matched?'none':'inline-block';
+  document.getElementById('ab-custom').style.display=matched?'none':'inline-block';
 }
 
-/* ══════════════════════════════════════════
-   URL STATE ENCODE / DECODE
-══════════════════════════════════════════ */
+/* ══ URL STATE ══ */
 function encodeState(){
   try{
     const v=getV();
     const p=new URLSearchParams();
-    p.set('sc',curSc);
+    p.set('sc',curSc);p.set('unit',curUnit);p.set('currency',curCurrency);
     Object.entries(v).forEach(([k,val])=>p.set(k,val));
     history.replaceState(null,'','?'+p.toString());
-  }catch(e){/* silent fail on file:// protocol */}
+  }catch(e){}
 }
 
 function decodeState(){
   const p=new URLSearchParams(window.location.search);
-  if(!p.has('miles')) return false;
-  const keys=['miles','buildcost','maint','visitors','spend','overnight','nonlocal','salestax',
-               'homes','homeval','propprem','proptax','multiplier','years','visitorgrowth','rampup','grant'];
-  keys.forEach(k=>{
-    if(p.has(k)){
-      const el=document.getElementById('s-'+k);
-      if(el){el.value=p.get(k);sv(k,p.get(k));}
-    }
-  });
-  // Set inflation state directly — do NOT call setInflation() here as it triggers recalc mid-decode
-  if(p.has('inflation')){
-    curInfl=+p.get('inflation');
-    document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('active',+b.dataset.rate===curInfl));
-  }
+  if(!p.has('miles'))return false;
+  const keys=['miles','buildcost','maint','visitors','spend','overnight','nonlocal','salestax','homes','homeval','propprem','proptax','multiplier','years','visitorgrowth','rampup','grant'];
+  keys.forEach(k=>{if(p.has(k)){const el=document.getElementById('s-'+k);if(el){el.value=p.get(k);sv(k,p.get(k));}}});
+  if(p.has('inflation')){curInfl=+p.get('inflation');document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('active',+b.dataset.rate===curInfl));}
+  if(p.has('unit')){curUnit=p.get('unit');['imperial','metric','both'].forEach(x=>document.getElementById('u-'+x).classList.toggle('active',x===curUnit));}
+  if(p.has('currency')){curCurrency=p.get('currency');['USD','AUD','CAD','EUR','GBP'].forEach(x=>document.getElementById('c-'+x).classList.toggle('active',x===curCurrency));}
   return true;
 }
 
@@ -657,50 +790,29 @@ function copyLink(){
   encodeState();
   const url=window.location.href;
   const doFallback=()=>{
-    try{
-      const ta=document.createElement('textarea');
-      ta.value=url;ta.style.position='fixed';ta.style.opacity='0';
-      document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
-    }catch(e){}
-    const btn=document.getElementById('copy-btn');
-    const orig=btn.innerHTML;
-    btn.innerHTML='✓ Copied!';
-    setTimeout(()=>{btn.innerHTML=orig;},2000);
+    try{const ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}catch(e){}
+    const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;btn.innerHTML='✓ Copied!';setTimeout(()=>{btn.innerHTML=orig;},2000);
   };
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(url).then(()=>{
-      const btn=document.getElementById('copy-btn');
-      const orig=btn.innerHTML;
-      btn.innerHTML='✓ Copied!';btn.style.color='#2D6A30';
-      setTimeout(()=>{btn.innerHTML=orig;btn.style.color='';},2000);
+      const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;btn.innerHTML='✓ Copied!';btn.style.color='#2D6A30';setTimeout(()=>{btn.innerHTML=orig;btn.style.color='';},2000);
     }).catch(doFallback);
-  } else {
-    doFallback();
-  }
+  }else{doFallback();}
 }
 
-/* ══════════════════════════════════════════
-   MAIN RECALC
-══════════════════════════════════════════ */
+/* ══ MAIN RECALC ══ */
 function recalc(){
-  const v=getV(), m=buildData(v);
-
-  /* custom state check */
+  const v=getV(),m=buildData(v);
   checkCustomState();
-
-  /* encode URL */
   encodeState();
+  updateIntlDisclaimer();
 
-  /* grant derived display */
+  // grant display
   const gd=document.getElementById('grant-derived');
-  if(v.grant>0){
-    gd.style.display='block';
-    gd.textContent=`Municipality pays ${100-v.grant}% · Grant saves ${fc(m.cap-m.municipalCap)} · Municipal share: ${fc(m.municipalCap)}`;
-  } else {
-    gd.style.display='none';
-  }
+  if(v.grant>0){gd.style.display='block';gd.textContent=`Municipality pays ${100-v.grant}% · Grant saves ${fcd(m.cap-m.municipalCap)} · Municipal share: ${fcd(m.municipalCap)}`;}
+  else gd.style.display='none';
 
-  /* banner */
+  // banner
   document.getElementById('ab-inflation').textContent=v.inflation===0?'Inflation: Off':'Inflation: '+v.inflation+'%';
   document.getElementById('ab-growth').textContent='Growth: '+v.visitorgrowth.toFixed(1)+'%/yr';
   document.getElementById('ab-rampup').textContent=v.rampup===0?'No ramp-up':'Ramp-up: '+v.rampup+' yrs';
@@ -710,12 +822,10 @@ function recalc(){
   if(v.grant>0){abg.style.display='inline-block';abg.textContent=v.grant+'% grant funded';}
   else abg.style.display='none';
 
-  /* nl note */
-  document.getElementById('nl-note').innerHTML=
-    `<strong>${v.nonlocal}%</strong> out-of-town → full ${v.multiplier.toFixed(1)}× multiplier. `+
-    `<strong>${100-v.nonlocal}%</strong> local → 1.0×. Both generate sales tax.`;
+  // nl note
+  document.getElementById('nl-note').innerHTML=`<strong>${v.nonlocal}%</strong> out-of-town → full ${v.multiplier.toFixed(1)}× multiplier. <strong>${100-v.nonlocal}%</strong> local → 1.0×. Both generate sales tax.`;
 
-  /* metric cards */
+  // metric cards
   const be=m.be;
   const beEl=document.getElementById('m-be'),beCard=document.getElementById('card-be');
   beEl.textContent=be?be+' yrs':'> 65 yrs';
@@ -725,73 +835,55 @@ function recalc(){
   const roiEl=document.getElementById('m-roi');
   roiEl.textContent=fp(m.roi10);
   roiEl.className='mc-val'+(m.roi10>50?' good':m.roi10<0?' caution':'');
-  document.getElementById('m-roi-sub').textContent=v.grant>0?`vs. ${fc(m.municipalCap)} municipal share`:'municipal tax revenue';
-  document.getElementById('m-impact').textContent=m.r10?fc(m.r10.cEcon):'—';
+  document.getElementById('m-roi-sub').textContent=v.grant>0?`vs. ${fcd(m.municipalCap)} municipal share`:'municipal tax revenue';
+  document.getElementById('m-impact').textContent=m.r10?fcd(m.r10.cEcon):'—';
   document.getElementById('m-jobs').textContent=fn(m.jobs);
   document.getElementById('yr-lbl').textContent=v.years;
 
-  /* property callout */
+  // property callout
   document.getElementById('prop-txt').textContent=
-    fn(v.homes)+' homes gain an estimated '+v.propprem.toFixed(1)+'% value premium — adding '+
-    fc(m.propVal)+' in assessed value. At '+v.proptax.toFixed(1)+'% property tax that generates '+
-    fc(m.ptAnn)+'/yr in new municipal revenue without raising anyone\'s rate. '+
-    '(Research range: 3–15%. Indianapolis Cultural Trail: $1B in assessed value added within 500 ft, 2008–2014.)';
+    fn(v.homes)+' homes within '+halfMile()+' of the trail gain an estimated '+v.propprem.toFixed(1)+'% value premium — adding '+
+    fcd(m.propVal)+' in assessed value. At '+v.proptax.toFixed(1)+'% property tax that generates '+
+    fcd(m.ptAnn)+'/yr in new municipal revenue without raising anyone\'s rate. '+
+    '(Research range: 3–15%. Indianapolis Cultural Trail: +$1B in assessed value within 500 ft, 2008–2014.)';
 
-  /* breakeven annotation */
+  // breakeven annotation
   const bn=document.getElementById('be-note');
   if(be){
     const br=m.rows[be-1];
-    const iNote=v.inflation>0?` Maintenance grows to ${fc(m.maint20)}/yr by Yr 20 at ${v.inflation}% CPI.`:'';
-    const gNote=v.grant>0?` (${v.grant}% grant reduces municipal share to ${fc(m.municipalCap)} from full ${fc(m.cap)} project cost)`:' ';
-    bn.textContent=`✓ Municipal revenue covers the${gNote}${fc(m.municipalCap)} cost in Year ${be} (cumul. muni = ${fc(br.cMuni)}).${iNote}`;
-  } else {
-    bn.textContent='No breakeven within 65 years at current assumptions.';
-  }
+    const iNote=v.inflation>0?` Maintenance grows to ${fcd(m.maint20)}/yr by Yr 20 at ${v.inflation}% CPI.`:'';
+    const gNote=v.grant>0?` (${v.grant}% grant reduces municipal share to ${fcd(m.municipalCap)} from full ${fcd(m.cap)} project cost) `:'';
+    bn.textContent=`✓ Municipal revenue covers the${gNote}${fcd(m.municipalCap)} cost in Year ${be} (cumul. muni = ${fcd(br.cMuni)}).${iNote}`;
+  }else{bn.textContent='No breakeven within 65 years at current assumptions.';}
   bn.style.display='inline-block';
 
-  /* charts */
   drawBE(v,m);drawDonut(v,m);drawMilestones(v,m);drawVisitors(v,m);drawHwy(v,m);drawTable(v,m);
 }
 
-/* ══════════════════════════════════════════
-   CHART: BREAKEVEN (color-blindness safe)
-══════════════════════════════════════════ */
+/* ══ CHART: BREAKEVEN ══ */
 function drawBE(v,m){
   kc('be');
   const labs=['Now'],costs=[m.municipalCap],muni=[0],econ=[0];
   for(let i=0;i<v.years&&i<m.rows.length;i++){
     const r=m.rows[i];
     labs.push('Yr '+r.yr);
-    costs.push(Math.round(r.cCost));
-    muni.push(Math.round(r.cMuni));
-    econ.push(Math.round(r.cEcon));
+    costs.push(Math.round(r.cCost));muni.push(Math.round(r.cMuni));econ.push(Math.round(r.cEcon));
   }
-  // markers on revenue line every 4 data points
   const ptR=labs.map((_,i)=>i%4===0&&i>0?4:0);
   CH.be=new Chart(document.getElementById('chartBE'),{type:'line',
     data:{labels:labs,datasets:[
-      {label:'Total Cost',data:costs,
-       borderColor:'#555555',backgroundColor:'rgba(80,80,80,0.05)',
-       fill:true,borderWidth:2,tension:.15,pointRadius:0,borderDash:[6,3]},
-      {label:'Municipal Revenue',data:muni,
-       borderColor:'#1A8C3E',backgroundColor:'rgba(26,140,62,0.08)',
-       fill:true,borderWidth:2.5,tension:.15,pointRadius:ptR,
-       pointBackgroundColor:'#1A8C3E',pointBorderColor:'#fff',pointBorderWidth:1.5},
-      {label:'Economic Impact',data:econ,
-       borderColor:'rgba(42,95,138,0.75)',backgroundColor:'rgba(42,95,138,0.03)',
-       fill:false,borderWidth:2,borderDash:[3,3],tension:.15,pointRadius:0}
+      {label:'Total Cost',data:costs,borderColor:'#555555',backgroundColor:'rgba(80,80,80,0.05)',fill:true,borderWidth:2,tension:.15,pointRadius:0,borderDash:[6,3]},
+      {label:'Municipal Revenue',data:muni,borderColor:'#1A8C3E',backgroundColor:'rgba(26,140,62,0.08)',fill:true,borderWidth:2.5,tension:.15,pointRadius:ptR,pointBackgroundColor:'#1A8C3E',pointBorderColor:'#fff',pointBorderWidth:1.5},
+      {label:'Economic Impact',data:econ,borderColor:'rgba(42,95,138,0.75)',backgroundColor:'rgba(42,95,138,0.03)',fill:false,borderWidth:2,borderDash:[3,3],tension:.15,pointRadius:0}
     ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': '+fc(c.raw)}}},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': '+fcd(c.raw)}}},
       scales:{x:{ticks:{autoSkip:true,maxTicksLimit:11,font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},
-              y:{ticks:{font:{size:10},callback:val=>fc(val)},grid:{color:'rgba(0,0,0,0.05)'}}}
+              y:{ticks:{font:{size:10},callback:val=>fcd(val)},grid:{color:'rgba(0,0,0,0.05)'}}}
     }});
 }
 
-/* ══════════════════════════════════════════
-   CHART: DONUT
-══════════════════════════════════════════ */
+/* ══ CHART: DONUT ══ */
 function drawDonut(v,m){
   kc('donut');
   const mr=m.mRow;
@@ -801,18 +893,14 @@ function drawDonut(v,m){
     {label:'Business & labor income',value:Math.max(0,Math.round(mr.econYr-mr.muniYr)),color:'#2A5F8A',type:'indirect'}
   ].filter(s=>s.value>0);
   document.getElementById('donut-sub').textContent='Year '+(Math.max(1,v.rampup+1))+' (full capacity)';
-  document.getElementById('donut-leg').innerHTML=segs.map(s=>
-    `<span class="li"><span class="ld" style="background:${s.color}"></span>${s.label} <span class="badge bd-${s.type[0]}" style="margin-left:2px">${s.type}</span></span>`
-  ).join('');
+  document.getElementById('donut-leg').innerHTML=segs.map(s=>`<span class="li"><span class="ld" style="background:${s.color}"></span>${s.label} <span class="badge bd-${s.type[0]}" style="margin-left:2px">${s.type}</span></span>`).join('');
   CH.donut=new Chart(document.getElementById('chartDonut'),{type:'doughnut',
     data:{labels:segs.map(s=>s.label),datasets:[{data:segs.map(s=>s.value),backgroundColor:segs.map(s=>s.color),borderWidth:3,borderColor:'#fff'}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.label+': '+fc(c.raw)+'/yr'}}}}});
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.label+': '+fcd(c.raw)+'/yr'}}}}});
 }
 
-/* ══════════════════════════════════════════
-   CHART: MILESTONES
-══════════════════════════════════════════ */
+/* ══ CHART: MILESTONES ══ */
 function drawMilestones(v,m){
   kc('ms');
   const yrs=[...new Set([1,3,5,10,15,v.years])];
@@ -821,25 +909,21 @@ function drawMilestones(v,m){
   CH.ms=new Chart(document.getElementById('chartMilestones'),{type:'bar',
     data:{labels:yrs.map(y=>'Yr '+y),datasets:[
       {label:'Cumulative muni revenue',data:vals,backgroundColor:cols,borderRadius:3,borderWidth:0},
-      {label:'Municipal cost',data:yrs.map(()=>Math.round(m.municipalCap)),
-       type:'line',borderColor:'#555',borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false}
+      {label:'Municipal cost',data:yrs.map(()=>Math.round(m.municipalCap)),type:'line',borderColor:'#555',borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': '+fc(c.raw)}}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': '+fcd(c.raw)}}},
       scales:{x:{ticks:{font:{size:10},autoSkip:false},grid:{display:false}},
-              y:{ticks:{font:{size:10},callback:val=>fc(val)},grid:{color:'rgba(0,0,0,0.05)'}}}
+              y:{ticks:{font:{size:10},callback:val=>fcd(val)},grid:{color:'rgba(0,0,0,0.05)'}}}
     }});
 }
 
-/* ══════════════════════════════════════════
-   CHART: VISITORS
-══════════════════════════════════════════ */
+/* ══ CHART: VISITORS ══ */
 function drawVisitors(v,m){
   kc('vis');
   const labs=[],data=[],cols=[];
   for(let i=0;i<v.years&&i<m.rows.length;i++){
-    const r=m.rows[i];
-    labs.push('Yr '+r.yr);data.push(Math.round(r.vis));
+    const r=m.rows[i];labs.push('Yr '+r.yr);data.push(Math.round(r.vis));
     cols.push(r.yr<=v.rampup?'rgba(42,95,138,0.4)':'#2A5F8A');
   }
   CH.vis=new Chart(document.getElementById('chartVisitors'),{type:'bar',
@@ -851,13 +935,11 @@ function drawVisitors(v,m){
     }});
 }
 
-/* ══════════════════════════════════════════
-   HIGHWAY COMPARE
-══════════════════════════════════════════ */
+/* ══ HIGHWAY COMPARE ══ */
 function drawHwy(v,m){
   const items=[
     {label:'Volunteer-built singletrack',pm:10000,color:'#A8C5A0'},
-    {label:`Your project (${fc(v.buildcost)}/mi · ${v.miles} mi total)`,pm:v.buildcost,color:'#2D6A30',bold:true},
+    {label:`Your project (${cpd(v.buildcost)} · ${v.miles} mi total)`,pm:v.buildcost,color:'#2D6A30',bold:true},
     {label:'Pro-built singletrack (2026)',pm:70000,color:'#4A9951'},
     {label:'2-lane rural road',pm:4000000,color:'#AAA090'},
     {label:'4-lane suburban highway',pm:25000000,color:'#7A7068'},
@@ -866,244 +948,120 @@ function drawHwy(v,m){
   const maxL=Math.log10(80000000),minL=Math.log10(5000);
   document.getElementById('hwy-cmp').innerHTML=items.map(it=>{
     const pct=Math.max(2,((Math.log10(it.pm)-minL)/(maxL-minL))*100);
-    return`<div class="ci">
-      <div class="ci-lr"><span style="${it.bold?'font-weight:600;color:var(--forest)':''}">${it.label}</span><span class="ci-v">${fc(it.pm)}/mi</span></div>
-      <div class="bt"><div class="bf" style="width:${pct.toFixed(1)}%;background:${it.color}">${pct>14?`<span class="bfl">${fc(it.pm)}</span>`:''}</div></div>
-    </div>`;
+    const label=cpd(it.pm);
+    return`<div class="ci"><div class="ci-lr"><span style="${it.bold?'font-weight:600;color:var(--forest)':''}">${it.label}</span><span class="ci-v">${label}</span></div><div class="bt"><div class="bf" style="width:${pct.toFixed(1)}%;background:${it.color}">${pct>14?`<span class="bfl">${label}</span>`:''}</div></div></div>`;
   }).join('');
 }
 
-/* ══════════════════════════════════════════
-   TABLE
-══════════════════════════════════════════ */
+/* ══ TABLE ══ */
 function drawTable(v,m){
   let html='';
   const show=Math.min(15,v.years,m.rows.length);
   for(let i=0;i<show;i++){
     const r=m.rows[i];
     const net=r.cMuni-m.municipalCap;
-    const isR=r.yr<=v.rampup, isBE=m.be&&r.yr===m.be;
+    const isR=r.yr<=v.rampup,isBE=m.be&&r.yr===m.be;
     const bg=isBE?'background:#EDF5ED;font-weight:500':isR?'background:#F0F4FA':i%2===1?'background:#FAFAF7':'';
     const nc=net>=0?'color:#1A8C3E':'color:#B84C24';
     const flag=isBE?' ✓':isR?' ↗':'';
-    html+=`<tr style="${bg}">
-      <td>${r.yr}${flag}</td>
-      <td>${fn(r.vis)}</td>
-      <td>${fc(r.maintYr)}</td>
-      <td>${fc(r.cCost)}</td>
-      <td>${fc(r.cMuni)}</td>
-      <td>${fc(r.cEcon)}</td>
-      <td style="${nc}">${net>=0?'+':''}${fc(net)}</td>
-    </tr>`;
+    const netStr=(net>=0?'+':'-')+fcd(Math.abs(net));
+    html+=`<tr style="${bg}"><td>${r.yr}${flag}</td><td>${fn(r.vis)}</td><td>${fcd(r.maintYr)}</td><td>${fcd(r.cCost)}</td><td>${fcd(r.cMuni)}</td><td>${fcd(r.cEcon)}</td><td style="${nc}">${netStr}</td></tr>`;
   }
   document.getElementById('tbl-body').innerHTML=html;
 }
 
-/* ══════════════════════════════════════════
-   SET SCENARIO
-══════════════════════════════════════════ */
+/* ══ SET SCENARIO ══ */
 function setScenario(name){
   const sc=SC[name];
   Object.entries(sc).forEach(([k,val])=>{
-    if(k==='inflation'){
-      curInfl=val;
-      document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('active',+b.dataset.rate===val));
-      return;
-    }
+    if(k==='inflation'){curInfl=val;document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('active',+b.dataset.rate===val));return;}
     const el=document.getElementById('s-'+k);
     if(el){el.value=val;sv(k,val);}
   });
   curSc=name;
-  recalc(); // checkCustomState runs inside recalc, will confirm match
+  recalc();
 }
 
-/* ══════════════════════════════════════════
-   PDF / PRINT REPORT
-══════════════════════════════════════════ */
+/* ══ PDF / PRINT REPORT ══ */
 function downloadReport(){
-  const v=getV(), m=buildData(v);
+  const v=getV(),m=buildData(v);
   const scLabel=curSc==='custom'?'Custom':curSc.charAt(0).toUpperCase()+curSc.slice(1);
   const now=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const curSym=CUR_SYM[curCurrency]||'$';
+  const unitNote=curCurrency!=='USD'||curUnit!=='imperial'?` (values shown in ${curSym}${curUnit!=='imperial'?' / '+curUnit:''} — converted from USD/imperial research data)`:'';
 
-  // capture charts as images
-  const beImg  = document.getElementById('chartBE').toDataURL('image/png');
-  const dnImg  = document.getElementById('chartDonut').toDataURL('image/png');
-  const msImg  = document.getElementById('chartMilestones').toDataURL('image/png');
-  const visImg = document.getElementById('chartVisitors').toDataURL('image/png');
+  const beImg=document.getElementById('chartBE').toDataURL('image/png');
+  const dnImg=document.getElementById('chartDonut').toDataURL('image/png');
+  const msImg=document.getElementById('chartMilestones').toDataURL('image/png');
+  const visImg=document.getElementById('chartVisitors').toDataURL('image/png');
 
-  // build assumptions list
   const asmPairs=[
-    ['Miles of trail', v.miles+' mi'],
-    ['Construction cost/mi', fc(v.buildcost)],
-    ['Total project cost', fc(m.cap)],
-    ['Grant funding', v.grant>0?v.grant+'% (saves '+fc(m.cap-m.municipalCap)+')':'None'],
-    ['Municipal construction share', fc(m.municipalCap)],
-    ['Maintenance/mi/yr (base)', fc(v.miles*v.maint)+'/yr total'],
-    ['Maintenance inflation', v.inflation>0?v.inflation+'% annually':'Off'],
-    ['Visitors/mile/yr (capacity)', fn(v.visitors)],
-    ['Avg spending/visit', '$'+v.spend],
-    ['Overnight visitor share', v.overnight+'%'],
-    ['Out-of-town visitor share', v.nonlocal+'%'],
-    ['City sales tax rate', v.salestax.toFixed(2)+'%'],
-    ['Annual visitor growth', v.visitorgrowth.toFixed(1)+'%/yr'],
-    ['Visitor ramp-up period', v.rampup>0?v.rampup+' years':'None'],
-    ['Homes within ½ mile', fn(v.homes)],
-    ['Average home value', fc(v.homeval)],
-    ['Property value premium', v.propprem.toFixed(1)+'%'],
-    ['Property tax rate', v.proptax.toFixed(1)+'%'],
-    ['Economic multiplier', v.multiplier.toFixed(1)+'× (out-of-town)'],
-    ['Projection horizon', v.years+' years'],
+    ['Miles of trail',dst(v.miles)],['Construction cost/mi',cpd(v.buildcost)],['Total project cost',fcd(m.cap)],
+    ['Grant funding',v.grant>0?v.grant+'% (saves '+fcd(m.cap-m.municipalCap)+')':'None'],
+    ['Municipal construction share',fcd(m.municipalCap)],['Maintenance/mi/yr (base)',fcd(v.miles*v.maint)+'/yr total'],
+    ['Maintenance inflation',v.inflation>0?v.inflation+'% annually':'Off'],['Visitors/mi/yr (capacity)',fn(v.visitors)],
+    ['Avg spending/visit',fcd(v.spend)],['Overnight visitor share',v.overnight+'%'],['Out-of-town visitor share',v.nonlocal+'%'],
+    ['City sales tax rate',v.salestax.toFixed(2)+'%'],['Annual visitor growth',v.visitorgrowth.toFixed(1)+'%/yr'],
+    ['Visitor ramp-up period',v.rampup>0?v.rampup+' years':'None'],['Homes within '+halfMile(),fn(v.homes)],
+    ['Average home value',fcd(v.homeval)],['Property value premium',v.propprem.toFixed(1)+'%'],
+    ['Property tax rate',v.proptax.toFixed(1)+'%'],['Economic multiplier',v.multiplier.toFixed(1)+'× (out-of-town)'],
+    ['Projection horizon',v.years+' years'],['Currency / units',curCurrency+(curUnit!=='imperial'?' / '+curUnit:'')],
   ];
 
-  // build table rows
   const show=Math.min(15,v.years,m.rows.length);
   let tRows='';
   for(let i=0;i<show;i++){
-    const r=m.rows[i];
-    const net=r.cMuni-m.municipalCap;
+    const r=m.rows[i];const net=r.cMuni-m.municipalCap;
     const nc=net>=0?'color:#1A8C3E;font-weight:600':'color:#B84C24';
     const flag=m.be&&r.yr===m.be?' ✓':r.yr<=v.rampup?' ↗':'';
     const bg=m.be&&r.yr===m.be?'background:#EDF5ED;':r.yr<=v.rampup?'background:#F0F4FA;':'';
-    tRows+=`<tr style="${bg}font-size:7.5pt">
-      <td style="text-align:left;padding:4px 5px;border-bottom:1px solid #E8E3D8">${r.yr}${flag}</td>
-      <td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fn(r.vis)}</td>
-      <td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fc(r.maintYr)}</td>
-      <td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fc(r.cCost)}</td>
-      <td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fc(r.cMuni)}</td>
-      <td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fc(r.cEcon)}</td>
-      <td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8;${nc}">${net>=0?'+':''}${fc(net)}</td>
-    </tr>`;
+    tRows+=`<tr style="${bg}"><td style="text-align:left;padding:4px 5px;border-bottom:1px solid #E8E3D8">${r.yr}${flag}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fn(r.vis)}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fcd(r.maintYr)}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fcd(r.cCost)}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fcd(r.cMuni)}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fcd(r.cEcon)}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8;${nc}">${(net>=0?'+':'-')+fcd(Math.abs(net))}</td></tr>`;
   }
 
   const be=m.be;
-  const beLabel=be?be+' years':'> 65 years';
-  const grantBanner=v.grant>0?`<div class="rpt-grant-banner"><strong>🏛 Grant funding active:</strong> ${v.grant}% of construction cost covered by grants — saving the municipality ${fc(m.cap-m.municipalCap)} upfront. Municipal share: ${fc(m.municipalCap)} of ${fc(m.cap)} total project cost.</div>`:'';
+  const grantBanner=v.grant>0?`<div class="rpt-grant-banner"><strong>Grant funding active:</strong> ${v.grant}% of construction covered — saving ${fcd(m.cap-m.municipalCap)} upfront. Municipal share: ${fcd(m.municipalCap)} of ${fcd(m.cap)} total.</div>`:'';
+  const intlBanner=unitNote?`<div style="background:#EBF3FB;border:1px solid #A8C8E8;border-radius:6px;padding:7px 12px;margin-bottom:10px;font-size:8pt;color:#1A4F7A"><strong>Currency / units note:</strong>${unitNote}</div>`:'';
 
   document.getElementById('rpt').innerHTML=`
-  <!-- PAGE 1 -->
   <div class="rpt-pg">
-    <div class="rpt-hdr">
-      <div>
-        <div class="rpt-title">Trail Investment ROI Calculator</div>
-        <div style="font-size:9pt;color:#7A7A70;margin-top:3px">Municipal Planning Tool · Based on 50+ economic studies · TPL, IMBA, NAR (2025)</div>
-      </div>
-      <div class="rpt-meta">
-        <div class="rpt-sc">${scLabel} Scenario</div><br>
-        Generated ${now}
-      </div>
-    </div>
-
-    ${grantBanner}
-
-    <div class="rpt-section-title">Key Outcomes</div>
+    <div class="rpt-hdr"><div><div class="rpt-title">Trail Investment ROI Calculator</div><div style="font-size:9pt;color:#7A7A70;margin-top:3px">Municipal Planning Tool · 50+ economic studies · TPL, IMBA, NAR (2025)</div></div><div class="rpt-meta"><div class="rpt-sc">${scLabel} Scenario</div><br>Generated ${now}</div></div>
+    ${grantBanner}${intlBanner}
+    <div class="rpt-section-title">Key outcomes</div>
     <div class="rpt-kpi-row">
-      <div class="rpt-kpi">
-        <div class="rpt-kpi-lbl">Breakeven year<br>(municipal revenue)</div>
-        <div class="rpt-kpi-val" style="${be&&be<=10?'color:#1A8C3E':be&&be<=20?'':'color:#C47A1A'}">${beLabel}</div>
-        <div class="rpt-kpi-sub">${be?'vs. '+fc(m.municipalCap)+' municipal cost':'No breakeven within 65 yrs'}</div>
-      </div>
-      <div class="rpt-kpi">
-        <div class="rpt-kpi-lbl">10-year return on<br>construction cost</div>
-        <div class="rpt-kpi-val">${fp(m.roi10)}</div>
-        <div class="rpt-kpi-sub">municipal tax revenue</div>
-      </div>
-      <div class="rpt-kpi">
-        <div class="rpt-kpi-lbl">10-year economic<br>impact</div>
-        <div class="rpt-kpi-val" style="color:#2A5F8A">${m.r10?fc(m.r10.cEcon):'—'}</div>
-        <div class="rpt-kpi-sub">local economy (w/ multiplier)</div>
-      </div>
-      <div class="rpt-kpi">
-        <div class="rpt-kpi-lbl">Jobs supported<br>(mature year)</div>
-        <div class="rpt-kpi-val">${fn(m.jobs)}</div>
-        <div class="rpt-kpi-sub">annual FTEs at full capacity</div>
-      </div>
+      <div class="rpt-kpi"><div class="rpt-kpi-lbl">Breakeven year (municipal revenue)</div><div class="rpt-kpi-val" style="${be&&be<=10?'color:#1A8C3E':''}">${be?be+' years':'> 65 years'}</div><div class="rpt-kpi-sub">vs. ${fcd(m.municipalCap)} municipal cost</div></div>
+      <div class="rpt-kpi"><div class="rpt-kpi-lbl">10-year return on construction cost</div><div class="rpt-kpi-val">${fp(m.roi10)}</div><div class="rpt-kpi-sub">municipal tax revenue</div></div>
+      <div class="rpt-kpi"><div class="rpt-kpi-lbl">10-year economic impact</div><div class="rpt-kpi-val" style="color:#2A5F8A">${m.r10?fcd(m.r10.cEcon):'—'}</div><div class="rpt-kpi-sub">local economy (w/ multiplier)</div></div>
+      <div class="rpt-kpi"><div class="rpt-kpi-lbl">Jobs supported (mature year)</div><div class="rpt-kpi-val">${fn(m.jobs)}</div><div class="rpt-kpi-sub">annual FTEs at full capacity</div></div>
     </div>
-
-    <div class="rpt-section-title">Active Assumptions</div>
-    <div class="rpt-assume-grid">
-      ${asmPairs.map(([k,v])=>`<div class="rpt-arow"><span class="rpt-akey">${k}</span><span class="rpt-aval">${v}</span></div>`).join('')}
-    </div>
-
-    <div class="rpt-section-title">Cumulative Investment vs. Return</div>
+    <div class="rpt-section-title">Active assumptions</div>
+    <div class="rpt-assume-grid">${asmPairs.map(([k,v])=>`<div class="rpt-arow"><span class="rpt-akey">${k}</span><span class="rpt-aval">${v}</span></div>`).join('')}</div>
+    <div class="rpt-section-title">Cumulative investment vs. return</div>
     <img src="${beImg}" class="rpt-chart-full" alt="Breakeven chart">
-
-    <div class="rpt-footer">
-      Trail Investment ROI Calculator · For planning and advocacy purposes only · Validate assumptions with local data before formal municipal presentation
-    </div>
+    <div class="rpt-footer">Trail Investment ROI Calculator · For planning and advocacy · Validate assumptions with local data before formal municipal presentation</div>
   </div>
-
-  <!-- PAGE 2 -->
   <div class="rpt-pg">
-    <div class="rpt-hdr">
-      <div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Page 2 of 3</div>
-      <div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div>
-    </div>
-
-    <div class="rpt-callout">
-      <strong>🏡 Property Value Impact</strong>
-      ${fn(v.homes)} homes near the trail gain an estimated ${v.propprem.toFixed(1)}% property value premium — adding ${fc(m.propVal)} in assessed value.
-      At a ${v.proptax.toFixed(1)}% property tax rate, this generates ${fc(m.ptAnn)}/year in new municipal revenue without raising anyone's rate.
-      (Research range: 3–15% premium. Indianapolis Cultural Trail: $1B in assessed value added within 500 ft of trail, 2008–2014.)
-    </div>
-
-    <div class="rpt-section-title">Annual Benefit Breakdown &amp; Cumulative Milestones</div>
-    <div class="rpt-chart-row">
-      <img src="${dnImg}" alt="Revenue breakdown donut chart">
-      <img src="${msImg}" alt="Cumulative revenue milestone chart">
-    </div>
-
-    <div class="rpt-section-title">Annual Visitor Count (with ramp-up &amp; growth)</div>
-    <img src="${visImg}" class="rpt-chart-full" alt="Annual visitor growth chart">
-
-    <div class="rpt-footer">
-      Trail Investment ROI Calculator · For planning and advocacy purposes only · Validate assumptions with local data before formal municipal presentation
-    </div>
+    <div class="rpt-hdr"><div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Page 2 of 3</div><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></div>
+    <div class="rpt-callout"><strong>Property value impact</strong>${fn(v.homes)} homes within ${halfMile()} gain a ${v.propprem.toFixed(1)}% value premium — adding ${fcd(m.propVal)} in assessed value. At ${v.proptax.toFixed(1)}% property tax: ${fcd(m.ptAnn)}/yr in new municipal revenue without raising anyone's rate. (Indianapolis Cultural Trail: +$1B within 500 ft, 2008–2014.)</div>
+    <div class="rpt-section-title">Annual benefit breakdown &amp; cumulative milestones</div>
+    <div class="rpt-chart-row"><img src="${dnImg}" alt="Revenue breakdown"><img src="${msImg}" alt="Milestone chart"></div>
+    <div class="rpt-section-title">Annual visitors (ramp-up &amp; growth)</div>
+    <img src="${visImg}" class="rpt-chart-full" alt="Visitor growth chart">
+    <div class="rpt-footer">Trail Investment ROI Calculator · For planning and advocacy · Validate assumptions with local data before formal municipal presentation</div>
   </div>
-
-  <!-- PAGE 3 -->
   <div class="rpt-pg">
-    <div class="rpt-hdr">
-      <div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Page 3 of 3</div>
-      <div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div>
-    </div>
-
-    <div class="rpt-section-title">Year-by-Year Detail (first ${show} years) &nbsp;·&nbsp; ✓ = breakeven &nbsp; ↗ = ramp-up phase</div>
-    <table class="rpt-tbl">
-      <thead><tr style="background:#F2EEE4">
-        <th style="text-align:left;padding:4px 5px">Yr</th>
-        <th style="padding:4px 5px">Visitors</th>
-        <th style="padding:4px 5px">Maint.</th>
-        <th style="padding:4px 5px">Cumul. Cost</th>
-        <th style="padding:4px 5px">Cumul. Muni Rev.</th>
-        <th style="padding:4px 5px">Cumul. Econ. Impact</th>
-        <th style="padding:4px 5px">Net (vs. muni cost)</th>
-      </tr></thead>
-      <tbody>${tRows}</tbody>
-    </table>
-
-    <div class="rpt-section-title" style="margin-top:16px">Methodology &amp; Data Sources</div>
-    <div style="font-size:8pt;color:#4A4A42;line-height:1.7">
-      <strong>Visitor spending benchmarks:</strong> TPL/IMBA <em>Economic Benefits of Mountain Biking</em> (2025), meta-analysis of 50 studies. Conservative $103/trip (Duluth, MN); Moderate $175/trip (regional average); Optimistic $416/trip (TPL national average).<br>
-      <strong>Property value premiums:</strong> Crompton &amp; Nicholls (2019) review of 20+ studies; NAR Field Guide on Trails and Property Values (2020). Typical finding: 3–5%.<br>
-      <strong>Trail build costs:</strong> Singletracks.com contractor survey (April 2026); American Trails database. <strong>Maintenance:</strong> American Trails $1,500–$5,000/mi/yr. <strong>Jobs:</strong> IMBA ~$45,000 labor income per FTE.<br>
-      <strong>Local vs. out-of-town:</strong> Out-of-town visitors bring new money; full multiplier applied. Local visitors recirculate existing spending; multiplier = 1.0. Per Savolt (2017) Duluth study and Buning &amp; Lamont (2021) critical review of 33 studies.<br>
-      <strong>Grant programs:</strong> RTP (Recreational Trails Program) up to 80% · RAISE · CMAQ · state-level programs. Grant % reduces municipal capital contribution for ROI and breakeven calculations.<br>
-      <strong>Breakeven:</strong> Year when cumulative municipal tax revenue ≥ municipal share of construction cost (maintenance excluded from breakeven denominator).<br><br>
-      <em>This report is for planning and advocacy purposes. Results should be validated with local tax, visitor, and property data before formal municipal presentation. For investments over $1M, commission a formal IMPLAN or REMI economic impact study.</em>
-    </div>
-
-    <div class="rpt-footer">
-      Trail Investment ROI Calculator · Generated ${now} · For planning and advocacy purposes only
-    </div>
+    <div class="rpt-hdr"><div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Page 3 of 3</div><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></div>
+    <div class="rpt-section-title">Year-by-year detail (first ${show} years) · ✓ = breakeven · ↗ = ramp-up</div>
+    <table class="rpt-tbl"><thead><tr style="background:#F2EEE4"><th style="text-align:left;padding:4px 5px">Yr</th><th style="padding:4px 5px">Visitors</th><th style="padding:4px 5px">Maint.</th><th style="padding:4px 5px">Cumul. Cost</th><th style="padding:4px 5px">Cumul. Muni Rev.</th><th style="padding:4px 5px">Cumul. Econ. Impact</th><th style="padding:4px 5px">Net (vs. muni cost)</th></tr></thead><tbody>${tRows}</tbody></table>
+    <div class="rpt-section-title" style="margin-top:16px">Methodology &amp; data sources</div>
+    <div style="font-size:8pt;color:#4A4A42;line-height:1.7"><strong>Visitor spending:</strong> TPL/IMBA 2025 (50-study meta-analysis). Conservative $103/trip (Duluth, MN); Moderate $175/trip (regional avg); Optimistic $416/trip (national avg).<br><strong>Property values:</strong> Crompton &amp; Nicholls (2019); NAR Field Guide (2020). Trail build: Singletracks.com (Apr 2026). Jobs: IMBA ~$45K labor income/FTE.<br><strong>Local vs. out-of-town:</strong> Out-of-town spending gets full multiplier; local spending multiplier = 1.0 (recirculated). Per Savolt (2017) and Buning &amp; Lamont (2021).<br>${unitNote?'<strong>Units / currency:</strong> All research data is USD/imperial. '+curCurrency+' and '+curUnit+' values are conversions for directional reference only.<br>':''}<em>This report is for planning and advocacy. Validate with local data before formal municipal presentation.</em></div>
+    <div class="rpt-footer">Trail Investment ROI Calculator · Generated ${now} · For planning and advocacy only</div>
   </div>`;
-
   window.print();
 }
 
-/* ══════════════════════════════════════════
-   INIT
-══════════════════════════════════════════ */
-window.addEventListener('DOMContentLoaded',()=>{
+/* ══ INIT ══ */
+window.addEventListener('DOMContentLoaded',async()=>{
+  fetchRates(); // non-blocking, updates rates in background
   const restored=decodeState();
   if(!restored) setScenario('moderate');
   else recalc();
