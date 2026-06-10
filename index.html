@@ -609,7 +609,7 @@ const FMT={
   miles:v=>dst(v),
   buildcost:v=>cpd(v),
   maint:v=>cpd(v)+'/yr',
-  visitors:v=>{const n=fn(+v);if(curUnit==='metric')return n+'/km';if(curUnit==='both')return n+'/mi | '+fn(Math.round(+v/1.60934))+'/km';return n+'/mi';},
+  visitors:v=>{const n=fn(+v);const km=fn(Math.round(+v/1.60934));if(curUnit==='metric')return km+'/km';if(curUnit==='both')return n+'/mi | '+km+'/km';return n+'/mi';},
   spend:v=>fcd(+v),
   overnight:v=>v+'%',
   nonlocal:v=>v+'%',
