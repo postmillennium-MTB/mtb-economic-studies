@@ -12,6 +12,26 @@
   --cream:#F7F4EE;--parchment:#EDE8DE;--sky:#2A5F8A;--amber:#C47A1A;--rust:#B84C24;
   --white:#fff;--tp:#1A1A18;--ts:#4A4A42;--tm:#7A7A70;
   --bd:#D5CFBF;--bdl:#E8E3D8;--bg:#fff;--sbg:#F2EEE4;
+  --pos:#1A8C3E;--neg:#B84C24;
+  --hi-bg:#F0F8F0;--warn-bg:#FBF5E8;
+  --ab-bg:#EFF5EF;--ab-bd:#B5D4B8;--ab-tx:#2D5A30;
+  --co-bg:#EDF5ED;--co-bd:#A8D4AE;--co-tx:#2A5A2D;
+}
+/* ── THEME: GAUNTLET GOLD ── */
+:root[data-theme="gold"]{
+  --forest:#4A3608;--fern:#9C7414;--leaf:#C9A227;--sage:#E3D08F;
+  --cream:#FBF6E8;--parchment:#F1E7C8;--sky:#5B6770;
+  --bd:#DCCFA6;--bdl:#EBE2C4;--sbg:#F5EDD6;
+  --hi-bg:#FBF3D9;--ab-bg:#F7EFD3;--ab-bd:#D9C270;--ab-tx:#6B5310;
+  --co-bg:#F7F0D8;--co-bd:#D9C778;--co-tx:#6B5510;
+}
+/* ── THEME: MYERS FLYER ── */
+:root[data-theme="myers"]{
+  --forest:#5A1414;--fern:#9E2B25;--leaf:#C4483C;--sage:#E5B8B0;
+  --cream:#FAF4F0;--parchment:#F2E4DD;--sky:#31556E;
+  --bd:#E0CCC4;--bdl:#EFDFD8;--sbg:#F6EAE4;
+  --hi-bg:#FBEFEA;--ab-bg:#F9ECE8;--ab-bd:#E0B4A8;--ab-tx:#7A2A1E;
+  --co-bg:#F9EDE8;--co-bd:#E0B8AA;--co-tx:#7A2E20;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--tp);font-size:13px;line-height:1.5}
 .wrap{max-width:1140px;margin:0 auto;padding:1rem 1.25rem 2.5rem}
@@ -34,6 +54,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--tp);fo
 .act-btn.dl:hover{background:var(--fern);border-color:var(--fern)}
 .act-btn.intl{border-color:var(--sky);color:var(--sky);font-size:13px}
 .act-btn.intl.open{background:var(--sky);color:#fff;border-color:var(--sky)}
+/* PMR BACK-LINK */
+.pmr-row{display:flex;justify-content:flex-end;margin-bottom:6px}
+.pmr-link{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid var(--fern);border-radius:16px;background:var(--sbg);color:var(--fern);font-size:11px;font-weight:600;text-decoration:none;letter-spacing:.03em;transition:all .15s}
+.pmr-link:hover{background:var(--fern);color:#fff}
+/* THEME SWATCHES */
+.theme-dots{display:inline-flex;align-items:center;gap:6px;margin-left:6px;padding-left:9px;border-left:1px solid var(--bd)}
+.theme-dot{width:17px;height:17px;border-radius:50%;border:2px solid var(--bd);cursor:pointer;padding:0;transition:transform .12s,border-color .12s,box-shadow .12s}
+.theme-dot:hover{transform:scale(1.15)}
+.theme-dot.active{border-color:var(--tp);box-shadow:0 0 0 2px #fff inset}
+/* CLICKABLE CHART LEGEND */
+.leg button.li{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ts);padding:2px 5px;border-radius:5px;transition:background .12s,opacity .15s}
+.leg button.li:hover{background:var(--sbg)}
+.leg button.li.off{opacity:.38;text-decoration:line-through}
 /* INTL PANEL */
 .intl-panel{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.875rem 1rem;margin-bottom:12px;display:none}
 .intl-panel.show{display:block}
@@ -80,17 +113,17 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .pill.active{background:var(--fern);color:#fff;border-color:var(--fern);font-weight:500}
 .nl-note{font-size:10px;color:var(--tm);margin-top:3px;padding:4px 7px;background:#F5F2EC;border-radius:4px;line-height:1.4}
 /* ASSUMPTION BANNER */
-.ab{background:#EFF5EF;border:1px solid #B5D4B8;border-radius:7px;padding:6px 10px;margin-bottom:10px;font-size:11px;color:#2D5A30;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
-.at{background:#fff;border:1px solid #B5D4B8;border-radius:9px;padding:1px 7px;font-size:10px;font-weight:500}
+.ab{background:var(--ab-bg);border:1px solid var(--ab-bd);border-radius:7px;padding:6px 10px;margin-bottom:10px;font-size:11px;color:var(--ab-tx);display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.at{background:#fff;border:1px solid var(--ab-bd);border-radius:9px;padding:1px 7px;font-size:10px;font-weight:500}
 .at-custom{background:#FFF3E0;border:1px solid #E8C570;border-radius:9px;padding:1px 7px;font-size:10px;font-weight:500;color:#8A5C00;display:none}
 /* METRIC CARDS */
 .mc-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
 .mc{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:.6rem .75rem}
-.mc.hi{border-color:var(--leaf);background:#F0F8F0}
-.mc.warn{border-color:var(--amber);background:#FBF5E8}
+.mc.hi{border-color:var(--leaf);background:var(--hi-bg)}
+.mc.warn{border-color:var(--amber);background:var(--warn-bg)}
 .mc-lbl{font-size:10px;color:var(--tm);margin-bottom:4px;line-height:1.35}
 .mc-val{font-size:20px;font-weight:600;color:var(--forest);line-height:1}
-.mc-val.good{color:var(--fern)}
+.mc-val.good{color:var(--pos)}
 .mc-val.caution{color:var(--amber)}
 .mc-val.ok{color:var(--sky)}
 .mc-sub{font-size:10px;color:var(--tm);margin-top:3px}
@@ -104,9 +137,9 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .badge{font-size:9px;padding:1px 5px;border-radius:8px;font-weight:500}
 .bd-d{background:#DFF2E4;color:#1B6B35}
 .bd-i{background:#DBE9F7;color:#1B4F80}
-.callout{background:#EDF5ED;border:1px solid #A8D4AE;border-radius:8px;padding:.6rem .875rem;margin-bottom:10px}
+.callout{background:var(--co-bg);border:1px solid var(--co-bd);border-radius:8px;padding:.6rem .875rem;margin-bottom:10px}
 .co-t{font-size:10px;font-weight:500;color:var(--fern);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
-.co-b{font-size:11px;color:#2A5A2D;line-height:1.5}
+.co-b{font-size:11px;color:var(--co-tx);line-height:1.5}
 .c3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
 /* HIGHWAY BARS */
 .ci{margin-bottom:8px}.ci:last-child{margin-bottom:0}
@@ -171,6 +204,11 @@ details[open] summary::before{content:'▼  '}
   .mc-row{grid-template-columns:1fr 1fr}
   .c3{grid-template-columns:1fr}
 }
+@media(max-width:640px){
+  .hdr{flex-direction:column;align-items:stretch;gap:8px}
+  .hdr-r{text-align:left}
+  .pmr-row,.sc-btns,.act-btns{justify-content:flex-start;flex-wrap:wrap}
+}
 </style>
 </head>
 <body>
@@ -184,6 +222,7 @@ details[open] summary::before{content:'▼  '}
     <p>Based on 50+ economic studies · TPL, IMBA, NAR &amp; municipal data (2025)</p>
   </div>
   <div class="hdr-r">
+    <div class="pmr-row"><a class="pmr-link" href="https://www.postmillenniumrenaissance.com" target="_top" rel="noopener">&#9666; PMR Home</a></div>
     <p class="sc-lbl">Projection scenario</p>
     <div class="sc-btns">
       <button class="sc-btn" id="btn-conservative" onclick="setScenario('conservative')">Conservative</button>
@@ -195,6 +234,11 @@ details[open] summary::before{content:'▼  '}
       <button class="act-btn" onclick="copyLink()" id="copy-btn">🔗 Copy Link</button>
       <button class="act-btn dl" onclick="downloadReport()">📄 Download Report</button>
       <button class="act-btn intl" id="intl-btn" onclick="toggleIntlPanel()" title="Units &amp; currency">€</button>
+      <span class="theme-dots" role="group" aria-label="Color scheme">
+        <button class="theme-dot active" id="th-ore" style="background:#2D6A30" onclick="setTheme('ore')" title="Ore Pass (default)" aria-label="Ore Pass color scheme"></button>
+        <button class="theme-dot" id="th-gold" style="background:#B8860B" onclick="setTheme('gold')" title="Gauntlet Gold" aria-label="Gauntlet Gold color scheme"></button>
+        <button class="theme-dot" id="th-myers" style="background:#9E2B25" onclick="setTheme('myers')" title="Myers Flyer" aria-label="Myers Flyer color scheme"></button>
+      </span>
     </div>
   </div>
 </header>
@@ -471,9 +515,9 @@ details[open] summary::before{content:'▼  '}
     <p class="cc-t">Cumulative investment vs. return — <span id="yr-lbl">20</span>-year projection</p>
     <p class="cc-s">Year-by-year with ramp-up, visitor growth, and maintenance inflation applied</p>
     <div class="leg">
-      <span class="li"><svg width="18" height="10" aria-hidden="true"><line x1="0" y1="5" x2="18" y2="5" stroke="#555" stroke-width="2" stroke-dasharray="5,3"/></svg>Total cost (construction + inflating maintenance)</span>
-      <span class="li"><span class="ld" style="background:#1A8C3E"></span>Cumulative municipal revenue <span class="badge bd-d" style="margin-left:3px">direct</span></span>
-      <span class="li"><span class="ld" style="background:#2A5F8A;opacity:.75"></span>Economic impact <span class="badge bd-i" style="margin-left:3px">indirect</span></span>
+      <button type="button" class="li" id="leg-cost" onclick="toggleBE('cost')" aria-pressed="true" title="Click to show/hide this line"><svg width="18" height="10" aria-hidden="true"><line id="ld-cost" x1="0" y1="5" x2="18" y2="5" stroke="#555" stroke-width="2" stroke-dasharray="5,3"/></svg>Total cost (construction + inflating maintenance)</button>
+      <button type="button" class="li" id="leg-muni" onclick="toggleBE('muni')" aria-pressed="true" title="Click to show/hide this line"><span class="ld" id="ld-muni" style="background:#1A8C3E"></span>Cumulative municipal revenue <span class="badge bd-d" style="margin-left:3px">direct</span></button>
+      <button type="button" class="li" id="leg-econ" onclick="toggleBE('econ')" aria-pressed="true" title="Click to show/hide this line"><span class="ld" id="ld-econ" style="background:#2A5F8A;opacity:.75"></span>Economic impact <span class="badge bd-i" style="margin-left:3px">indirect</span></button>
     </div>
     <div style="position:relative;height:200px">
       <canvas id="chartBE" role="img" aria-label="Breakeven line chart showing cumulative investment vs return over time">Breakeven chart</canvas>
@@ -556,6 +600,49 @@ details[open] summary::before{content:'▼  '}
 <script>
 /* ══ STATE ══ */
 let curInfl=3, curSc='moderate', dTimer=null;
+let curTheme='ore';
+
+/* ══ COLOR THEMES (chart palettes; CSS handles the rest via data-theme) ══ */
+const THEMES={
+  ore:  {cost:'#555555',costFill:'rgba(80,80,80,0.05)', muni:'#1A8C3E',muniFill:'rgba(26,140,62,0.08)', econ:'rgba(42,95,138,0.75)',econSolid:'#2A5F8A',
+         donut:['#2D6A30','#4A9951','#2A5F8A'],msMiss:'#A8C5A0',visLight:'rgba(42,95,138,0.4)',visDark:'#2A5F8A',hwy:['#A8C5A0','#2D6A30','#4A9951']},
+  gold: {cost:'#5C5344',costFill:'rgba(92,83,68,0.05)', muni:'#B8860B',muniFill:'rgba(184,134,11,0.10)', econ:'rgba(91,103,112,0.8)',econSolid:'#5B6770',
+         donut:['#9C7414','#C9A227','#5B6770'],msMiss:'#E3D08F',visLight:'rgba(156,116,20,0.35)',visDark:'#9C7414',hwy:['#E3D08F','#9C7414','#C9A227']},
+  myers:{cost:'#5A5350',costFill:'rgba(90,83,80,0.05)', muni:'#B03A2E',muniFill:'rgba(176,58,46,0.08)', econ:'rgba(49,85,110,0.8)',econSolid:'#31556E',
+         donut:['#9E2B25','#C4483C','#31556E'],msMiss:'#E5B8B0',visLight:'rgba(49,85,110,0.4)',visDark:'#31556E',hwy:['#E5B8B0','#9E2B25','#C4483C']}
+};
+const T=()=>THEMES[curTheme]||THEMES.ore;
+
+function setTheme(name,redraw=true){
+  if(!THEMES[name])name='ore';
+  curTheme=name;
+  if(name==='ore')document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme',name);
+  ['ore','gold','myers'].forEach(t=>{const b=document.getElementById('th-'+t);if(b)b.classList.toggle('active',t===name)});
+  const t=T();
+  const lc=document.getElementById('ld-cost');if(lc)lc.setAttribute('stroke',t.cost);
+  const lm=document.getElementById('ld-muni');if(lm)lm.style.background=t.muni;
+  const le=document.getElementById('ld-econ');if(le)le.style.background=t.econSolid;
+  try{localStorage.setItem('pmr-roi-theme',name)}catch(e){}
+  if(redraw)recalc();
+}
+
+/* ══ BREAKEVEN SERIES VISIBILITY ══ */
+const beVis={cost:true,muni:true,econ:true};
+const BE_IDX={cost:0,muni:1,econ:2};
+function toggleBE(key){
+  if(!(key in beVis))return;
+  beVis[key]=!beVis[key];
+  if(CH.be){CH.be.setDatasetVisibility(BE_IDX[key],beVis[key]);CH.be.update();}
+  syncBELegend();
+  encodeState();
+}
+function syncBELegend(){
+  Object.keys(beVis).forEach(k=>{
+    const b=document.getElementById('leg-'+k);
+    if(b){b.classList.toggle('off',!beVis[k]);b.setAttribute('aria-pressed',String(beVis[k]));}
+  });
+}
 let curUnit='imperial'; // 'imperial' | 'metric' | 'both'
 let curCurrency='USD';  // 'USD' | 'AUD' | 'CAD' | 'EUR' | 'GBP'
 let exRates={USD:1,AUD:1.546,CAD:1.362,EUR:0.918,GBP:0.783};
@@ -770,6 +857,9 @@ function encodeState(){
     const v=getV();
     const p=new URLSearchParams();
     p.set('sc',curSc);p.set('unit',curUnit);p.set('currency',curCurrency);
+    if(curTheme!=='ore')p.set('theme',curTheme);
+    const hid=Object.keys(beVis).filter(k=>!beVis[k]);
+    if(hid.length)p.set('hide',hid.join(','));
     Object.entries(v).forEach(([k,val])=>p.set(k,val));
     history.replaceState(null,'','?'+p.toString());
   }catch(e){}
@@ -863,6 +953,7 @@ function recalc(){
 /* ══ CHART: BREAKEVEN ══ */
 function drawBE(v,m){
   kc('be');
+  const t=T();
   const labs=['Now'],costs=[m.municipalCap],muni=[0],econ=[0];
   for(let i=0;i<v.years&&i<m.rows.length;i++){
     const r=m.rows[i];
@@ -872,9 +963,9 @@ function drawBE(v,m){
   const ptR=labs.map((_,i)=>i%4===0&&i>0?4:0);
   CH.be=new Chart(document.getElementById('chartBE'),{type:'line',
     data:{labels:labs,datasets:[
-      {label:'Total Cost',data:costs,borderColor:'#555555',backgroundColor:'rgba(80,80,80,0.05)',fill:true,borderWidth:2,tension:.15,pointRadius:0,borderDash:[6,3]},
-      {label:'Municipal Revenue',data:muni,borderColor:'#1A8C3E',backgroundColor:'rgba(26,140,62,0.08)',fill:true,borderWidth:2.5,tension:.15,pointRadius:ptR,pointBackgroundColor:'#1A8C3E',pointBorderColor:'#fff',pointBorderWidth:1.5},
-      {label:'Economic Impact',data:econ,borderColor:'rgba(42,95,138,0.75)',backgroundColor:'rgba(42,95,138,0.03)',fill:false,borderWidth:2,borderDash:[3,3],tension:.15,pointRadius:0}
+      {label:'Total Cost',data:costs,borderColor:t.cost,backgroundColor:t.costFill,fill:true,borderWidth:2,tension:.15,pointRadius:0,borderDash:[6,3],hidden:!beVis.cost},
+      {label:'Municipal Revenue',data:muni,borderColor:t.muni,backgroundColor:t.muniFill,fill:true,borderWidth:2.5,tension:.15,pointRadius:ptR,pointBackgroundColor:t.muni,pointBorderColor:'#fff',pointBorderWidth:1.5,hidden:!beVis.muni},
+      {label:'Economic Impact',data:econ,borderColor:t.econ,backgroundColor:'rgba(0,0,0,0.02)',fill:false,borderWidth:2,borderDash:[3,3],tension:.15,pointRadius:0,hidden:!beVis.econ}
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': '+fcd(c.raw)}}},
@@ -888,9 +979,9 @@ function drawDonut(v,m){
   kc('donut');
   const mr=m.mRow;
   const segs=[
-    {label:'Sales tax revenue',value:Math.round(mr.stax),color:'#2D6A30',type:'direct'},
-    {label:'Property tax revenue',value:Math.round(mr.ptAnn),color:'#4A9951',type:'direct'},
-    {label:'Business & labor income',value:Math.max(0,Math.round(mr.econYr-mr.muniYr)),color:'#2A5F8A',type:'indirect'}
+    {label:'Sales tax revenue',value:Math.round(mr.stax),color:T().donut[0],type:'direct'},
+    {label:'Property tax revenue',value:Math.round(mr.ptAnn),color:T().donut[1],type:'direct'},
+    {label:'Business & labor income',value:Math.max(0,Math.round(mr.econYr-mr.muniYr)),color:T().donut[2],type:'indirect'}
   ].filter(s=>s.value>0);
   document.getElementById('donut-sub').textContent='Year '+(Math.max(1,v.rampup+1))+' (full capacity)';
   document.getElementById('donut-leg').innerHTML=segs.map(s=>`<span class="li"><span class="ld" style="background:${s.color}"></span>${s.label} <span class="badge bd-${s.type[0]}" style="margin-left:2px">${s.type}</span></span>`).join('');
@@ -905,11 +996,11 @@ function drawMilestones(v,m){
   kc('ms');
   const yrs=[...new Set([1,3,5,10,15,v.years])];
   const vals=yrs.map(yr=>{const r=m.rows[yr-1];return r?Math.round(r.cMuni):0});
-  const cols=vals.map(vl=>vl>=m.municipalCap?'#1A8C3E':'#A8C5A0');
+  const cols=vals.map(vl=>vl>=m.municipalCap?T().muni:T().msMiss);
   CH.ms=new Chart(document.getElementById('chartMilestones'),{type:'bar',
     data:{labels:yrs.map(y=>'Yr '+y),datasets:[
       {label:'Cumulative muni revenue',data:vals,backgroundColor:cols,borderRadius:3,borderWidth:0},
-      {label:'Municipal cost',data:yrs.map(()=>Math.round(m.municipalCap)),type:'line',borderColor:'#555',borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false}
+      {label:'Municipal cost',data:yrs.map(()=>Math.round(m.municipalCap)),type:'line',borderColor:T().cost,borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': '+fcd(c.raw)}}},
@@ -924,7 +1015,7 @@ function drawVisitors(v,m){
   const labs=[],data=[],cols=[];
   for(let i=0;i<v.years&&i<m.rows.length;i++){
     const r=m.rows[i];labs.push('Yr '+r.yr);data.push(Math.round(r.vis));
-    cols.push(r.yr<=v.rampup?'rgba(42,95,138,0.4)':'#2A5F8A');
+    cols.push(r.yr<=v.rampup?T().visLight:T().visDark);
   }
   CH.vis=new Chart(document.getElementById('chartVisitors'),{type:'bar',
     data:{labels:labs,datasets:[{label:'Annual visitors',data,backgroundColor:cols,borderRadius:2,borderWidth:0}]},
@@ -938,9 +1029,9 @@ function drawVisitors(v,m){
 /* ══ HIGHWAY COMPARE ══ */
 function drawHwy(v,m){
   const items=[
-    {label:'Volunteer-built singletrack',pm:10000,color:'#A8C5A0'},
-    {label:`Your project (${cpd(v.buildcost)} · ${v.miles} mi total)`,pm:v.buildcost,color:'#2D6A30',bold:true},
-    {label:'Pro-built singletrack (2026)',pm:70000,color:'#4A9951'},
+    {label:'Volunteer-built singletrack',pm:10000,color:T().hwy[0]},
+    {label:`Your project (${cpd(v.buildcost)} · ${v.miles} mi total)`,pm:v.buildcost,color:T().hwy[1],bold:true},
+    {label:'Pro-built singletrack (2026)',pm:70000,color:T().hwy[2]},
     {label:'2-lane rural road',pm:4000000,color:'#AAA090'},
     {label:'4-lane suburban highway',pm:25000000,color:'#7A7068'},
     {label:'Urban 6-lane interstate',pm:80000000,color:'#3D3830'}
@@ -962,7 +1053,7 @@ function drawTable(v,m){
     const net=r.cMuni-m.municipalCap;
     const isR=r.yr<=v.rampup,isBE=m.be&&r.yr===m.be;
     const bg=isBE?'background:#EDF5ED;font-weight:500':isR?'background:#F0F4FA':i%2===1?'background:#FAFAF7':'';
-    const nc=net>=0?'color:#1A8C3E':'color:#B84C24';
+    const nc=net>=0?'color:var(--pos)':'color:var(--neg)';
     const flag=isBE?' ✓':isR?' ↗':'';
     const netStr=(net>=0?'+':'-')+fcd(Math.abs(net));
     html+=`<tr style="${bg}"><td>${r.yr}${flag}</td><td>${fn(r.vis)}</td><td>${fcd(r.maintYr)}</td><td>${fcd(r.cCost)}</td><td>${fcd(r.cMuni)}</td><td>${fcd(r.cEcon)}</td><td style="${nc}">${netStr}</td></tr>`;
@@ -1062,6 +1153,14 @@ function downloadReport(){
 /* ══ INIT ══ */
 window.addEventListener('DOMContentLoaded',async()=>{
   fetchRates(); // non-blocking, updates rates in background
+  // theme: URL param wins, then saved preference, then Ore Pass default
+  const p=new URLSearchParams(window.location.search);
+  let th=p.get('theme');
+  if(!th){try{th=localStorage.getItem('pmr-roi-theme')}catch(e){}}
+  setTheme(th&&THEMES[th]?th:'ore',false);
+  // hidden breakeven series from shared link
+  if(p.has('hide'))p.get('hide').split(',').forEach(k=>{if(k in beVis)beVis[k]=false});
+  syncBELegend();
   const restored=decodeState();
   if(!restored) setScenario('moderate');
   else recalc();
