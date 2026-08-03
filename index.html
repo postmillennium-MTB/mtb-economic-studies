@@ -133,6 +133,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 /* CHART CARDS */
 .cc{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:.875rem;margin-bottom:10px}
 .cc-t{font-size:13px;font-weight:500;color:var(--tp);margin-bottom:2px}
+.cc-t-lg{font-size:15px}
 .cc-s{font-size:11px;color:var(--tm);margin-bottom:10px}
 /* COLLAPSIBLE CARD — reusable. Add class "collapsible" to any .cc,
    wrap its title in a .cc-toggle button and its content in a .cc-body div. */
@@ -186,30 +187,34 @@ details[open] summary::before{content:'▼  '}
 /* PRINT REPORT */
 #rpt{display:none}
 .rpt-pg{padding:28px 32px;font-family:'DM Sans',sans-serif}
-.rpt-hdr{border-bottom:3px solid #2D6A30;padding-bottom:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end}
-.rpt-title{font-family:'Libre Baskerville',serif;font-size:18pt;color:#1E3A1F;font-weight:700}
-.rpt-meta{font-size:9pt;color:#7A7A70;text-align:right;line-height:1.5}
-.rpt-sc{display:inline-block;background:#EFF5EF;border:1px solid #B5D4B8;border-radius:4px;padding:2px 8px;font-size:8pt;font-weight:600;color:#2D6A30;text-transform:uppercase;letter-spacing:.08em}
-.rpt-section-title{font-size:10pt;font-weight:600;color:#1E3A1F;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #D5CFBF;padding-bottom:4px;margin:14px 0 8px}
+/* rpt-* colors use the live theme's CSS variables so Gold/Myers reports
+   aren't stuck rendering in forest green. */
+.rpt-hdr{border-bottom:3px solid var(--fern);padding-bottom:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end}
+.rpt-title{font-family:'Libre Baskerville',serif;font-size:18pt;color:var(--forest);font-weight:700}
+.rpt-meta{font-size:9pt;color:var(--tm);text-align:right;line-height:1.5}
+.rpt-sc{display:inline-block;background:var(--ab-bg);border:1px solid var(--ab-bd);border-radius:4px;padding:2px 8px;font-size:8pt;font-weight:600;color:var(--fern);text-transform:uppercase;letter-spacing:.08em}
+.rpt-section-title{font-size:10pt;font-weight:600;color:var(--forest);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--bd);padding-bottom:4px;margin:14px 0 8px}
 .rpt-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-.rpt-kpi{border:1px solid #D5CFBF;border-radius:6px;padding:8px 10px}
-.rpt-kpi-lbl{font-size:8pt;color:#7A7A70;margin-bottom:3px;line-height:1.3}
-.rpt-kpi-val{font-size:16pt;font-weight:700;color:#1E3A1F;line-height:1}
-.rpt-kpi-sub{font-size:7.5pt;color:#7A7A70;margin-top:2px}
+.rpt-kpi{border:1px solid var(--bd);border-radius:6px;padding:8px 10px}
+.rpt-kpi-lbl{font-size:8pt;color:var(--tm);margin-bottom:3px;line-height:1.3}
+.rpt-kpi-val{font-size:16pt;font-weight:700;color:var(--forest);line-height:1}
+.rpt-kpi-sub{font-size:7.5pt;color:var(--tm);margin-top:2px}
 .rpt-assume-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin-bottom:14px}
-.rpt-arow{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #E8E3D8;font-size:8.5pt}
-.rpt-akey{color:#4A4A42}.rpt-aval{font-weight:600;color:#1E3A1F}
-.rpt-chart-full{width:100%;border:1px solid #E8E3D8;border-radius:4px;margin-bottom:10px}
+.rpt-arow{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--bdl);font-size:8.5pt}
+.rpt-akey{color:var(--ts)}.rpt-aval{font-weight:600;color:var(--forest)}
+.rpt-chart-full{width:100%;border:1px solid var(--bdl);border-radius:4px;margin-bottom:10px}
 .rpt-chart-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.rpt-chart-row img{width:100%;border:1px solid #E8E3D8;border-radius:4px}
-.rpt-callout{background:#EDF5ED;border:1px solid #A8D4AE;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:8.5pt;color:#2A5A2D;line-height:1.5}
-.rpt-callout strong{font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px;color:#2D6A30}
+.rpt-chart-row img{width:100%;border:1px solid var(--bdl);border-radius:4px}
+.rpt-callout{background:var(--co-bg);border:1px solid var(--co-bd);border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:8.5pt;color:var(--co-tx);line-height:1.5}
+.rpt-callout strong{font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px;color:var(--fern)}
 .rpt-tbl{width:100%;border-collapse:collapse;font-size:7.5pt}
-.rpt-tbl th{text-align:right;padding:4px 5px;background:#F2EEE4;color:#4A4A42;border-bottom:2px solid #D5CFBF;font-weight:500}
+.rpt-tbl th{text-align:right;padding:4px 5px;background:var(--sbg);color:var(--ts);border-bottom:2px solid var(--bd);font-weight:500}
 .rpt-tbl th:first-child{text-align:left}
-.rpt-tbl td{text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8}
+.rpt-tbl td{text-align:right;padding:4px 5px;border-bottom:1px solid var(--bdl)}
 .rpt-tbl td:first-child{text-align:left}
-.rpt-footer{font-size:7.5pt;color:#7A7A70;border-top:1px solid #D5CFBF;padding-top:8px;margin-top:16px;line-height:1.6}
+.rpt-footer{font-size:7.5pt;color:var(--tm);border-top:1px solid var(--bd);padding-top:8px;margin-top:16px;line-height:1.6}
+/* grant banner intentionally stays amber/warning-colored regardless of theme —
+   it's a functional "money saved" callout, not a themed brand element. */
 .rpt-grant-banner{background:#FFF8EC;border:1px solid #E8D4A0;border-radius:6px;padding:7px 12px;margin-bottom:10px;font-size:8.5pt;color:#6B4C1A}
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
@@ -378,105 +383,37 @@ details[open] summary::before{content:'▼  '}
     <button class="tab" onclick="showTab('modeling',this)">Modeling</button>
   </div>
 
+  <!-- Slider markup below is generated from the INPUTS config array in the
+       script (search "renderSliders") — this is now the only place a new
+       slider needs to be added; getV(), setUnit(), setCurrency(),
+       decodeState(), and the report's assumption list all read from the
+       same INPUTS list automatically. -->
+
   <!-- TAB: TRAIL -->
   <div class="tab-pane active" id="tab-trail">
     <p class="sec-ttl"><span class="dot" style="background:#4A9951"></span>Trail project</p>
-    <div class="sr">
-      <div class="sl">Miles of trail <span class="sv" id="v-miles">10 mi</span></div>
-      <input type="range" id="s-miles" min="1" max="60" step="1" value="10" oninput="sv('miles',this.value);recalcD()">
-    </div>
-    <div class="sr">
-      <div class="sl">Construction cost / mile <span class="sv" id="v-buildcost">$50K/mi</span></div>
-      <input type="range" id="s-buildcost" min="10000" max="120000" step="5000" value="50000" oninput="sv('buildcost',this.value);recalcD()">
-      <p class="sh">Volunteer: ~$5–15K · Pro-built: $60–80K (2026)</p>
-    </div>
-    <div class="sr">
-      <div class="sl">Maintenance / mile / year <span class="sv" id="v-maint">$2,500/mi</span></div>
-      <input type="range" id="s-maint" min="500" max="8000" step="250" value="2500" oninput="sv('maint',this.value);recalcD()">
-      <p class="sh">Typical: $1,500–$5,000 · escalates with inflation (Modeling tab)</p>
-    </div>
-    <div class="sr">
-      <div class="sl">Grant funding <span class="sv" id="v-grant">0%</span></div>
-      <input type="range" id="s-grant" min="0" max="80" step="5" value="0" oninput="sv('grant',this.value);recalcD()">
-      <div class="grant-derived" id="grant-derived" style="display:none"></div>
-      <p class="sh">RTP grants cover up to 80% · RAISE, CMAQ &amp; state programs also available</p>
-    </div>
+    <div id="sliders-trail"></div>
   </div>
 
   <!-- TAB: VISITORS -->
   <div class="tab-pane" id="tab-visitors">
     <p class="sec-ttl"><span class="dot" style="background:#2A5F8A"></span>Visitor activity</p>
-    <div class="sr">
-      <div class="sl">Annual visitors / mile (at full capacity) <span class="sv" id="v-visitors">1,000/mi</span></div>
-      <input type="range" id="s-visitors" min="100" max="5000" step="50" value="1000" oninput="sv('visitors',this.value);recalcD()">
-    </div>
-    <div class="sr">
-      <div class="sl">Avg spending / visit <span class="sv" id="v-spend">$175</span></div>
-      <input type="range" id="s-spend" min="50" max="600" step="5" value="175" oninput="sv('spend',this.value);recalcD()">
-      <p class="sh">Research range: $103–$416/trip (TPL/IMBA 2025)</p>
-    </div>
-    <div class="sr">
-      <div class="sl">Overnight visitors <span class="sv" id="v-overnight">30%</span></div>
-      <input type="range" id="s-overnight" min="0" max="80" step="5" value="30" oninput="sv('overnight',this.value);recalcD()">
-      <p class="sh">Overnight visitors spend ~2× more than day-trippers</p>
-    </div>
-    <div class="sr">
-      <div class="sl">Out-of-town visitors <span class="sv" id="v-nonlocal">60%</span></div>
-      <input type="range" id="s-nonlocal" min="0" max="100" step="5" value="60" oninput="sv('nonlocal',this.value);recalcD()">
-      <div class="nl-note" id="nl-note">60% out-of-town → full multiplier. 40% local → 1.0×.</div>
-    </div>
-    <div class="sr">
-      <div class="sl">City sales tax rate (city share) <span class="sv" id="v-salestax">4.25%</span></div>
-      <input type="range" id="s-salestax" min="0.25" max="8.0" step="0.25" value="4.25" oninput="sv('salestax',this.value);recalcD()">
-    </div>
+    <div id="sliders-visitors"></div>
   </div>
 
   <!-- TAB: REAL ESTATE -->
   <div class="tab-pane" id="tab-realestate">
     <p class="sec-ttl"><span class="dot" style="background:#C47A1A"></span>Real estate impact</p>
-    <div class="sr">
-      <div class="sl">Homes within ½ mile of trail <span class="sv" id="v-homes">100</span></div>
-      <input type="range" id="s-homes" min="0" max="1500" step="25" value="100" oninput="sv('homes',this.value);recalcD()">
-    </div>
-    <div class="sr">
-      <div class="sl">Average home value <span class="sv" id="v-homeval">$350K</span></div>
-      <input type="range" id="s-homeval" min="100000" max="1200000" step="25000" value="350000" oninput="sv('homeval',this.value);recalcD()">
-    </div>
-    <div class="sr">
-      <div class="sl">Property value premium <span class="sv" id="v-propprem">5%</span></div>
-      <input type="range" id="s-propprem" min="0" max="15" step="0.5" value="5" oninput="sv('propprem',this.value);recalcD()">
-      <p class="sh">Studies: 3–5% typical, up to 15% (NAR / Crompton &amp; Nicholls 2019)</p>
-    </div>
-    <div class="sr">
-      <div class="sl">Property tax rate <span class="sv" id="v-proptax">1.2%</span></div>
-      <input type="range" id="s-proptax" min="0.3" max="3.5" step="0.1" value="1.2" oninput="sv('proptax',this.value);recalcD()">
-    </div>
+    <div id="sliders-realestate"></div>
   </div>
 
   <!-- TAB: MODELING -->
   <div class="tab-pane" id="tab-modeling">
     <p class="sec-ttl"><span class="dot" style="background:#7A4FA0"></span>Visitor growth &amp; ramp-up</p>
-    <div class="sr">
-      <div class="sl">Annual visitor growth rate <span class="sv" id="v-visitorgrowth">3%</span></div>
-      <input type="range" id="s-visitorgrowth" min="0" max="10" step="0.5" value="3" oninput="sv('visitorgrowth',this.value);recalcD()">
-      <p class="sh">MTB market CAGR ~5.8–8.9% globally. Local trails typically 2–4%.</p>
-    </div>
-    <div class="sr">
-      <div class="sl">Ramp-up period <span class="sv" id="v-rampup">2 yrs</span></div>
-      <input type="range" id="s-rampup" min="0" max="5" step="1" value="2" oninput="sv('rampup',this.value);recalcD()">
-      <p class="sh">0 = full use Day 1. Otherwise starts at 40%, grows linearly to 100%.</p>
-    </div>
+    <div id="sliders-modeling-growth"></div>
     <hr class="divider">
     <p class="sec-ttl" style="margin-top:2px"><span class="dot" style="background:#B84C24"></span>Economic factors</p>
-    <div class="sr">
-      <div class="sl">Economic multiplier (out-of-town) <span class="sv" id="v-multiplier">1.5×</span></div>
-      <input type="range" id="s-multiplier" min="1.0" max="2.5" step="0.1" value="1.5" oninput="sv('multiplier',this.value);recalcD()">
-      <p class="sh">Applied only to out-of-town spending. Local = 1.0×.</p>
-    </div>
-    <div class="sr">
-      <div class="sl">Projection horizon <span class="sv" id="v-years">20 yrs</span></div>
-      <input type="range" id="s-years" min="5" max="30" step="1" value="20" oninput="sv('years',this.value);recalcD()">
-    </div>
+    <div id="sliders-modeling-econ"></div>
     <hr class="divider">
     <div class="sr">
       <p class="pl-lbl">Maintenance cost inflation</p>
@@ -533,7 +470,7 @@ details[open] summary::before{content:'▼  '}
   </div>
 
   <div class="cc">
-    <p class="cc-t">Cumulative investment vs. return — <span id="yr-lbl">20</span>-year projection</p>
+    <p class="cc-t cc-t-lg">Cumulative investment vs. return — <span id="yr-lbl">20</span>-year projection</p>
     <p class="cc-s">Year-by-year with ramp-up, visitor growth, and maintenance inflation applied</p>
     <div class="leg">
       <button type="button" class="li" id="leg-cost" onclick="toggleBE('cost')" aria-pressed="true" title="Click to show/hide this line"><svg width="18" height="10" aria-hidden="true"><line id="ld-cost" x1="0" y1="5" x2="18" y2="5" stroke="#555" stroke-width="2" stroke-dasharray="5,3"/></svg>Total cost (construction + inflating maintenance)</button>
@@ -636,6 +573,19 @@ details[open] summary::before{content:'▼  '}
 let curInfl=3, curSc='moderate', dTimer=null;
 let curTheme='ore';
 
+/* ══ MODEL CONSTANTS ══
+   Named so the assumptions behind buildData() are visible and editable
+   in one place instead of buried as bare numbers in the math. */
+const OVERNIGHT_SPEND_MULTIPLIER=2;   // overnight visitors spend ~2x day-trippers (TPL/IMBA 2025)
+const LABOR_INCOME_PER_FTE=45000;     // IMBA: $ of annual economic impact that supports one job
+const RAMP_START_FRACTION=0.4;        // year-1 usage during ramp-up, before linear climb to 100%
+const BREAKEVEN_SEARCH_YEARS=65;      // how far out we look for a breakeven year before giving up
+const KM_PER_MILE=1.60934;
+const RECALC_DEBOUNCE_MS=80;
+const COPY_FEEDBACK_MS=2000;
+const MILESTONE_YEARS=[1,3,5,10,15]; // plus the current projection horizon, added at render time
+const TABLE_ROW_LIMIT=15;
+
 /* ══ COLOR THEMES (chart palettes; CSS handles the rest via data-theme) ══ */
 const THEMES={
   ore:  {cost:'#555555',costFill:'rgba(80,80,80,0.05)', muni:'#1A8C3E',muniFill:'rgba(26,140,62,0.08)', econ:'rgba(42,95,138,0.75)',econSolid:'#2A5F8A',
@@ -652,7 +602,7 @@ function setTheme(name,redraw=true){
   curTheme=name;
   if(name==='ore')document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme',name);
-  ['ore','gold','myers'].forEach(t=>{const b=document.getElementById('th-'+t);if(b)b.classList.toggle('active',t===name)});
+  setActiveIn('.theme-dot',b=>b.id==='th-'+name);
   const t=T();
   const lc=document.getElementById('ld-cost');if(lc)lc.setAttribute('stroke',t.cost);
   const lm=document.getElementById('ld-muni');if(lm)lm.style.background=t.muni;
@@ -677,13 +627,14 @@ function syncBELegend(){
     if(b){b.classList.toggle('off',!beVis[k]);b.setAttribute('aria-pressed',String(beVis[k]));}
   });
 }
-let curUnit='imperial'; // 'imperial' | 'metric' | 'both'
-let curCurrency='USD';  // 'USD' | 'AUD' | 'CAD' | 'EUR' | 'GBP'
+const UNIT_KEYS=['imperial','metric','both'];
+let curUnit='imperial';
+let curCurrency='USD';  // key into CUR_SYM / exRates, set below
 let exRates={USD:1,AUD:1.546,CAD:1.362,EUR:0.918,GBP:0.783};
 let ratesDate=null;
 
 /* ══ SCENARIOS ══ */
-const SC={
+const SCENARIOS={
   conservative:{miles:15,buildcost:35000,maint:1500,visitors:500,spend:103,overnight:15,nonlocal:40,salestax:4.25,homes:50,homeval:280000,propprem:3,proptax:1.0,multiplier:1.2,years:20,visitorgrowth:1,rampup:3,inflation:2,grant:0},
   moderate:{miles:10,buildcost:50000,maint:2500,visitors:1000,spend:175,overnight:30,nonlocal:60,salestax:4.25,homes:100,homeval:350000,propprem:5,proptax:1.2,multiplier:1.5,years:20,visitorgrowth:3,rampup:2,inflation:3,grant:0},
   optimistic:{miles:20,buildcost:60000,maint:3000,visitors:2000,spend:416,overnight:50,nonlocal:75,salestax:4.25,homes:200,homeval:420000,propprem:8,proptax:1.4,multiplier:1.8,years:20,visitorgrowth:6,rampup:1,inflation:4,grant:0}
@@ -691,6 +642,7 @@ const SC={
 
 /* ══ CURRENCY / UNIT FORMATTERS ══ */
 const CUR_SYM={USD:'$',AUD:'A$',CAD:'CA$',EUR:'€',GBP:'£'};
+const CURRENCY_KEYS=Object.keys(CUR_SYM); // adding a currency: add here + exRates + a .c-btn in the markup
 
 function fcd(usdVal){
   const n=usdVal*(exRates[curCurrency]||1);
@@ -702,7 +654,7 @@ function fcd(usdVal){
 }
 
 function dst(milesVal){
-  const v=+milesVal, km=(v*1.60934).toFixed(1);
+  const v=+milesVal, km=(v*KM_PER_MILE).toFixed(1);
   if(curUnit==='metric') return km+' km';
   if(curUnit==='both') return v+' mi | '+km+' km';
   return v+' mi';
@@ -710,8 +662,8 @@ function dst(milesVal){
 
 function cpd(usdPerMile){
   const u=+usdPerMile;
-  if(curUnit==='metric') return fcd(u/1.60934)+'/km';
-  if(curUnit==='both') return fcd(u)+'/mi | '+fcd(u/1.60934)+'/km';
+  if(curUnit==='metric') return fcd(u/KM_PER_MILE)+'/km';
+  if(curUnit==='both') return fcd(u)+'/mi | '+fcd(u/KM_PER_MILE)+'/km';
   return fcd(u)+'/mi';
 }
 
@@ -730,7 +682,7 @@ const FMT={
   miles:v=>dst(v),
   buildcost:v=>cpd(v),
   maint:v=>cpd(v)+'/yr',
-  visitors:v=>{const n=fn(+v);const km=fn(Math.round(+v/1.60934));if(curUnit==='metric')return km+'/km';if(curUnit==='both')return n+'/mi | '+km+'/km';return n+'/mi';},
+  visitors:v=>{const n=fn(+v);const km=fn(Math.round(+v/KM_PER_MILE));if(curUnit==='metric')return km+'/km';if(curUnit==='both')return n+'/mi | '+km+'/km';return n+'/mi';},
   spend:v=>fcd(+v),
   overnight:v=>v+'%',
   nonlocal:v=>v+'%',
@@ -747,49 +699,195 @@ const FMT={
 };
 function sv(id,val){const el=document.getElementById('v-'+id);if(el&&FMT[id])el.textContent=FMT[id](val)}
 
+/* ══ INPUTS — single source of truth for every slider ══
+   Adding a new slider means adding ONE entry here (plus a FMT[] formatter
+   above and a case in buildData() if it feeds the model). Everything else
+   — the slider markup, getV(), setUnit/setCurrency's display refresh,
+   decodeState()'s URL restore, and the report's "active assumptions"
+   list — reads this array instead of separately maintaining its own copy
+   of the same 17 keys.
+   group: which container div the slider renders into (see the empty
+   #sliders-* divs in the HTML). Defaults to `tab` if not given — only
+   the Modeling tab splits into two groups (growth vs. economic). */
+const INPUTS=[
+  {key:'miles',tab:'trail',label:'Miles of trail',min:1,max:60,step:1,value:10,round:true},
+  {key:'buildcost',tab:'trail',label:'Construction cost / mile',min:10000,max:120000,step:5000,value:50000,
+    hint:'Volunteer: ~$5–15K · Pro-built: $60–80K (2026)'},
+  {key:'maint',tab:'trail',label:'Maintenance / mile / year',min:500,max:8000,step:250,value:2500,
+    hint:'Typical: $1,500–$5,000 · escalates with inflation (Modeling tab)'},
+  {key:'grant',tab:'trail',label:'Grant funding',min:0,max:80,step:5,value:0,extra:'grant-derived',
+    hint:'RTP grants cover up to 80% · RAISE, CMAQ &amp; state programs also available'},
+  {key:'visitors',tab:'visitors',label:'Annual visitors / mile (at full capacity)',min:100,max:5000,step:50,value:1000},
+  {key:'spend',tab:'visitors',label:'Avg spending / visit',min:50,max:600,step:5,value:175,
+    hint:'Research range: $103–$416/trip (TPL/IMBA 2025)'},
+  {key:'overnight',tab:'visitors',label:'Overnight visitors',min:0,max:80,step:5,value:30,
+    hint:'Overnight visitors spend ~2× more than day-trippers'},
+  {key:'nonlocal',tab:'visitors',label:'Out-of-town visitors',min:0,max:100,step:5,value:60,extra:'nl-note'},
+  {key:'salestax',tab:'visitors',label:'City sales tax rate (city share)',min:0.25,max:8.0,step:0.25,value:4.25},
+  {key:'homes',tab:'realestate',label:'Homes within ½ mile of trail',min:0,max:1500,step:25,value:100,round:true},
+  {key:'homeval',tab:'realestate',label:'Average home value',min:100000,max:1200000,step:25000,value:350000},
+  {key:'propprem',tab:'realestate',label:'Property value premium',min:0,max:15,step:0.5,value:5,
+    hint:'Studies: 3–5% typical, up to 15% (NAR / Crompton &amp; Nicholls 2019)'},
+  {key:'proptax',tab:'realestate',label:'Property tax rate',min:0.3,max:3.5,step:0.1,value:1.2},
+  {key:'visitorgrowth',tab:'modeling',group:'modeling-growth',label:'Annual visitor growth rate',min:0,max:10,step:0.5,value:3,
+    hint:'MTB market CAGR ~5.8–8.9% globally. Local trails typically 2–4%.'},
+  {key:'rampup',tab:'modeling',group:'modeling-growth',label:'Ramp-up period',min:0,max:5,step:1,value:2,round:true,
+    hint:'0 = full use Day 1. Otherwise starts at 40%, grows linearly to 100%.'},
+  {key:'multiplier',tab:'modeling',group:'modeling-econ',label:'Economic multiplier (out-of-town)',min:1.0,max:2.5,step:0.1,value:1.5,
+    hint:'Applied only to out-of-town spending. Local = 1.0×.'},
+  {key:'years',tab:'modeling',group:'modeling-econ',label:'Projection horizon',min:5,max:30,step:1,value:20,round:true},
+];
+const INPUT_KEYS=INPUTS.map(i=>i.key);
+
+// Extra dynamic elements that live next to specific sliders (grant savings
+// note, out-of-town split note) — their initial markup, kept alongside the
+// slider so it isn't a separate thing to remember to add.
+const INPUT_EXTRA_HTML={
+  'grant-derived':'<div class="grant-derived" id="grant-derived" style="display:none"></div>',
+  'nl-note':'<div class="nl-note" id="nl-note">60% out-of-town → full multiplier. 40% local → 1.0×.</div>'
+};
+
+function sliderHTML(inp){
+  const extra=inp.extra?INPUT_EXTRA_HTML[inp.extra]||'':'';
+  const hint=inp.hint?`<p class="sh">${inp.hint}</p>`:'';
+  return`<div class="sr">
+      <div class="sl">${inp.label} <span class="sv" id="v-${inp.key}">${FMT[inp.key](inp.value)}</span></div>
+      <input type="range" id="s-${inp.key}" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.value}" oninput="sv('${inp.key}',this.value);recalcD()">
+      ${extra}${hint}
+    </div>`;
+}
+function renderSliders(){
+  const byGroup={};
+  INPUTS.forEach(inp=>{
+    const gid=inp.group||inp.tab;
+    (byGroup[gid]=byGroup[gid]||[]).push(inp);
+  });
+  Object.entries(byGroup).forEach(([gid,items])=>{
+    const el=document.getElementById('sliders-'+gid);
+    if(el)el.innerHTML=items.map(sliderHTML).join('');
+  });
+}
+
 /* ══ GET VALUES ══ */
 function getV(){
   const g=id=>parseFloat(document.getElementById('s-'+id).value);
-  return{miles:g('miles'),buildcost:g('buildcost'),maint:g('maint'),visitors:g('visitors'),spend:g('spend'),overnight:g('overnight'),nonlocal:g('nonlocal'),salestax:g('salestax'),homes:g('homes'),homeval:g('homeval'),propprem:g('propprem'),proptax:g('proptax'),multiplier:g('multiplier'),years:Math.round(g('years')),visitorgrowth:g('visitorgrowth'),rampup:Math.round(g('rampup')),inflation:curInfl,grant:g('grant')};
+  const v={inflation:curInfl};
+  INPUTS.forEach(inp=>{v[inp.key]=inp.round?Math.round(g(inp.key)):g(inp.key);});
+  return v;
 }
 
 /* ══ DEBOUNCE ══ */
-function recalcD(){clearTimeout(dTimer);dTimer=setTimeout(recalc,80)}
+function recalcD(){clearTimeout(dTimer);dTimer=setTimeout(recalc,RECALC_DEBOUNCE_MS)}
 
-/* ══ YEAR-BY-YEAR MODEL ══ */
+/* ══ YEAR-BY-YEAR MODEL ══
+   Runs the full projection once per recalc and returns every year's row
+   plus the summary figures (breakeven, ROI, jobs) the rest of the page reads.
+   Money in USD/imperial always — currency/unit conversion happens only at
+   display time (see fcd/dst/cpd), never here. */
 function buildData(v){
-  const ir=v.inflation/100,gr=v.visitorgrowth/100,nf=v.nonlocal/100;
-  const effSpend=v.spend*(1+v.overnight/100);
-  const cap=v.miles*v.buildcost, municipalCap=cap*(1-v.grant/100);
-  const mbBase=v.miles*v.maint, bVis=v.miles*v.visitors;
+  const ir=v.inflation/100, gr=v.visitorgrowth/100, nf=v.nonlocal/100;
+
+  // Blended spend-per-visit: overnight visitors spend OVERNIGHT_SPEND_MULTIPLIER×
+  // as much as day-trippers, so the more of them there are, the higher the average.
+  const effSpend=v.spend*(1+(v.overnight/100)*(OVERNIGHT_SPEND_MULTIPLIER-1));
+
+  const cap=v.miles*v.buildcost;              // full construction cost
+  const municipalCap=cap*(1-v.grant/100);      // municipal share after grant offset
+  const mbBase=v.miles*v.maint;                // year-1 maintenance cost, before inflation
+  const bVis=v.miles*v.visitors;               // annual visitors once at full capacity
+
+  // Property tax revenue is flat every year (premium is already "baked in"
+  // to assessed value the year the trail opens) — it doesn't ramp or grow.
   const ptAnn=v.homes*v.homeval*(v.propprem/100)*(v.proptax/100);
-  const maxYrs=Math.max(65,v.years);
+
+  const maxYrs=Math.max(BREAKEVEN_SEARCH_YEARS,v.years);
   const rows=[];
-  let cMuni=0,cEcon=0,cCost=municipalCap,be=null;
+  let cMuni=0, cEcon=0, cCost=municipalCap, be=null; // cCost starts at the muni share, not full project cost
+
   for(let yr=1;yr<=maxYrs;yr++){
+    // Ramp-up: usage starts at RAMP_START_FRACTION in year 1 and climbs
+    // linearly to 100% by the end of the ramp-up period. The yr===1 guard
+    // avoids a divide-by-zero when rampup is exactly 1 year.
     let ramp=1;
-    if(v.rampup>0&&yr<=v.rampup) ramp=v.rampup===1?0.4:0.4+0.6*(yr-1)/(v.rampup-1);
+    if(v.rampup>0&&yr<=v.rampup){
+      ramp=v.rampup===1?RAMP_START_FRACTION
+        :RAMP_START_FRACTION+(1-RAMP_START_FRACTION)*(yr-1)/(v.rampup-1);
+    }
+    // Visitor growth only compounds once ramp-up is complete — years spent
+    // ramping don't also count toward the growth curve.
     const gYrs=v.rampup>0?Math.max(0,yr-v.rampup):yr-1;
     const vis=bVis*ramp*Math.pow(1+gr,gYrs);
-    const tSpend=vis*effSpend,nlSpend=tSpend*nf,lSpend=tSpend*(1-nf);
+
+    const tSpend=vis*effSpend, nlSpend=tSpend*nf, lSpend=tSpend*(1-nf);
     const stax=tSpend*(v.salestax/100);
     const muniYr=stax+ptAnn;
+    // Multiplier applies only to out-of-town spending (new money to the local
+    // economy); local spending is money that was already circulating, so it
+    // counts once at face value (1.0x).
     const econYr=nlSpend*v.multiplier+lSpend;
     const maintYr=mbBase*Math.pow(1+ir,yr-1);
-    cMuni+=muniYr;cEcon+=econYr;cCost+=maintYr;
-    if(!be&&cMuni>=municipalCap)be=yr;
+
+    cMuni+=muniYr; cEcon+=econYr; cCost+=maintYr;
+    // Breakeven = first year cumulative municipal revenue covers the
+    // municipal capital share. Maintenance is deliberately excluded from
+    // this comparison (documented in the methodology panel).
+    if(!be&&cMuni>=municipalCap) be=yr;
+
     rows.push({yr,vis,tSpend,nlSpend,lSpend,stax,ptAnn,muniYr,econYr,maintYr,cMuni,cEcon,cCost,cap,municipalCap});
   }
-  const mRow=rows[Math.max(0,v.rampup)]||rows[0];
+
+  const mRow=rows[Math.max(0,v.rampup)]||rows[0]; // "mature year" = first year at full capacity
   const r10=rows[9];
   const roi10=municipalCap>0?((r10?.cMuni??0)/municipalCap-1)*100:0;
-  const jobs=Math.round(mRow.econYr/45000);
-  return{rows,cap,municipalCap,be,ptAnn,mRow,r10,roi10,jobs,propVal:v.homes*v.homeval*(v.propprem/100),maint20:mbBase*Math.pow(1+ir,19)};
+  const jobs=Math.round(mRow.econYr/LABOR_INCOME_PER_FTE);
+
+  return{
+    rows,cap,municipalCap,be,ptAnn,mRow,r10,roi10,jobs,
+    propVal:v.homes*v.homeval*(v.propprem/100),
+    maint20:mbBase*Math.pow(1+ir,19)
+  };
 }
 
 /* ══ CHARTS REGISTRY ══ */
 const CH={};
 function kc(id){if(CH[id]){CH[id].destroy();delete CH[id]}}
+
+/* ══ SHARED CHART OPTIONS ══
+   The axis/legend/grid look that's common to every Chart.js instance on
+   the page. Each draw* function spreads this and overrides only what's
+   genuinely different (scales, tooltip label format, animation). */
+function baseChartOpts(){
+  return{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+  };
+}
+function axisFont(){return{font:{size:10}}}
+function gridStyle(){return{color:'rgba(0,0,0,0.05)'}}
+
+/* ══ SEQUENTIAL LINE REVEAL ══
+   Used only on the breakeven chart: rather than all three lines drawing
+   at once, each line finishes before the next one starts, in dataset
+   order — Total Cost, then Municipal Revenue, then Economic Impact.
+   Chart.js re-runs its entrance animation automatically every time a
+   chart is destroyed and recreated, which drawBE() already does on
+   every recalc() — so this naturally replays on load AND on every
+   assumption change with no extra wiring. */
+const CHART_POINT_STAGGER_MS=14;  // delay between consecutive points on the same line
+const CHART_LINE_GAP_MS=180;      // pause before the next line starts, once the previous one finishes
+function sequentialRevealDelay(ctx){
+  if(ctx.type!=='data')return 0;
+  const nPoints=ctx.chart.data.labels.length;
+  return ctx.datasetIndex*(nPoints*CHART_POINT_STAGGER_MS+CHART_LINE_GAP_MS)+ctx.dataIndex*CHART_POINT_STAGGER_MS;
+}
+
+/* ══ BUTTON-GROUP ACTIVE STATE ══
+   Shared by themes, units, currency, inflation pills, and scenarios —
+   anywhere a group of buttons has exactly one "active" member. */
+function setActiveIn(selector,isActive){
+  document.querySelectorAll(selector).forEach(el=>el.classList.toggle('active',isActive(el)));
+}
 
 /* ══ TABS ══ */
 function showTab(id,btn){
@@ -822,7 +920,7 @@ function restoreCards(){
 /* ══ INFLATION ══ */
 function setInflation(r){
   curInfl=r;
-  document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('active',+b.dataset.rate===r));
+  setActiveIn('.pill',b=>+b.dataset.rate===r);
   recalc();
 }
 
@@ -837,19 +935,19 @@ function toggleIntlPanel(){
 
 function setUnit(u){
   curUnit=u;
-  ['imperial','metric','both'].forEach(x=>document.getElementById('u-'+x).classList.toggle('active',x===u));
+  setActiveIn('.u-btn',el=>el.id==='u-'+u);
   updateIntlDisclaimer();
   // refresh all slider displays
-  const keys=['miles','buildcost','maint','visitors','spend','overnight','nonlocal','salestax','homes','homeval','propprem','proptax','multiplier','years','visitorgrowth','rampup','grant'];
+  const keys=INPUT_KEYS;
   keys.forEach(k=>{const el=document.getElementById('s-'+k);if(el)sv(k,el.value);});
   recalc();
 }
 
 function setCurrency(c){
   curCurrency=c;
-  ['USD','AUD','CAD','EUR','GBP'].forEach(x=>document.getElementById('c-'+x).classList.toggle('active',x===c));
+  setActiveIn('.c-btn',el=>el.id==='c-'+c);
   updateIntlDisclaimer();
-  const keys=['miles','buildcost','maint','visitors','spend','overnight','nonlocal','salestax','homes','homeval','propprem','proptax','multiplier','years','visitorgrowth','rampup','grant'];
+  const keys=INPUT_KEYS;
   keys.forEach(k=>{const el=document.getElementById('s-'+k);if(el)sv(k,el.value);});
   recalc();
 }
@@ -890,7 +988,7 @@ async function fetchRates(){
 /* ══ CUSTOM SCENARIO DETECTION ══ */
 function checkCustomState(){
   let matched=null;
-  for(const[name,sc]of Object.entries(SC)){
+  for(const[name,sc]of Object.entries(SCENARIOS)){
     const ok=Object.entries(sc).every(([k,val])=>{
       if(k==='inflation')return curInfl===val;
       const el=document.getElementById('s-'+k);
@@ -899,7 +997,7 @@ function checkCustomState(){
     if(ok){matched=name;break;}
   }
   curSc=matched||'custom';
-  ['conservative','moderate','optimistic'].forEach(s=>document.getElementById('btn-'+s).classList.toggle('active',s===matched));
+  setActiveIn('.sc-btn:not(.custom)',b=>b.id==='btn-'+matched);
   const customBtn=document.getElementById('btn-custom');
   customBtn.style.display=matched?'none':'inline-block';
   document.getElementById('ab-custom').style.display=matched?'none':'inline-block';
@@ -922,11 +1020,11 @@ function encodeState(){
 function decodeState(){
   const p=new URLSearchParams(window.location.search);
   if(!p.has('miles'))return false;
-  const keys=['miles','buildcost','maint','visitors','spend','overnight','nonlocal','salestax','homes','homeval','propprem','proptax','multiplier','years','visitorgrowth','rampup','grant'];
+  const keys=INPUT_KEYS;
   keys.forEach(k=>{if(p.has(k)){const el=document.getElementById('s-'+k);if(el){el.value=p.get(k);sv(k,p.get(k));}}});
-  if(p.has('inflation')){curInfl=+p.get('inflation');document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('active',+b.dataset.rate===curInfl));}
-  if(p.has('unit')){curUnit=p.get('unit');['imperial','metric','both'].forEach(x=>document.getElementById('u-'+x).classList.toggle('active',x===curUnit));}
-  if(p.has('currency')){curCurrency=p.get('currency');['USD','AUD','CAD','EUR','GBP'].forEach(x=>document.getElementById('c-'+x).classList.toggle('active',x===curCurrency));}
+  if(p.has('inflation')){curInfl=+p.get('inflation');setActiveIn('.pill',b=>+b.dataset.rate===curInfl);}
+  if(p.has('unit')){curUnit=p.get('unit');setActiveIn('.u-btn',el=>el.id==='u-'+curUnit);}
+  if(p.has('currency')){curCurrency=p.get('currency');setActiveIn('.c-btn',el=>el.id==='c-'+curCurrency);}
   return true;
 }
 
@@ -935,11 +1033,11 @@ function copyLink(){
   const url=window.location.href;
   const doFallback=()=>{
     try{const ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}catch(e){}
-    const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;btn.innerHTML='✓ Copied!';setTimeout(()=>{btn.innerHTML=orig;},2000);
+    const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;btn.innerHTML='✓ Copied!';setTimeout(()=>{btn.innerHTML=orig;},COPY_FEEDBACK_MS);
   };
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(url).then(()=>{
-      const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;btn.innerHTML='✓ Copied!';btn.style.color='#2D6A30';setTimeout(()=>{btn.innerHTML=orig;btn.style.color='';},2000);
+      const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;btn.innerHTML='✓ Copied!';btn.style.color='var(--fern)';setTimeout(()=>{btn.innerHTML=orig;btn.style.color='';},COPY_FEEDBACK_MS);
     }).catch(doFallback);
   }else{doFallback();}
 }
@@ -972,7 +1070,7 @@ function recalc(){
   // metric cards
   const be=m.be;
   const beEl=document.getElementById('m-be'),beCard=document.getElementById('card-be');
-  beEl.textContent=be?be+' yrs':'> 65 yrs';
+  beEl.textContent=be?be+' yrs':'> '+BREAKEVEN_SEARCH_YEARS+' yrs';
   beEl.className='mc-val'+(!be?' caution':be<=10?' good':'');
   beCard.className='mc'+(!be?' warn':be<=10?' hi':'');
   document.getElementById('m-be-sub').textContent=!be?'Try higher visitors/tax':be<=5?'Excellent ROI':be<=15?'Solid investment':'Long-term return';
@@ -998,7 +1096,7 @@ function recalc(){
     const iNote=v.inflation>0?` Maintenance grows to ${fcd(m.maint20)}/yr by Yr 20 at ${v.inflation}% CPI.`:'';
     const gNote=v.grant>0?` (${v.grant}% grant reduces municipal share to ${fcd(m.municipalCap)} from full ${fcd(m.cap)} project cost) `:'';
     bn.textContent=`✓ Municipal revenue covers the${gNote}${fcd(m.municipalCap)} cost in Year ${be} (cumul. muni = ${fcd(br.cMuni)}).${iNote}`;
-  }else{bn.textContent='No breakeven within 65 years at current assumptions.';}
+  }else{bn.textContent='No breakeven within '+BREAKEVEN_SEARCH_YEARS+' years at current assumptions.';}
   bn.style.display='inline-block';
 
   drawBE(v,m);drawDonut(v,m);drawMilestones(v,m);drawVisitors(v,m);drawHwy(v,m);drawTable(v,m);
@@ -1021,10 +1119,11 @@ function drawBE(v,m){
       {label:'Municipal Revenue',data:muni,borderColor:t.muni,backgroundColor:t.muniFill,fill:true,borderWidth:2.5,tension:.15,pointRadius:ptR,pointBackgroundColor:t.muni,pointBorderColor:'#fff',pointBorderWidth:1.5,hidden:!beVis.muni},
       {label:'Economic Impact',data:econ,borderColor:t.econ,backgroundColor:'rgba(0,0,0,0.02)',fill:false,borderWidth:2,borderDash:[3,3],tension:.15,pointRadius:0,hidden:!beVis.econ}
     ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    options:{...baseChartOpts(),interaction:{mode:'index',intersect:false},
+      animation:{delay:sequentialRevealDelay},
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': '+fcd(c.raw)}}},
-      scales:{x:{ticks:{autoSkip:true,maxTicksLimit:11,font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},
-              y:{ticks:{font:{size:10},callback:val=>fcd(val)},grid:{color:'rgba(0,0,0,0.05)'}}}
+      scales:{x:{ticks:{autoSkip:true,maxTicksLimit:11,...axisFont()},grid:gridStyle()},
+              y:{ticks:{...axisFont(),callback:val=>fcd(val)},grid:gridStyle()}}
     }});
 }
 
@@ -1041,14 +1140,14 @@ function drawDonut(v,m){
   document.getElementById('donut-leg').innerHTML=segs.map(s=>`<span class="li"><span class="ld" style="background:${s.color}"></span>${s.label} <span class="badge bd-${s.type[0]}" style="margin-left:2px">${s.type}</span></span>`).join('');
   CH.donut=new Chart(document.getElementById('chartDonut'),{type:'doughnut',
     data:{labels:segs.map(s=>s.label),datasets:[{data:segs.map(s=>s.value),backgroundColor:segs.map(s=>s.color),borderWidth:3,borderColor:'#fff'}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+    options:{...baseChartOpts(),cutout:'60%',
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.label+': '+fcd(c.raw)+'/yr'}}}}});
 }
 
 /* ══ CHART: MILESTONES ══ */
 function drawMilestones(v,m){
   kc('ms');
-  const yrs=[...new Set([1,3,5,10,15,v.years])];
+  const yrs=[...new Set([...MILESTONE_YEARS,v.years])];
   const vals=yrs.map(yr=>{const r=m.rows[yr-1];return r?Math.round(r.cMuni):0});
   const cols=vals.map(vl=>vl>=m.municipalCap?T().muni:T().msMiss);
   CH.ms=new Chart(document.getElementById('chartMilestones'),{type:'bar',
@@ -1056,10 +1155,10 @@ function drawMilestones(v,m){
       {label:'Cumulative muni revenue',data:vals,backgroundColor:cols,borderRadius:3,borderWidth:0},
       {label:'Municipal cost',data:yrs.map(()=>Math.round(m.municipalCap)),type:'line',borderColor:T().cost,borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false}
     ]},
-    options:{responsive:true,maintainAspectRatio:false,
+    options:{...baseChartOpts(),
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': '+fcd(c.raw)}}},
-      scales:{x:{ticks:{font:{size:10},autoSkip:false},grid:{display:false}},
-              y:{ticks:{font:{size:10},callback:val=>fcd(val)},grid:{color:'rgba(0,0,0,0.05)'}}}
+      scales:{x:{ticks:{...axisFont(),autoSkip:false},grid:{display:false}},
+              y:{ticks:{...axisFont(),callback:val=>fcd(val)},grid:gridStyle()}}
     }});
 }
 
@@ -1073,24 +1172,38 @@ function drawVisitors(v,m){
   }
   CH.vis=new Chart(document.getElementById('chartVisitors'),{type:'bar',
     data:{labels:labs,datasets:[{label:'Annual visitors',data,backgroundColor:cols,borderRadius:2,borderWidth:0}]},
-    options:{responsive:true,maintainAspectRatio:false,
+    options:{...baseChartOpts(),
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  Visitors: '+fn(c.raw)}}},
-      scales:{x:{ticks:{autoSkip:true,maxTicksLimit:12,font:{size:10}},grid:{display:false}},
-              y:{ticks:{font:{size:10},callback:val=>fn(val)},grid:{color:'rgba(0,0,0,0.05)'}}}
+      scales:{x:{ticks:{autoSkip:true,maxTicksLimit:12,...axisFont()},grid:{display:false}},
+              y:{ticks:{...axisFont(),callback:val=>fn(val)},grid:gridStyle()}}
     }});
 }
 
-/* ══ HIGHWAY COMPARE ══ */
+/* ══ HIGHWAY COMPARE ══
+   Reference benchmarks for the log-scale infrastructure comparison bar.
+   Sourced from FHWA/DOT (2020–2024) and Singletracks.com's Apr 2026
+   contractor survey — cited again in the card footer. Adding a new
+   comparison point is a one-line entry here; the scale rescales itself. */
+const INFRASTRUCTURE_COSTS=[
+  {label:'Volunteer-built singletrack',pm:10000,themeColor:'hwy0'},
+  {label:'Pro-built singletrack (2026)',pm:70000,themeColor:'hwy2'},
+  {label:'2-lane rural road',pm:4000000,color:'#AAA090'},
+  {label:'4-lane suburban highway',pm:25000000,color:'#7A7068'},
+  {label:'Urban 6-lane interstate',pm:80000000,color:'#3D3830'}
+];
+
 function drawHwy(v,m){
+  const t=T();
   const items=[
-    {label:'Volunteer-built singletrack',pm:10000,color:T().hwy[0]},
-    {label:`Your project (${cpd(v.buildcost)} · ${v.miles} mi total)`,pm:v.buildcost,color:T().hwy[1],bold:true},
-    {label:'Pro-built singletrack (2026)',pm:70000,color:T().hwy[2]},
-    {label:'2-lane rural road',pm:4000000,color:'#AAA090'},
-    {label:'4-lane suburban highway',pm:25000000,color:'#7A7068'},
-    {label:'Urban 6-lane interstate',pm:80000000,color:'#3D3830'}
+    {label:'Volunteer-built singletrack',pm:INFRASTRUCTURE_COSTS[0].pm,color:t.hwy[0]},
+    {label:`Your project (${cpd(v.buildcost)} · ${v.miles} mi total)`,pm:v.buildcost,color:t.hwy[1],bold:true},
+    {label:'Pro-built singletrack (2026)',pm:INFRASTRUCTURE_COSTS[1].pm,color:t.hwy[2]},
+    ...INFRASTRUCTURE_COSTS.slice(2).map(it=>({label:it.label,pm:it.pm,color:it.color}))
   ];
-  const maxL=Math.log10(80000000),minL=Math.log10(5000);
+  // Scale bounds derive from the actual data (with a little headroom) so a
+  // new highest/lowest reference point can't silently fall off the bar.
+  const allPm=[...items.map(i=>i.pm)];
+  const maxL=Math.log10(Math.max(...allPm)),minL=Math.log10(Math.min(...allPm,5000));
   document.getElementById('hwy-cmp').innerHTML=items.map(it=>{
     const pct=Math.max(2,((Math.log10(it.pm)-minL)/(maxL-minL))*100);
     const label=cpd(it.pm);
@@ -1098,28 +1211,38 @@ function drawHwy(v,m){
   }).join('');
 }
 
-/* ══ TABLE ══ */
-function drawTable(v,m){
+/* ══ TABLE ══
+   buildYearRows() is the single source for the year-by-year table markup —
+   used both on-screen (drawTable) and in the printed report
+   (downloadReport). The two only differ in cell padding/border, controlled
+   by the `print` flag, so they can never drift apart in content again. */
+function buildYearRows(v,m,{print=false}={}){
+  const cellStyle=print?'padding:4px 5px;border-bottom:1px solid var(--bdl)':'';
+  const show=Math.min(TABLE_ROW_LIMIT,v.years,m.rows.length);
   let html='';
-  const show=Math.min(15,v.years,m.rows.length);
   for(let i=0;i<show;i++){
     const r=m.rows[i];
     const net=r.cMuni-m.municipalCap;
-    const isR=r.yr<=v.rampup,isBE=m.be&&r.yr===m.be;
-    const bg=isBE?'background:#EDF5ED;font-weight:500':isR?'background:#F0F4FA':i%2===1?'background:#FAFAF7':'';
-    const nc=net>=0?'color:var(--pos)':'color:var(--neg)';
+    const isR=r.yr<=v.rampup, isBE=m.be&&r.yr===m.be;
+    const bg=isBE?'background:var(--co-bg);font-weight:500':isR?'background:var(--sbg)':(!print&&i%2===1?'background:#FAFAF7':'');
+    const nc=(net>=0?'color:var(--pos)':'color:var(--neg)')+(cellStyle?';'+cellStyle:'');
+    const td=cellStyle?` style="text-align:right;${cellStyle}"`:'';
+    const tdFirst=cellStyle?` style="text-align:left;${cellStyle}"`:'';
     const flag=isBE?' ✓':isR?' ↗':'';
     const netStr=(net>=0?'+':'-')+fcd(Math.abs(net));
-    html+=`<tr style="${bg}"><td>${r.yr}${flag}</td><td>${fn(r.vis)}</td><td>${fcd(r.maintYr)}</td><td>${fcd(r.cCost)}</td><td>${fcd(r.cMuni)}</td><td>${fcd(r.cEcon)}</td><td style="${nc}">${netStr}</td></tr>`;
+    html+=`<tr style="${bg}"><td${tdFirst}>${r.yr}${flag}</td><td${td}>${fn(r.vis)}</td><td${td}>${fcd(r.maintYr)}</td><td${td}>${fcd(r.cCost)}</td><td${td}>${fcd(r.cMuni)}</td><td${td}>${fcd(r.cEcon)}</td><td style="text-align:right;${nc}">${netStr}</td></tr>`;
   }
-  document.getElementById('tbl-body').innerHTML=html;
+  return html;
+}
+function drawTable(v,m){
+  document.getElementById('tbl-body').innerHTML=buildYearRows(v,m);
 }
 
 /* ══ SET SCENARIO ══ */
 function setScenario(name){
-  const sc=SC[name];
+  const sc=SCENARIOS[name];
   Object.entries(sc).forEach(([k,val])=>{
-    if(k==='inflation'){curInfl=val;document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('active',+b.dataset.rate===val));return;}
+    if(k==='inflation'){curInfl=val;setActiveIn('.pill',b=>+b.dataset.rate===val);return;}
     const el=document.getElementById('s-'+k);
     if(el){el.value=val;sv(k,val);}
   });
@@ -1153,15 +1276,8 @@ function downloadReport(){
     ['Projection horizon',v.years+' years'],['Currency / units',curCurrency+(curUnit!=='imperial'?' / '+curUnit:'')],
   ];
 
-  const show=Math.min(15,v.years,m.rows.length);
-  let tRows='';
-  for(let i=0;i<show;i++){
-    const r=m.rows[i];const net=r.cMuni-m.municipalCap;
-    const nc=net>=0?'color:#1A8C3E;font-weight:600':'color:#B84C24';
-    const flag=m.be&&r.yr===m.be?' ✓':r.yr<=v.rampup?' ↗':'';
-    const bg=m.be&&r.yr===m.be?'background:#EDF5ED;':r.yr<=v.rampup?'background:#F0F4FA;':'';
-    tRows+=`<tr style="${bg}"><td style="text-align:left;padding:4px 5px;border-bottom:1px solid #E8E3D8">${r.yr}${flag}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fn(r.vis)}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fcd(r.maintYr)}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fcd(r.cCost)}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fcd(r.cMuni)}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8">${fcd(r.cEcon)}</td><td style="text-align:right;padding:4px 5px;border-bottom:1px solid #E8E3D8;${nc}">${(net>=0?'+':'-')+fcd(Math.abs(net))}</td></tr>`;
-  }
+  const show=Math.min(TABLE_ROW_LIMIT,v.years,m.rows.length);
+  const tRows=buildYearRows(v,m,{print:true});
 
   const be=m.be;
   const grantBanner=v.grant>0?`<div class="rpt-grant-banner"><strong>Grant funding active:</strong> ${v.grant}% of construction covered — saving ${fcd(m.cap-m.municipalCap)} upfront. Municipal share: ${fcd(m.municipalCap)} of ${fcd(m.cap)} total.</div>`:'';
@@ -1173,9 +1289,9 @@ function downloadReport(){
     ${grantBanner}${intlBanner}
     <div class="rpt-section-title">Key outcomes</div>
     <div class="rpt-kpi-row">
-      <div class="rpt-kpi"><div class="rpt-kpi-lbl">Breakeven year (municipal revenue)</div><div class="rpt-kpi-val" style="${be&&be<=10?'color:#1A8C3E':''}">${be?be+' years':'> 65 years'}</div><div class="rpt-kpi-sub">vs. ${fcd(m.municipalCap)} municipal cost</div></div>
+      <div class="rpt-kpi"><div class="rpt-kpi-lbl">Breakeven year (municipal revenue)</div><div class="rpt-kpi-val" style="${be&&be<=10?'color:var(--pos)':''}">${be?be+' years':'> '+BREAKEVEN_SEARCH_YEARS+' years'}</div><div class="rpt-kpi-sub">vs. ${fcd(m.municipalCap)} municipal cost</div></div>
       <div class="rpt-kpi"><div class="rpt-kpi-lbl">10-year return on construction cost</div><div class="rpt-kpi-val">${fp(m.roi10)}</div><div class="rpt-kpi-sub">municipal tax revenue</div></div>
-      <div class="rpt-kpi"><div class="rpt-kpi-lbl">10-year economic impact</div><div class="rpt-kpi-val" style="color:#2A5F8A">${m.r10?fcd(m.r10.cEcon):'—'}</div><div class="rpt-kpi-sub">local economy (w/ multiplier)</div></div>
+      <div class="rpt-kpi"><div class="rpt-kpi-lbl">10-year economic impact</div><div class="rpt-kpi-val" style="color:var(--sky)">${m.r10?fcd(m.r10.cEcon):'—'}</div><div class="rpt-kpi-sub">local economy (w/ multiplier)</div></div>
       <div class="rpt-kpi"><div class="rpt-kpi-lbl">Jobs supported (mature year)</div><div class="rpt-kpi-val">${fn(m.jobs)}</div><div class="rpt-kpi-sub">annual FTEs at full capacity</div></div>
     </div>
     <div class="rpt-section-title">Active assumptions</div>
@@ -1206,6 +1322,7 @@ function downloadReport(){
 
 /* ══ INIT ══ */
 window.addEventListener('DOMContentLoaded',async()=>{
+  renderSliders(); // must run before getV()/decodeState() touch any slider element
   fetchRates(); // non-blocking, updates rates in background
   // theme: URL param wins, then saved preference, then Ore Pass default
   const p=new URLSearchParams(window.location.search);
