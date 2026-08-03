@@ -45,7 +45,7 @@ This calculator is designed to let users plug in their own local numbers — con
 
 ## 2. How to Use the Tool
 
-The tool is a single self-contained HTML file. Open it in any modern web browser — no server, no installation, no internet connection required after the initial load (Google Fonts will load if online, but the calculator functions offline).
+The tool is a single self-contained HTML file. Open it in any modern web browser — no server, no installation, and no internet connection required. As of the June 2026 rebuild, every chart is drawn with hand-written JavaScript directly onto the page (no external charting library), so the tool has zero runtime dependencies: it works fully offline, including all four charts, animations, and the printed report. The only thing that touches the network is Google Fonts (for the display typeface) and the optional daily exchange-rate refresh (Section 4) — both degrade gracefully to system fonts and fixed fallback rates if you're offline.
 
 **Step 1 — Choose a scenario.** The three buttons at the top right (Conservative / Moderate / Optimistic) pre-load a set of assumptions calibrated to different levels of trail development, visitor volume, and economic context. This is the fastest way to get a meaningful baseline.
 
@@ -60,7 +60,7 @@ The tool is a single self-contained HTML file. Open it in any modern web browser
 
 **Step 3 — Adjust modeling assumptions.** The visitor ramp-up, annual growth rate, percentage of out-of-town visitors, and maintenance inflation rate all materially affect multi-year projections. Read the sections below to understand what each one means before adjusting.
 
-**Step 4 — Read the results.** The four metric cards at the top of the results panel provide the headline numbers. The breakeven chart shows the full trajectory. The year-by-year table lets you examine every year's individual values.
+**Step 4 — Read the results.** The four metric cards at the top of the results panel provide the headline numbers. The breakeven chart shows the full trajectory — its three lines draw in sequence (Total Cost, then Municipal Revenue, then Economic Impact) each time you load the page or change an assumption, so it's easier to follow which line is which. Click any line's legend button to show or hide it. The year-by-year table lets you examine every year's individual values, and the infrastructure cost comparison card near the bottom can be collapsed by clicking its header if you want to shorten the page for a presentation.
 
 **Step 5 — Adjust for international presentation (optional).** Click the **€** button next to Download Report to open the International Settings panel. Choose **Metric** or **Both** to display distances in kilometres, and select a currency for local context. A disclaimer will appear reminding you that all benchmarks are from US research — adjust the visitor spending and construction cost sliders with locally sourced data before presenting formally outside the United States. See Section 4 for full details.
 
@@ -666,7 +666,7 @@ The bar chart uses a logarithmic scale because the actual dollar differences spa
 
 ## 11. Contributing and Forking
 
-This tool is intentionally simple: a single HTML file with no build process, no dependencies to install, and no server required. Contributions are welcome.
+This tool is intentionally simple: a single HTML file with no build process, no dependencies to install, and no server required. As of the June 2026 rebuild, that includes the charts — earlier versions loaded Chart.js from a CDN, which meant the four charts (and the printed report, which captures them as images) would silently fail if that CDN was ever blocked, down, or unreachable offline. All charting is now hand-written directly in the file: look for the "NO-DEPENDENCY CHART ENGINE" comment block in the JavaScript section. If you're forking this and want to add a new chart, that block has the shared pieces (canvas sizing, tooltip, entrance animation, axis gridlines) — you shouldn't need to touch a charting library's API, because there isn't one. Contributions are welcome.
 
 **To suggest improvements:**
 - Open an issue describing the change and its evidentiary basis
@@ -853,6 +853,6 @@ The following studies, reports, and data sources directly informed the assumptio
 
 ---
 
-*This README was written to accompany version 2.1 of the Trail Investment ROI Calculator (June 2026). Version 2.1 adds the International Settings panel: metric/imperial/both unit toggle, and currency display conversion (USD, AUD, CAD, EUR, GBP) with daily-updated exchange rates via CDN. The calculator is a single-file HTML tool requiring no installation or internet connection. It is intended for use by trail advocates, municipal planners, parks directors, and community decision-makers. All dollar figures reflect nominal USD as of the cited study dates; users should apply their own inflation adjustments when comparing studies from different years.*
+*This README was written to accompany version 2.2 of the Trail Investment ROI Calculator (June 2026). Version 2.2 removes the tool's last external JavaScript dependency: all four charts (breakeven line chart, benefit-breakdown donut, milestone bars, visitor bars) are now drawn with hand-written canvas code instead of loading Chart.js from a CDN, so the tool runs correctly fully offline with zero network access, including chart rendering, animation, and the printed PDF report. This version also adds a sequential reveal animation to the breakeven chart (Total Cost, then Municipal Revenue, then Economic Impact draw in order on load and on every assumption change) and makes the infrastructure cost comparison card collapsible. Version 2.1 added the International Settings panel: metric/imperial/both unit toggle, and currency display conversion (USD, AUD, CAD, EUR, GBP) with daily-updated exchange rates via CDN. The calculator remains a single-file HTML tool requiring no installation. It is intended for use by trail advocates, municipal planners, parks directors, and community decision-makers. All dollar figures reflect nominal USD as of the cited study dates; users should apply their own inflation adjustments when comparing studies from different years.*
 
 *Prepared with research support from the TPL/IMBA Economic Benefits of Mountain Biking report (2025), the IMBA Investing in Trails study collection, and additional peer-reviewed and practitioner literature as cited above.*
