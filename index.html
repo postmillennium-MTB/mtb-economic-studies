@@ -134,6 +134,17 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .cc{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:.875rem;margin-bottom:10px}
 .cc-t{font-size:13px;font-weight:500;color:var(--tp);margin-bottom:2px}
 .cc-s{font-size:11px;color:var(--tm);margin-bottom:10px}
+/* COLLAPSIBLE CARD — reusable. Add class "collapsible" to any .cc,
+   wrap its title in a .cc-toggle button and its content in a .cc-body div. */
+.cc-toggle{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;padding:0;margin:0;border:none;background:none;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;color:inherit}
+.cc-toggle .cc-t{display:block;margin-bottom:2px}
+.cc-toggle .cc-s{display:block;margin-bottom:0}
+.cc-chev{flex-shrink:0;margin-top:2px;color:var(--tm);transition:transform .18s,color .12s}
+.cc-toggle:hover .cc-t{color:var(--fern)}
+.cc-toggle:hover .cc-chev{color:var(--fern)}
+.cc.collapsed .cc-chev{transform:rotate(-90deg)}
+.cc-body{margin-top:10px}
+.cc.collapsed .cc-body{display:none}
 .leg{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
 .li{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--ts)}
 .ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
@@ -141,7 +152,8 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .bd-d{background:#DFF2E4;color:#1B6B35}
 .bd-i{background:#DBE9F7;color:#1B4F80}
 .callout{background:var(--co-bg);border:1px solid var(--co-bd);border-radius:8px;padding:.6rem .875rem;margin-bottom:10px}
-.co-t{font-size:10px;font-weight:500;color:var(--fern);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.co-t{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:500;color:var(--fern);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.co-ico{flex-shrink:0}
 .co-b{font-size:11px;color:var(--co-tx);line-height:1.5}
 .c3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
 /* HIGHWAY BARS */
@@ -535,7 +547,7 @@ details[open] summary::before{content:'▼  '}
   </div>
 
   <div class="callout">
-    <p class="co-t">&#127968; Property value impact</p>
+    <p class="co-t"><svg class="co-ico" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Property value impact</p>
     <p class="co-b" id="prop-txt">Calculating…</p>
   </div>
 
@@ -564,11 +576,18 @@ details[open] summary::before{content:'▼  '}
     </div>
   </div>
 
-  <div class="cc" style="margin-top:10px">
-    <p class="cc-t">Infrastructure cost comparison — per mile (log scale)</p>
-    <p class="cc-s">Your trail vs. conventional road infrastructure</p>
-    <div id="hwy-cmp"></div>
-    <p style="font-size:10px;color:var(--tm);margin-top:6px">Sources: FHWA/DOT 2020–2024 · Singletracks.com contractor survey April 2026 · American Trails database</p>
+  <div class="cc collapsible" style="margin-top:10px">
+    <button type="button" class="cc-toggle" data-card="hwy" aria-expanded="true" aria-controls="hwy-body" onclick="toggleCard(this)">
+      <span>
+        <span class="cc-t">Infrastructure cost comparison — per mile (log scale)</span>
+        <span class="cc-s">Your trail vs. conventional road infrastructure</span>
+      </span>
+      <svg class="cc-chev" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="cc-body" id="hwy-body">
+      <div id="hwy-cmp"></div>
+      <p style="font-size:10px;color:var(--tm);margin-top:6px">Sources: FHWA/DOT 2020–2024 · Singletracks.com contractor survey April 2026 · American Trails database</p>
+    </div>
   </div>
 
   <div class="cc" style="margin-top:10px">
@@ -778,6 +797,26 @@ function showTab(id,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
+}
+
+/* ══ COLLAPSIBLE CARDS ══
+   Generic — works for any .cc.collapsible with a .cc-toggle[data-card] button.
+   Open/closed state is remembered per card in localStorage.
+   NOTE: do not collapse a card containing a <canvas> chart by default —
+   Chart.js cannot size a canvas inside display:none, and downloadReport()
+   reads those canvases via toDataURL(). */
+function toggleCard(btn){
+  const card=btn.closest('.cc');
+  const collapsed=card.classList.toggle('collapsed');
+  btn.setAttribute('aria-expanded',String(!collapsed));
+  try{localStorage.setItem('pmr-roi-card-'+btn.dataset.card,collapsed?'closed':'open')}catch(e){}
+}
+function restoreCards(){
+  document.querySelectorAll('.cc.collapsible .cc-toggle').forEach(btn=>{
+    let saved=null;
+    try{saved=localStorage.getItem('pmr-roi-card-'+btn.dataset.card)}catch(e){}
+    if(saved==='closed'){btn.closest('.cc').classList.add('collapsed');btn.setAttribute('aria-expanded','false');}
+  });
 }
 
 /* ══ INFLATION ══ */
@@ -1176,6 +1215,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   // hidden breakeven series from shared link
   if(p.has('hide'))p.get('hide').split(',').forEach(k=>{if(k in beVis)beVis[k]=false});
   syncBELegend();
+  restoreCards();
   const restored=decodeState();
   if(!restored) setScenario('moderate');
   else recalc();
