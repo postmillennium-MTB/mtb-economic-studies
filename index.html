@@ -165,6 +165,12 @@ details summary::before{content:'▶  ';font-size:9px}
 details[open] summary::before{content:'▼  '}
 .src-body{font-size:10px;color:var(--tm);padding:8px;line-height:1.65;border:1px solid var(--bdl);border-top:none;border-radius:0 0 6px 6px}
 .src-body strong{color:var(--ts)}
+/* RELATED-TOOL CROSS-LINK */
+.xlink{margin-top:12px;padding-top:11px;border-top:1px solid var(--bdl)}
+.xlabel{display:block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);font-weight:500;margin-bottom:7px}
+.xbtn{display:inline-flex;align-items:center;padding:5px 12px;border:1px solid var(--fern);border-radius:16px;background:var(--sbg);color:var(--fern);font-size:11px;font-weight:600;text-decoration:none;letter-spacing:.03em;transition:all .15s}
+.xbtn:hover{background:var(--fern);color:#fff}
+.xtext{display:block;font-size:10px;color:var(--tm);line-height:1.6;margin-top:7px;max-width:620px}
 /* PRINT REPORT */
 #rpt{display:none}
 .rpt-pg{padding:28px 32px;font-family:'DM Sans',sans-serif}
@@ -591,6 +597,12 @@ details[open] summary::before{content:'▼  '}
       <strong>Units &amp; currency:</strong> All research benchmarks are USD/imperial. Metric and foreign-currency displays are conversions for directional reference only. Exchange rates fetched daily from fawazahmed0/currency-api (jsdelivr CDN); fallback rates used if unavailable.<br><br>
       <strong>Breakeven:</strong> Year when cumulative municipal tax revenue ≥ municipal share of construction cost. Maintenance excluded from breakeven denominator.<br><br>
       <em>This tool is for planning and advocacy. Validate assumptions with local data before formal presentation.</em>
+
+      <div class="xlink">
+        <span class="xlabel">Related tool</span>
+        <a class="xbtn" href="https://www.postmillenniumrenaissance.com/pump-track/" target="_top">Skatepark and Pump Track ROI Calculator&nbsp;&rarr;</a>
+        <span class="xtext">The same economic logic applied to wheeled-sport facilities. A two-pillar model &mdash; direct user surplus plus visitor spending &mdash; anchored to Kemp (2025), for when the ask in front of council is a pump track or skatepark rather than singletrack.</span>
+      </div>
     </div>
   </details>
 </main>
