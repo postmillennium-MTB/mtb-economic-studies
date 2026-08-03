@@ -147,6 +147,9 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .cc-body{margin-top:10px}
 .cc.collapsed .cc-body{display:none}
 .leg{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+/* Floating tooltip shared by every canvas chart (see chartTooltip() in JS) */
+.chart-tt{position:fixed;display:none;z-index:80;background:var(--tp);color:var(--bg);font-family:'DM Sans',sans-serif;font-size:11px;line-height:1.5;padding:6px 9px;border-radius:5px;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,0.18);white-space:nowrap}
+.chart-tt div+div{margin-top:1px}
 .li{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--ts)}
 .ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
 .badge{font-size:9px;padding:1px 5px;border-radius:8px;font-weight:500}
@@ -567,7 +570,6 @@ details[open] summary::before{content:'▼  '}
 <div id="rpt"></div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 /* ══ STATE ══ */
 let curInfl=3, curSc='moderate', dTimer=null;
@@ -613,11 +615,10 @@ function setTheme(name,redraw=true){
 
 /* ══ BREAKEVEN SERIES VISIBILITY ══ */
 const beVis={cost:true,muni:true,econ:true};
-const BE_IDX={cost:0,muni:1,econ:2};
 function toggleBE(key){
   if(!(key in beVis))return;
   beVis[key]=!beVis[key];
-  if(CH.be){CH.be.setDatasetVisibility(BE_IDX[key],beVis[key]);CH.be.update();}
+  if(CH.be)CH.be.redraw();
   syncBELegend();
   encodeState();
 }
@@ -848,38 +849,161 @@ function buildData(v){
   };
 }
 
-/* ══ CHARTS REGISTRY ══ */
+/* ══════════════════════════════════════════════════════════════════
+   NO-DEPENDENCY CHART ENGINE
+   Replaces Chart.js entirely — this file is now a true single-file,
+   zero-external-dependency tool. Nothing below is a generic charting
+   library; it's exactly the drawing code these 4 specific charts need,
+   sharing only the parts that were genuinely identical (canvas setup,
+   tooltip, animation loop, axis gridlines). Each draw*() function still
+   owns its own layout, same as before.
+   ══════════════════════════════════════════════════════════════════ */
 const CH={};
 function kc(id){if(CH[id]){CH[id].destroy();delete CH[id]}}
 
-/* ══ SHARED CHART OPTIONS ══
-   The axis/legend/grid look that's common to every Chart.js instance on
-   the page. Each draw* function spreads this and overrides only what's
-   genuinely different (scales, tooltip label format, animation). */
-function baseChartOpts(){
+// Reads a live CSS custom property's resolved value. Needed because the
+// canvas 2D API does NOT understand var(--x) in fillStyle/strokeStyle —
+// colors must be resolved to real color strings before use, unlike CSS.
+function cssVar(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim()}
+
+const CHART_FONT="10px 'DM Sans',sans-serif";
+const CHART_ANIM_MS=550;          // entrance duration for donut/bar/combo charts
+const CHART_EASE=t=>1-Math.pow(1-t,3); // ease-out cubic, used by every chart's entrance animation
+const FULL_REVEAL=1e9;            // pass as "elapsed" to force an instant, fully-drawn render (no animation)
+
+/* ── Canvas sizing ──
+   Sizes the canvas's backing store to match its CSS box at the screen's
+   device pixel ratio (crisp on retina), while all drawing code below
+   keeps working in ordinary CSS-pixel coordinates. */
+function fitCanvas(canvas){
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.parentElement.getBoundingClientRect();
+  const w=Math.max(1,Math.round(rect.width)),h=Math.max(1,Math.round(rect.height));
+  canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+  canvas.style.width=w+'px';canvas.style.height=h+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return{ctx,w,h};
+}
+
+/* ── Shared tooltip ──
+   One floating element reused by all four charts, positioned at the
+   cursor. Charts do their own hit-testing on mousemove and call these. */
+let chartTooltipEl=null;
+function chartTooltip(){
+  if(!chartTooltipEl){chartTooltipEl=document.createElement('div');chartTooltipEl.className='chart-tt';document.body.appendChild(chartTooltipEl);}
+  return chartTooltipEl;
+}
+function showChartTooltip(clientX,clientY,lines){
+  const el=chartTooltip();
+  el.innerHTML=lines.map(l=>'<div>'+l+'</div>').join('');
+  el.style.left=(clientX+14)+'px';el.style.top=(clientY+14)+'px';el.style.display='block';
+  const r=el.getBoundingClientRect();
+  if(r.right>window.innerWidth-8)el.style.left=(clientX-r.width-14)+'px';
+  if(r.bottom>window.innerHeight-8)el.style.top=(clientY-r.height-14)+'px';
+}
+function hideChartTooltip(){if(chartTooltipEl)chartTooltipEl.style.display='none'}
+
+/* ── Animation loop ──
+   renderFrame(elapsedMs) is called every frame until durationMs elapses,
+   then once more at exactly durationMs to guarantee a clean final frame.
+   .finish() is used by the PDF export, which needs the chart fully drawn
+   (not mid-animation) before it reads pixels via canvas.toDataURL(). */
+function animateChart(renderFrame,durationMs){
+  let raf=null,stopped=false,startTs=null;
+  function frame(ts){
+    if(stopped)return;
+    if(startTs===null)startTs=ts;
+    const elapsed=ts-startTs;
+    renderFrame(Math.min(elapsed,durationMs));
+    if(elapsed<durationMs)raf=requestAnimationFrame(frame);
+  }
+  raf=requestAnimationFrame(frame);
   return{
-    responsive:true,
-    maintainAspectRatio:false,
-    plugins:{legend:{display:false}},
+    stop(){stopped=true;if(raf)cancelAnimationFrame(raf)},
+    finish(){stopped=true;if(raf)cancelAnimationFrame(raf);renderFrame(durationMs)}
   };
 }
-function axisFont(){return{font:{size:10}}}
-function gridStyle(){return{color:'rgba(0,0,0,0.05)'}}
 
-/* ══ SEQUENTIAL LINE REVEAL ══
-   Used only on the breakeven chart: rather than all three lines drawing
-   at once, each line finishes before the next one starts, in dataset
-   order — Total Cost, then Municipal Revenue, then Economic Impact.
-   Chart.js re-runs its entrance animation automatically every time a
-   chart is destroyed and recreated, which drawBE() already does on
-   every recalc() — so this naturally replays on load AND on every
-   assumption change with no extra wiring. */
-const CHART_POINT_STAGGER_MS=14;  // delay between consecutive points on the same line
-const CHART_LINE_GAP_MS=180;      // pause before the next line starts, once the previous one finishes
-function sequentialRevealDelay(ctx){
-  if(ctx.type!=='data')return 0;
-  const nPoints=ctx.chart.data.labels.length;
-  return ctx.datasetIndex*(nPoints*CHART_POINT_STAGGER_MS+CHART_LINE_GAP_MS)+ctx.dataIndex*CHART_POINT_STAGGER_MS;
+/* ── "Nice" axis scale ──
+   Picks a clean y-axis max/step (1/2/5×10^n) instead of an arbitrary
+   fraction of the data max, the way Chart.js's default scale did. */
+function niceScale(maxVal,ticks=5){
+  if(!(maxVal>0))maxVal=1;
+  const raw=maxVal/ticks;
+  const mag=Math.pow(10,Math.floor(Math.log10(raw)));
+  const norm=raw/mag;
+  const step=(norm<1.5?1:norm<3?2:norm<7?5:10)*mag;
+  return{max:Math.ceil(maxVal/step)*step,step};
+}
+
+/* ── Cartesian axes (line/bar/combo charts) ──
+   Draws horizontal gridlines + y-axis labels, and x-axis category
+   labels (auto-thinning them if there isn't room for all of them). */
+function drawAxes(ctx,plot,yMax,yFmt,xLabels,maxXLabels,xPosFn){
+  const{left,top,w,h}=plot;
+  ctx.save();
+  ctx.strokeStyle=cssVar('--bd')||'rgba(0,0,0,0.08)';
+  ctx.globalAlpha=0.5;ctx.lineWidth=1;
+  ctx.font=CHART_FONT;
+  ctx.fillStyle=cssVar('--tm')||'#7A7A70';
+  const ticks=5;
+  for(let i=0;i<=ticks;i++){
+    const val=yMax*i/ticks;
+    const y=top+h-(h*i/ticks);
+    ctx.beginPath();ctx.moveTo(left,Math.round(y)+.5);ctx.lineTo(left+w,Math.round(y)+.5);ctx.stroke();
+    ctx.globalAlpha=1;ctx.textAlign='right';ctx.textBaseline='middle';
+    ctx.fillText(yFmt(val),left-6,y);
+    ctx.globalAlpha=0.5;
+  }
+  ctx.globalAlpha=1;
+  ctx.textAlign='center';ctx.textBaseline='top';
+  const n=xLabels.length;
+  const skip=maxXLabels&&n>maxXLabels?Math.ceil(n/maxXLabels):1;
+  const xPos=xPosFn||(i=>left+(n<=1?w/2:w*i/(n-1)));
+  xLabels.forEach((lab,i)=>{
+    if(skip>1&&i%skip!==0&&i!==n-1)return;
+    ctx.fillText(lab,xPos(i),top+h+6);
+  });
+  ctx.restore();
+}
+
+/* ── Bar drawing (shared by the milestones and visitors charts) ──
+   Bars grow upward from the baseline as `progress` goes 0→1. */
+function roundRectTop(ctx,x,y,w,h,r){
+  if(h<=0)return;
+  r=Math.max(0,Math.min(r,w/2,h));
+  ctx.beginPath();
+  ctx.moveTo(x,y+h);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);
+  ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h);ctx.closePath();
+}
+function drawBars(ctx,vals,colors,xPos,barW,yPos,plot,progress){
+  vals.forEach((val,i)=>{
+    const y0=plot.top+plot.h,targetY=yPos(val);
+    const curY=y0-(y0-targetY)*progress;
+    ctx.fillStyle=colors[i];
+    roundRectTop(ctx,xPos(i)-barW/2,curY,barW,y0-curY,3);
+    ctx.fill();
+  });
+}
+
+/* ── Resize handling ──
+   Chart.js used to redraw itself on container resize; each chart handle
+   below sets up its own ResizeObserver on the canvas's wrapper div and
+   redraws at its current (already-settled) state, without re-animating. */
+function observeResize(el,cb){
+  // ResizeObserver invokes its callback once immediately upon observe(),
+  // even with no actual resize — without skipping that first call, every
+  // chart's entrance animation got instantly short-circuited to its final
+  // frame before a single frame of the reveal ever painted.
+  let first=true;
+  const ro=new ResizeObserver(()=>{
+    if(first){first=false;return}
+    cb();
+  });
+  ro.observe(el);
+  return ro;
 }
 
 /* ══ BUTTON-GROUP ACTIVE STATE ══
@@ -887,6 +1011,19 @@ function sequentialRevealDelay(ctx){
    anywhere a group of buttons has exactly one "active" member. */
 function setActiveIn(selector,isActive){
   document.querySelectorAll(selector).forEach(el=>el.classList.toggle('active',isActive(el)));
+}
+
+/* ══ SEQUENTIAL LINE REVEAL (breakeven chart only) ══
+   Rather than all three lines drawing at once, each finishes before the
+   next starts, in dataset order — Total Cost, then Municipal Revenue,
+   then Economic Impact. Only counts currently-visible series (a line
+   hidden via the legend doesn't hold up the ones after it). */
+const CHART_POINT_STAGGER_MS=14;  // delay between consecutive points on the same line
+const CHART_LINE_GAP_MS=180;      // pause before the next line starts, once the previous one finishes
+function lineReveal(elapsedMs,slotIndex,nPoints){
+  const start=slotIndex*(nPoints*CHART_POINT_STAGGER_MS+CHART_LINE_GAP_MS);
+  const dur=Math.max(1,nPoints*CHART_POINT_STAGGER_MS);
+  return Math.min(1,Math.max(0,(elapsedMs-start)/dur));
 }
 
 /* ══ TABS ══ */
@@ -1102,7 +1239,10 @@ function recalc(){
   drawBE(v,m);drawDonut(v,m);drawMilestones(v,m);drawVisitors(v,m);drawHwy(v,m);drawTable(v,m);
 }
 
-/* ══ CHART: BREAKEVEN ══ */
+/* ══ CHART: BREAKEVEN ══
+   The one chart with the sequential per-line reveal animation. Draws
+   Total Cost first, then Municipal Revenue, then Economic Impact —
+   see lineReveal() above for the timing. */
 function drawBE(v,m){
   kc('be');
   const t=T();
@@ -1112,20 +1252,104 @@ function drawBE(v,m){
     labs.push('Yr '+r.yr);
     costs.push(Math.round(r.cCost));muni.push(Math.round(r.cMuni));econ.push(Math.round(r.cEcon));
   }
-  const ptR=labs.map((_,i)=>i%4===0&&i>0?4:0);
-  CH.be=new Chart(document.getElementById('chartBE'),{type:'line',
-    data:{labels:labs,datasets:[
-      {label:'Total Cost',data:costs,borderColor:t.cost,backgroundColor:t.costFill,fill:true,borderWidth:2,tension:.15,pointRadius:0,borderDash:[6,3],hidden:!beVis.cost},
-      {label:'Municipal Revenue',data:muni,borderColor:t.muni,backgroundColor:t.muniFill,fill:true,borderWidth:2.5,tension:.15,pointRadius:ptR,pointBackgroundColor:t.muni,pointBorderColor:'#fff',pointBorderWidth:1.5,hidden:!beVis.muni},
-      {label:'Economic Impact',data:econ,borderColor:t.econ,backgroundColor:'rgba(0,0,0,0.02)',fill:false,borderWidth:2,borderDash:[3,3],tension:.15,pointRadius:0,hidden:!beVis.econ}
-    ]},
-    options:{...baseChartOpts(),interaction:{mode:'index',intersect:false},
-      animation:{delay:sequentialRevealDelay},
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': '+fcd(c.raw)}}},
-      scales:{x:{ticks:{autoSkip:true,maxTicksLimit:11,...axisFont()},grid:gridStyle()},
-              y:{ticks:{...axisFont(),callback:val=>fcd(val)},grid:gridStyle()}}
-    }});
+  const series=[
+    {key:'cost',label:'Total Cost',data:costs,color:t.cost,fill:t.costFill,dash:[6,3],lineWidth:2,pointEvery:0},
+    {key:'muni',label:'Municipal Revenue',data:muni,color:t.muni,fill:t.muniFill,dash:null,lineWidth:2.5,pointEvery:4},
+    {key:'econ',label:'Economic Impact',data:econ,color:t.econ,fill:null,dash:[3,3],lineWidth:2,pointEvery:0}
+  ];
+  const canvas=document.getElementById('chartBE');
+  const PAD={left:52,right:10,top:8,bottom:22};
+  let lastGeom=null;
+
+  function render(elapsed){
+    const{ctx,w,h}=fitCanvas(canvas);
+    ctx.clearRect(0,0,w,h);
+    const plot={left:PAD.left,top:PAD.top,w:w-PAD.left-PAD.right,h:h-PAD.top-PAD.bottom};
+    const vis=series.filter(s=>beVis[s.key]);
+    // Y-scale only considers currently-visible series, same as Chart.js's
+    // default — hiding "Economic Impact" rescales the chart to zoom in
+    // on what's left, rather than leaving dead space at the top.
+    const maxVal=Math.max(1,...vis.flatMap(s=>s.data),m.municipalCap);
+    const{max:yMax}=niceScale(maxVal);
+    drawAxes(ctx,plot,yMax,val=>fcd(val),labs,11);
+    const xPos=i=>plot.left+(labs.length<=1?plot.w/2:plot.w*i/(labs.length-1));
+    const yPos=val=>plot.top+plot.h-(plot.h*Math.max(0,val)/yMax);
+    let slot=0;
+    series.forEach(s=>{
+      if(!beVis[s.key])return;
+      drawRevealedLine(ctx,s,lineReveal(elapsed,slot,labs.length),xPos,yPos,plot);
+      slot++;
+    });
+    lastGeom={plot,xPos,vis};
+  }
+
+  function onMove(e){
+    if(!lastGeom)return;
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left;
+    const{plot,xPos,vis}=lastGeom;
+    if(mx<plot.left-10||mx>plot.left+plot.w+10||!vis.length){hideChartTooltip();return;}
+    let idx=Math.round((mx-plot.left)/plot.w*(labs.length-1));
+    idx=Math.max(0,Math.min(labs.length-1,idx));
+    const lines=[labs[idx]].concat(vis.map(s=>'  '+s.label+': '+fcd(s.data[idx])));
+    showChartTooltip(e.clientX,e.clientY,lines);
+  }
+  function onLeave(){hideChartTooltip()}
+  canvas.addEventListener('mousemove',onMove);
+  canvas.addEventListener('mouseleave',onLeave);
+
+  const nVisibleAtStart=series.filter(s=>beVis[s.key]).length;
+  const duration=Math.max(300,nVisibleAtStart*(labs.length*CHART_POINT_STAGGER_MS+CHART_LINE_GAP_MS));
+  const anim=animateChart(render,duration);
+  const ro=observeResize(canvas.parentElement,()=>render(FULL_REVEAL));
+
+  CH.be={
+    destroy(){anim.stop();ro.disconnect();canvas.removeEventListener('mousemove',onMove);canvas.removeEventListener('mouseleave',onLeave);hideChartTooltip()},
+    redraw(){render(FULL_REVEAL)},
+    finish(){render(FULL_REVEAL)}
+  };
 }
+
+/* Draws one line series up through `progress` (0–1) of its x-range,
+   including a partial leading segment so the line appears to "draw
+   itself in" rather than snapping in-frame. Also fills the area under
+   the revealed portion (if s.fill is set) and marks points at s.pointEvery
+   intervals, once each point has actually been reached. */
+function drawRevealedLine(ctx,s,progress,xPos,yPos,plot){
+  const n=s.data.length,revealed=progress*(n-1),full=Math.floor(revealed);
+  const pts=[];
+  for(let i=0;i<=full&&i<n;i++)pts.push({i,x:xPos(i),y:yPos(s.data[i])});
+  if(full<n-1&&progress<1){
+    const frac=revealed-full;
+    const x0=xPos(full),y0=yPos(s.data[full]),x1=xPos(full+1),y1=yPos(s.data[full+1]);
+    pts.push({i:full+0.5,x:x0+(x1-x0)*frac,y:y0+(y1-y0)*frac});
+  }
+  if(pts.length<2)return;
+  if(s.fill){
+    ctx.save();ctx.beginPath();
+    ctx.moveTo(pts[0].x,plot.top+plot.h);
+    pts.forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.lineTo(pts[pts.length-1].x,plot.top+plot.h);
+    ctx.closePath();ctx.fillStyle=s.fill;ctx.fill();ctx.restore();
+  }
+  ctx.save();ctx.beginPath();
+  ctx.strokeStyle=s.color;ctx.lineWidth=s.lineWidth;
+  ctx.setLineDash(s.dash||[]);ctx.lineJoin='round';ctx.lineCap='round';
+  pts.forEach((p,idx)=>idx===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+  ctx.stroke();ctx.restore();
+  if(s.pointEvery){
+    ctx.save();
+    pts.forEach(p=>{
+      if(Number.isInteger(p.i)&&p.i>0&&p.i%s.pointEvery===0){
+        ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);
+        ctx.fillStyle=s.color;ctx.fill();
+        ctx.lineWidth=1.5;ctx.strokeStyle='#fff';ctx.stroke();
+      }
+    });
+    ctx.restore();
+  }
+}
+
 
 /* ══ CHART: DONUT ══ */
 function drawDonut(v,m){
@@ -1138,11 +1362,66 @@ function drawDonut(v,m){
   ].filter(s=>s.value>0);
   document.getElementById('donut-sub').textContent='Year '+(Math.max(1,v.rampup+1))+' (full capacity)';
   document.getElementById('donut-leg').innerHTML=segs.map(s=>`<span class="li"><span class="ld" style="background:${s.color}"></span>${s.label} <span class="badge bd-${s.type[0]}" style="margin-left:2px">${s.type}</span></span>`).join('');
-  CH.donut=new Chart(document.getElementById('chartDonut'),{type:'doughnut',
-    data:{labels:segs.map(s=>s.label),datasets:[{data:segs.map(s=>s.value),backgroundColor:segs.map(s=>s.color),borderWidth:3,borderColor:'#fff'}]},
-    options:{...baseChartOpts(),cutout:'60%',
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.label+': '+fcd(c.raw)+'/yr'}}}}});
+
+  const canvas=document.getElementById('chartDonut');
+  const total=segs.reduce((a,s)=>a+s.value,0)||1;
+  let lastGeom=null;
+
+  // Full (final) angle for each segment, computed once — used both to draw
+  // and for hover hit-testing, so hover targets don't shift mid-animation.
+  const START=-Math.PI/2;
+  let cum=0;
+  const fullArcs=segs.map(s=>{
+    const a0=START+cum,a1=a0+(s.value/total)*Math.PI*2;
+    cum=a1-START;
+    return{s,a0,a1};
+  });
+
+  function render(elapsed){
+    const{ctx,w,h}=fitCanvas(canvas);
+    ctx.clearRect(0,0,w,h);
+    const cx=w/2,cy=h/2,outerR=Math.min(w,h)/2-6,innerR=outerR*0.6;
+    const progress=CHART_EASE(Math.min(1,elapsed/CHART_ANIM_MS));
+    const sweepBudget=Math.PI*2*progress;
+    fullArcs.forEach(({s,a0,a1})=>{
+      const revealed=Math.max(0,Math.min(a1-a0,START+sweepBudget-a0));
+      if(revealed<=0)return;
+      const drawA1=a0+revealed;
+      ctx.beginPath();
+      ctx.moveTo(cx+Math.cos(a0)*innerR,cy+Math.sin(a0)*innerR);
+      ctx.arc(cx,cy,outerR,a0,drawA1);
+      ctx.arc(cx,cy,innerR,drawA1,a0,true);
+      ctx.closePath();
+      ctx.fillStyle=s.color;ctx.fill();
+      ctx.lineWidth=3;ctx.strokeStyle='#fff';ctx.stroke();
+    });
+    lastGeom={cx,cy,outerR,innerR};
+  }
+
+  function onMove(e){
+    if(!lastGeom)return;
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left-lastGeom.cx,my=e.clientY-rect.top-lastGeom.cy;
+    const dist=Math.hypot(mx,my);
+    if(dist<lastGeom.innerR||dist>lastGeom.outerR){hideChartTooltip();return;}
+    let ang=Math.atan2(my,mx);
+    if(ang<START)ang+=Math.PI*2;
+    const hit=fullArcs.find(a=>ang>=a.a0&&ang<=a.a1);
+    if(hit)showChartTooltip(e.clientX,e.clientY,['  '+hit.s.label+': '+fcd(hit.s.value)+'/yr']);
+    else hideChartTooltip();
+  }
+  function onLeave(){hideChartTooltip()}
+  canvas.addEventListener('mousemove',onMove);
+  canvas.addEventListener('mouseleave',onLeave);
+
+  const anim=animateChart(render,CHART_ANIM_MS);
+  const ro=observeResize(canvas.parentElement,()=>render(FULL_REVEAL));
+  CH.donut={
+    destroy(){anim.stop();ro.disconnect();canvas.removeEventListener('mousemove',onMove);canvas.removeEventListener('mouseleave',onLeave);hideChartTooltip()},
+    finish(){render(FULL_REVEAL)}
+  };
 }
+
 
 /* ══ CHART: MILESTONES ══ */
 function drawMilestones(v,m){
@@ -1150,16 +1429,48 @@ function drawMilestones(v,m){
   const yrs=[...new Set([...MILESTONE_YEARS,v.years])];
   const vals=yrs.map(yr=>{const r=m.rows[yr-1];return r?Math.round(r.cMuni):0});
   const cols=vals.map(vl=>vl>=m.municipalCap?T().muni:T().msMiss);
-  CH.ms=new Chart(document.getElementById('chartMilestones'),{type:'bar',
-    data:{labels:yrs.map(y=>'Yr '+y),datasets:[
-      {label:'Cumulative muni revenue',data:vals,backgroundColor:cols,borderRadius:3,borderWidth:0},
-      {label:'Municipal cost',data:yrs.map(()=>Math.round(m.municipalCap)),type:'line',borderColor:T().cost,borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false}
-    ]},
-    options:{...baseChartOpts(),
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': '+fcd(c.raw)}}},
-      scales:{x:{ticks:{...axisFont(),autoSkip:false},grid:{display:false}},
-              y:{ticks:{...axisFont(),callback:val=>fcd(val)},grid:gridStyle()}}
-    }});
+  const costLine=yrs.map(()=>Math.round(m.municipalCap));
+  const labs=yrs.map(y=>'Yr '+y);
+  const canvas=document.getElementById('chartMilestones');
+  const PAD={left:52,right:10,top:8,bottom:20};
+  let lastGeom=null;
+
+  function render(elapsed){
+    const{ctx,w,h}=fitCanvas(canvas);
+    ctx.clearRect(0,0,w,h);
+    const plot={left:PAD.left,top:PAD.top,w:w-PAD.left-PAD.right,h:h-PAD.top-PAD.bottom};
+    const maxVal=Math.max(1,...vals,m.municipalCap);
+    const{max:yMax}=niceScale(maxVal);
+    const n=labs.length,slot=plot.w/n;
+    const xPos=i=>plot.left+slot*(i+0.5);
+    const yPos=val=>plot.top+plot.h-(plot.h*Math.max(0,val)/yMax);
+    drawAxes(ctx,plot,yMax,val=>fcd(val),labs,null,xPos);
+    const progress=CHART_EASE(Math.min(1,elapsed/CHART_ANIM_MS));
+    const barW=Math.min(34,slot*0.55);
+    drawBars(ctx,vals,cols,xPos,barW,yPos,plot,progress);
+    drawRevealedLine(ctx,{data:costLine,color:T().cost,fill:null,dash:[5,3],lineWidth:1.5,pointEvery:0},progress,xPos,yPos,plot);
+    lastGeom={plot,slot,n};
+  }
+
+  function onMove(e){
+    if(!lastGeom)return;
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left;
+    const{plot,slot,n}=lastGeom;
+    if(mx<plot.left||mx>plot.left+plot.w){hideChartTooltip();return;}
+    let idx=Math.max(0,Math.min(n-1,Math.floor((mx-plot.left)/slot)));
+    showChartTooltip(e.clientX,e.clientY,[labs[idx],'  Cumulative muni revenue: '+fcd(vals[idx]),'  Municipal cost: '+fcd(m.municipalCap)]);
+  }
+  function onLeave(){hideChartTooltip()}
+  canvas.addEventListener('mousemove',onMove);
+  canvas.addEventListener('mouseleave',onLeave);
+
+  const anim=animateChart(render,CHART_ANIM_MS);
+  const ro=observeResize(canvas.parentElement,()=>render(FULL_REVEAL));
+  CH.ms={
+    destroy(){anim.stop();ro.disconnect();canvas.removeEventListener('mousemove',onMove);canvas.removeEventListener('mouseleave',onLeave);hideChartTooltip()},
+    finish(){render(FULL_REVEAL)}
+  };
 }
 
 /* ══ CHART: VISITORS ══ */
@@ -1170,13 +1481,45 @@ function drawVisitors(v,m){
     const r=m.rows[i];labs.push('Yr '+r.yr);data.push(Math.round(r.vis));
     cols.push(r.yr<=v.rampup?T().visLight:T().visDark);
   }
-  CH.vis=new Chart(document.getElementById('chartVisitors'),{type:'bar',
-    data:{labels:labs,datasets:[{label:'Annual visitors',data,backgroundColor:cols,borderRadius:2,borderWidth:0}]},
-    options:{...baseChartOpts(),
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'  Visitors: '+fn(c.raw)}}},
-      scales:{x:{ticks:{autoSkip:true,maxTicksLimit:12,...axisFont()},grid:{display:false}},
-              y:{ticks:{...axisFont(),callback:val=>fn(val)},grid:gridStyle()}}
-    }});
+  const canvas=document.getElementById('chartVisitors');
+  const PAD={left:46,right:10,top:8,bottom:20};
+  let lastGeom=null;
+
+  function render(elapsed){
+    const{ctx,w,h}=fitCanvas(canvas);
+    ctx.clearRect(0,0,w,h);
+    const plot={left:PAD.left,top:PAD.top,w:w-PAD.left-PAD.right,h:h-PAD.top-PAD.bottom};
+    const maxVal=Math.max(1,...data);
+    const{max:yMax}=niceScale(maxVal);
+    const n=labs.length,slot=plot.w/n;
+    const xPos=i=>plot.left+slot*(i+0.5);
+    const yPos=val=>plot.top+plot.h-(plot.h*Math.max(0,val)/yMax);
+    drawAxes(ctx,plot,yMax,val=>fn(val),labs,12,xPos);
+    const progress=CHART_EASE(Math.min(1,elapsed/CHART_ANIM_MS));
+    const barW=Math.min(18,slot*0.6);
+    drawBars(ctx,data,cols,xPos,barW,yPos,plot,progress);
+    lastGeom={plot,slot,n};
+  }
+
+  function onMove(e){
+    if(!lastGeom)return;
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left;
+    const{plot,slot,n}=lastGeom;
+    if(mx<plot.left||mx>plot.left+plot.w){hideChartTooltip();return;}
+    let idx=Math.max(0,Math.min(n-1,Math.floor((mx-plot.left)/slot)));
+    showChartTooltip(e.clientX,e.clientY,[labs[idx],'  Visitors: '+fn(data[idx])]);
+  }
+  function onLeave(){hideChartTooltip()}
+  canvas.addEventListener('mousemove',onMove);
+  canvas.addEventListener('mouseleave',onLeave);
+
+  const anim=animateChart(render,CHART_ANIM_MS);
+  const ro=observeResize(canvas.parentElement,()=>render(FULL_REVEAL));
+  CH.vis={
+    destroy(){anim.stop();ro.disconnect();canvas.removeEventListener('mousemove',onMove);canvas.removeEventListener('mouseleave',onLeave);hideChartTooltip()},
+    finish(){render(FULL_REVEAL)}
+  };
 }
 
 /* ══ HIGHWAY COMPARE ══
@@ -1258,6 +1601,10 @@ function downloadReport(){
   const curSym=CUR_SYM[curCurrency]||'$';
   const unitNote=curCurrency!=='USD'||curUnit!=='imperial'?` (values shown in ${curSym}${curUnit!=='imperial'?' / '+curUnit:''} — converted from USD/imperial research data)`:'';
 
+  // Charts may still be mid-animation (e.g. report opened right after a
+  // slider change) — force each to its final frame before reading pixels,
+  // otherwise toDataURL() could capture a half-drawn chart.
+  Object.values(CH).forEach(c=>c.finish&&c.finish());
   const beImg=document.getElementById('chartBE').toDataURL('image/png');
   const dnImg=document.getElementById('chartDonut').toDataURL('image/png');
   const msImg=document.getElementById('chartMilestones').toDataURL('image/png');
