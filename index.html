@@ -2186,6 +2186,13 @@ function downloadReport(){
 
 /* ══ INIT ══ */
 window.addEventListener('DOMContentLoaded',async()=>{
+  // Captured before anything else runs: encodeState() (called from recalc(),
+  // which fires below during initial load) rewrites the URL via
+  // history.replaceState(null,'','?'+params) — query string only, no hash —
+  // which silently drops any #partnerships fragment the page was opened
+  // with. Read it now, once, and use this copy for the deep-link check
+  // further down instead of re-reading window.location.hash later.
+  const initialHash=window.location.hash;
   renderSliders(); // must run before getV()/decodeState() touch any slider element
   renderWhySliders(); // same requirement, for the Why tab's separate slider set
   document.getElementById('why-reset').addEventListener('click',()=>{
@@ -2205,6 +2212,20 @@ window.addEventListener('DOMContentLoaded',async()=>{
   const restored=decodeState();
   if(!restored) setScenario('moderate');
   else recalc();
+  // Deep link: a URL ending in #partnerships opens the Partnerships panel on
+  // load, so a link elsewhere on the site (or a shared URL) can point straight
+  // at the cost-comparison model instead of the default breakeven view.
+  // Also reacts to later same-page hash changes, e.g. a "Compare partnership
+  // delivery ↓" link added to page copy above the calculator.
+  function applyHashDeepLink(hash){
+    if((hash!==undefined?hash:window.location.hash).toLowerCase()==='#partnerships'){
+      const panel=document.getElementById('why-panel');
+      if(!panel.classList.contains('show'))togglePartnerships();
+      panel.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  }
+  applyHashDeepLink(initialHash);
+  window.addEventListener('hashchange',()=>applyHashDeepLink());
 });
 </script>
 </body>
