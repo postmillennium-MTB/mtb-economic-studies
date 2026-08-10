@@ -2226,6 +2226,18 @@ window.addEventListener('DOMContentLoaded',async()=>{
   }
   applyHashDeepLink(initialHash);
   window.addEventListener('hashchange',()=>applyHashDeepLink());
+  // Fallback deep-link path for when this page is embedded in a cross-origin
+  // <iframe> (e.g. postmillenniumrenaissance.com/roi/) — a hash on the OUTER
+  // page's URL never reaches this page's own window.location.hash at all,
+  // same-origin policy blocks that read entirely. If whoever owns the
+  // embedding page forwards the hash via postMessage instead of (or in
+  // addition to) appending it to the iframe's src, this picks it up.
+  // Expected message shape: {type:'pmr-hash', hash:'#partnerships'}
+  window.addEventListener('message',e=>{
+    const okOrigins=['https://www.postmillenniumrenaissance.com','https://postmillenniumrenaissance.com'];
+    if(!okOrigins.includes(e.origin))return;
+    if(e.data&&e.data.type==='pmr-hash'&&typeof e.data.hash==='string')applyHashDeepLink(e.data.hash);
+  });
 });
 </script>
 </body>
