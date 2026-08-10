@@ -16,8 +16,9 @@
 8. [What the Tool Does Not Model](#8-what-the-tool-does-not-model)
 9. [A Note on Methodology and Limitations](#9-a-note-on-methodology-and-limitations)
 10. [Highway Cost Comparison Context](#10-highway-cost-comparison-context)
-11. [Contributing and Forking](#11-contributing-and-forking)
-12. [Bibliography](#12-bibliography)
+11. [The Why Tab — Municipal vs. Partnership Cost Comparison](#11-the-why-tab--municipal-vs-partnership-cost-comparison)
+12. [Contributing and Forking](#12-contributing-and-forking)
+13. [Bibliography](#13-bibliography)
 
 ---
 
@@ -664,7 +665,48 @@ The bar chart uses a logarithmic scale because the actual dollar differences spa
 
 ---
 
-## 11. Contributing and Forking
+## 11. The Why Tab — Municipal vs. Partnership Cost Comparison
+
+Every section above answers *what a trail returns*. The Why tab answers a different question: *what does it cost to build it in the first place, and does who builds it change that number?* It sits alongside Trail / Visitors / Real Estate / Modeling in the sidebar tab bar and swaps out the entire right-hand results column with its own model — it is not another view of the ROI calculation above, it's a separate comparison.
+
+### 11.1 The Two Options
+
+- **Option 1 — Traditional municipal.** The town hires a for-profit contractor for the whole job and owns the finished asset, and its maintenance, forever.
+- **Option 2 — Leveraged partnership.** Same contractor for the machine work, but a non-profit advocacy organization brings volunteer hand-finishing labor, private capital, donated planning, and an adopt-a-trail maintenance agreement.
+
+The "who pays to build it" bars in the tab are deliberately drawn the same length in both options — the trail costs what it costs; the entire argument is about who covers each slice of that cost, not about making the trail cheaper.
+
+### 11.2 Fourteen Inputs
+
+The tab has its own slider set (separate from the main ROI sliders above), grouped into project inputs (miles, construction cost, planning %, maintenance, grant rate, projection years) and partnership inputs (volunteer hours, volunteer hourly rate, productivity factor, hand-finishing share, private capital raised, planning offset %, adoption %, annual coordination cost). Adjusting any of them recalculates both options immediately.
+
+### 11.3 Three Deliberate Honesty Constraints
+
+These exist specifically so the tab can't be used as an uncritical sales pitch for partnership delivery. Removing any of them would make the comparison misleading:
+
+1. **Both options get the same public grant rate.** Municipalities apply for RTP, RAISE, CMAQ, and state trail money directly and win it routinely — grant access is not a partnership-exclusive advantage. The partnership's real funding edge is the *private* pool: donations, corporate sponsorship, outdoor-industry and foundation grants, which towns generally can't tap directly. The model also surfaces the awkward corollary: because volunteer labor shrinks the size of the contract, the same grant *percentage* draws fewer grant dollars under Option 2.
+2. **Volunteer labor is discounted and capped.** Hours are priced at Independent Sector's national value of volunteer time ($34.79/hr, 2024), multiplied by a productivity factor (volunteers move less dirt per hour than a paid crew), then capped at the hand-finishing share of construction. Machine time — excavator, operator, mobilization — can't be volunteered away, so no amount of volunteer labor drives the cost below the machine-only floor.
+3. **The partnership is allowed to lose.** Adoption caps at 95% (storm damage, drainage, liability inspections, and machine work stay municipal), and coordination carries a real annual cost for staff time, training, insurance, and tools. Set coordination high and volunteer hours low and Option 2 comes out behind — the time-series chart names the crossover year where that happens. A cost-comparison tool that can't produce that result isn't a model, it's marketing.
+
+### 11.4 What the Tab Shows
+
+- **Headline stats** — total cost under each option over the selected projection horizon, and the dollar/percentage difference.
+- **Funding chart** — a segmented bar per option (municipal cash / public grant / private capital / volunteer labor / donated planning) at equal total length, so the comparison is about composition, not size.
+- **Time chart** — cumulative municipal outlay year by year for both options, so a town can see not just the endpoint but whether Option 2 ever crosses over to cost more.
+- **Line-item ledger** — every number in the comparison, traceable back to a slider value.
+- **Caveats panel** — cost benchmarks, the volunteer-labor pricing method, and what the model deliberately does not assume.
+
+### 11.5 Not Modeled, Deliberately
+
+Volunteer hours often qualify as in-kind local match on public grants, which would make Option 2 look *better* than shown here — match rules vary too much by grant program to model responsibly, so the tab stays conservative and says so explicitly in its caveats. Also excluded: schedule risk, build-quality variance, and every downstream economic return covered by the rest of this calculator (visitor spending, property values, health). This tab compares what a trail *costs* to build; the rest of the tool compares what it *returns* once built.
+
+### 11.6 In the Printed Report
+
+If the Why tab is the active tab when **Download Report** is clicked, the PDF includes an additional page summarizing the cost comparison — the two options, the cumulative-cost chart, and the three honesty constraints — so a report generated while reviewing partnership delivery doesn't silently drop that context. If the Why tab is not active, the report has its usual three pages and no partnership content is added.
+
+---
+
+## 12. Contributing and Forking
 
 This tool is intentionally simple: a single HTML file with no build process, no dependencies to install, and no server required. As of the June 2026 rebuild, that includes the charts — earlier versions loaded Chart.js from a CDN, which meant the four charts (and the printed report, which captures them as images) would silently fail if that CDN was ever blocked, down, or unreachable offline. All charting is now hand-written directly in the file: look for the "NO-DEPENDENCY CHART ENGINE" comment block in the JavaScript section. If you're forking this and want to add a new chart, that block has the shared pieces (canvas sizing, tooltip, entrance animation, axis gridlines) — you shouldn't need to touch a charting library's API, because there isn't one. Contributions are welcome.
 
@@ -695,7 +737,7 @@ If you need a more institutionally stable rate source — for example, for a gov
 
 ---
 
-## 12. Bibliography
+## 13. Bibliography
 
 The following studies, reports, and data sources directly informed the assumptions, benchmarks, and methodology used in this calculator. They are listed by category.
 
@@ -853,6 +895,6 @@ The following studies, reports, and data sources directly informed the assumptio
 
 ---
 
-*This README was written to accompany version 2.2 of the Trail Investment ROI Calculator (June 2026). Version 2.2 removes the tool's last external JavaScript dependency: all four charts (breakeven line chart, benefit-breakdown donut, milestone bars, visitor bars) are now drawn with hand-written canvas code instead of loading Chart.js from a CDN, so the tool runs correctly fully offline with zero network access, including chart rendering, animation, and the printed PDF report. This version also adds a sequential reveal animation to the breakeven chart (Total Cost, then Municipal Revenue, then Economic Impact draw in order on load and on every assumption change) and makes the infrastructure cost comparison card collapsible. Version 2.1 added the International Settings panel: metric/imperial/both unit toggle, and currency display conversion (USD, AUD, CAD, EUR, GBP) with daily-updated exchange rates via CDN. The calculator remains a single-file HTML tool requiring no installation. It is intended for use by trail advocates, municipal planners, parks directors, and community decision-makers. All dollar figures reflect nominal USD as of the cited study dates; users should apply their own inflation adjustments when comparing studies from different years.*
+*This README was written to accompany version 2.3 of the Trail Investment ROI Calculator (August 2026). Version 2.3 adds the Why tab: a separate municipal-only vs. leveraged-partnership cost comparison model (fourteen inputs, its own funding and time-series charts, a full line-item ledger, and three deliberate honesty constraints — see Section 11), and fixes the printed report so it includes a Why-tab summary page whenever that tab is active at download time, instead of silently omitting the partnership comparison. Version 2.2 removed the tool's last external JavaScript dependency: all four ROI charts (breakeven line chart, benefit-breakdown donut, milestone bars, visitor bars) are drawn with hand-written canvas code instead of loading Chart.js from a CDN, so the tool runs correctly fully offline with zero network access, including chart rendering, animation, and the printed PDF report. That version also added a sequential reveal animation to the breakeven chart (Total Cost, then Municipal Revenue, then Economic Impact draw in order on load and on every assumption change) and made the infrastructure cost comparison card collapsible. Version 2.1 added the International Settings panel: metric/imperial/both unit toggle, and currency display conversion (USD, AUD, CAD, EUR, GBP) with daily-updated exchange rates via CDN. The calculator remains a single-file HTML tool requiring no installation. It is intended for use by trail advocates, municipal planners, parks directors, and community decision-makers. All dollar figures reflect nominal USD as of the cited study dates; users should apply their own inflation adjustments when comparing studies from different years.*
 
 *Prepared with research support from the TPL/IMBA Economic Benefits of Mountain Biking report (2025), the IMBA Investing in Trails study collection, and additional peer-reviewed and practitioner literature as cited above.*
