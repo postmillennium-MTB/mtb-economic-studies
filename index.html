@@ -146,6 +146,13 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .mc-val.caution{color:var(--amber)}
 .mc-val.ok{color:var(--sky)}
 .mc-sub{font-size:10px;color:var(--tm);margin-top:3px}
+/* Percentage badge next to the dollar figure on the Partnership saves/costs
+   card — the dollar amount alone doesn't say whether that's a big or small
+   share of the total, so the % rides right along with it instead of being
+   buried in the smaller sub-text below. */
+.mc-pct-badge{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:10px;vertical-align:middle}
+.mc-pct-badge.good{background:var(--hi-bg);color:var(--pos)}
+.mc-pct-badge.caution{background:var(--warn-bg);color:var(--amber)}
 /* CHART CARDS */
 .cc{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:.875rem;margin-bottom:10px}
 .cc-t{font-size:13px;font-weight:500;color:var(--tp);margin-bottom:2px}
@@ -1896,8 +1903,8 @@ function updateWhy(){
     </div>
     <div class="${stat3Cls}">
       <p class="mc-lbl">${negligible?'Difference':cheaper?'Partnership saves':'Partnership costs more'}</p>
-      <p class="mc-val ${negligible?'':cheaper?'good':'caution'}">${whyCashShort(Math.abs(m.delta))}</p>
-      <p class="mc-sub">${negligible?`Within 1% — a wash on these assumptions.`:`${Math.abs(m.deltaPct).toFixed(0)}% ${cheaper?'less':'more'} municipal money${v.years===0?' to build':` over ${v.years} years`}`}</p>
+      <p class="mc-val ${negligible?'':cheaper?'good':'caution'}">${whyCashShort(Math.abs(m.delta))}${negligible?'':` <span class="mc-pct-badge ${cheaper?'good':'caution'}">${Math.abs(m.deltaPct).toFixed(0)}%</span>`}</p>
+      <p class="mc-sub">${negligible?`Within 1% — a wash on these assumptions.`:`${cheaper?'Cheaper':'Costlier'} municipal cost${v.years===0?' to build':` over ${v.years} years`}`}</p>
     </div>
   </div>`;
   const mobileSummary=`
@@ -1996,13 +2003,13 @@ function updateWhy(){
       <strong>Maintenance inflation:</strong> when enabled, compounds only the per-mile trail maintenance line, for both options, at the rate selected above — construction, planning, private capital, and partnership coordination costs are all treated as fixed today's-dollar figures for the length of the comparison horizon. Off by default; the six-way switch (Off/1/2/3/4/5%) sits right below the maintenance slider.<br><br>
       <strong>Three things this model refuses to assume:</strong> that grants are partnership-only (the grant rate here applies to both options — what the non-profit unlocks is the private pool); that adoption eliminates maintenance (the slider caps at 95% — storm damage, drainage failures, and machine work stay municipal); that partnership is free (set coordination cost high and volunteer hours low and Option 2 loses — if a model can't produce that result, it isn't a model).<br><br>
       <strong>Not modeled:</strong> volunteer hours often qualify as in-kind local match on public grants — a real second-order benefit, excluded here because match rules vary too much by program to model responsibly. Also excluded: schedule risk, build-quality variance, and every downstream economic effect covered by the rest of this tool (visitor spending, property values). This tab compares what a trail <em>costs</em>, not what it returns.<br><br>
-      <em>Directional planning tool for advocacy and early scoping. USD/imperial only — this tab doesn't yet participate in the unit/currency switcher above. Validate against local contractor quotes before putting any figure in front of a council.</em>
+      <em>Directional planning tool for advocacy and early scoping. USD/imperial only — this tab doesn't yet participate in the unit/currency switcher above. Validate against local contractor quotes.</em>
     </div>
   </details>`;
 
   document.getElementById('why-results').innerHTML=`
   ${mobileSummary}
-  <p style="font-size:12px;color:var(--tm);max-width:70ch;margin-bottom:10px">Two ways to put the same trail on the ground. In the first, the town buys a finished asset from a contractor and owns it forever. In the second, a non-profit advocacy organization joins the project and changes who pays for what. <strong style="color:var(--forest)">The trail is identical either way</strong> — what moves is the money, the labor, and the maintenance liability.</p>
+  <p style="font-size:12px;color:var(--tm);max-width:70ch;margin-bottom:10px">Same trail, two ways to pay for it — the town alone, or with a non-profit partner. <strong style="color:var(--forest)">The trail is identical either way</strong>; what changes is the money, the labor, and who carries the maintenance afterward.</p>
   ${stats}${fundingChart}${timeChart}${ledger}${caveats}`;
   drawWhy(v,m);
 }
