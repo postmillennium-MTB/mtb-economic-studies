@@ -57,6 +57,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--tp);fo
 .act-btn.dl:hover{background:var(--fern);border-color:var(--fern)}
 .act-btn.intl{border-color:var(--sky);color:var(--sky);font-size:13px}
 .act-btn.intl.open{background:var(--sky);color:#fff;border-color:var(--sky)}
+.act-btn.partner{border-color:var(--amber);color:var(--amber)}
+.act-btn.partner.open{background:var(--amber);color:#fff;border-color:var(--amber)}
 /* PMR BACK-LINK */
 .pmr-row{display:flex;justify-content:flex-end;margin-bottom:6px}
 .pmr-link{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid var(--fern);border-radius:16px;background:var(--sbg);color:var(--fern);font-size:11px;font-weight:600;text-decoration:none;letter-spacing:.03em;transition:all .15s}
@@ -73,6 +75,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--tp);fo
 /* INTL PANEL */
 .intl-panel{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.875rem 1rem;margin-bottom:12px;display:none}
 .intl-panel.show{display:block}
+/* PARTNERSHIPS PANEL — same show/hide pattern as .intl-panel above. Its inner
+   layout deliberately mirrors .grid (sliders left, results right) so it reads
+   as a sibling of the main sidebar+results split rather than a different UI. */
+.why-panel{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.875rem 1rem;margin-bottom:12px;display:none}
+.why-panel.show{display:block}
+.why-panel-inner{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:start}
 .intl-sec-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--tm);font-weight:500;margin-bottom:7px}
 .u-btn{padding:4px 11px;border:1px solid var(--bd);border-radius:7px;background:#fff;color:var(--ts);cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:all .12s}
 .u-btn:hover{border-color:var(--fern);color:var(--fern)}
@@ -255,6 +263,7 @@ details[open] summary::before{content:'▼  '}
 }
 @media(max-width:820px){
   .grid{grid-template-columns:1fr}
+  .why-panel-inner{grid-template-columns:1fr}
   .panel{position:static;max-height:none}
   .mc-row{grid-template-columns:1fr 1fr}
   .c3{grid-template-columns:1fr}
@@ -286,6 +295,7 @@ details[open] summary::before{content:'▼  '}
       <button class="sc-btn custom" id="btn-custom" style="display:none" disabled>● Custom</button>
     </div>
     <div class="act-btns">
+      <button class="act-btn partner" id="partnerships-btn" onclick="togglePartnerships()" aria-expanded="false" aria-controls="why-panel">🤝 Partnerships</button>
       <button class="act-btn" onclick="copyLink()" id="copy-btn">🔗 Copy Link</button>
       <button class="act-btn dl" onclick="downloadReport()">📄 Download Report</button>
       <button class="act-btn intl" id="intl-btn" onclick="toggleIntlPanel()" title="Units &amp; currency">€</button>
@@ -400,13 +410,38 @@ details[open] summary::before{content:'▼  '}
   </div>
 </div>
 
+<!-- PARTNERSHIPS PANEL — toggled by the header's "Partnerships" button (mirrors
+     toggleIntlPanel()'s show/hide pattern). Formerly a sidebar tab ("Why"); moved
+     here because it answers a different question (what does the trail cost to
+     deliver — municipal-only vs. a non-profit partnership) than the rest of this
+     tool (what does an already-built trail return), so it reads better as its own
+     drawer than as a 5th peer of Trail/Visitors/Real Estate/Modeling. Two-column
+     layout mirrors .grid below it: sliders left, results right. -->
+<div class="why-panel" id="why-panel">
+  <div class="why-panel-inner">
+    <aside class="panel">
+      <p class="cc-t cc-t-lg">Compare how the trail gets built</p>
+      <p class="cc-s">Same trail either way — what changes is who pays, whose labor it is, and who carries the maintenance afterward.</p>
+      <p class="sec-ttl" style="margin-top:10px"><span class="dot" style="background:#B84C24"></span>The project</p>
+      <p class="sh" style="margin:-4px 0 10px">Applies to both options — the same trail, built to the same standard.</p>
+      <div id="sliders-why-project"></div>
+      <hr class="divider">
+      <p class="sec-ttl" style="margin-top:2px"><span class="dot" style="background:#7A4FA0"></span>The partnership</p>
+      <p class="sh" style="margin:-4px 0 10px">Option 2 only — what the non-profit brings, and what it costs the town to work with them.</p>
+      <div id="sliders-why-partner"></div>
+      <hr class="divider">
+      <button type="button" class="act-btn" id="why-reset" style="width:100%;justify-content:center">&#8635; Reset to defaults</button>
+    </aside>
+    <div id="why-results"></div>
+  </div>
+</div>
+
 <div class="grid">
 
 <!-- LEFT: TABBED INPUTS -->
 <aside class="panel">
 <div class="icard">
   <div class="tab-bar">
-    <button class="tab" onclick="showTab('why',this)">Why</button>
     <button class="tab active" onclick="showTab('trail',this)">Trail</button>
     <button class="tab" onclick="showTab('visitors',this)">Visitors</button>
     <button class="tab" onclick="showTab('realestate',this)">Real Estate</button>
@@ -417,24 +452,9 @@ details[open] summary::before{content:'▼  '}
        script (search "renderSliders") — this is now the only place a new
        slider needs to be added; getV(), setUnit(), setCurrency(),
        decodeState(), and the report's assumption list all read from the
-       same INPUTS list automatically. The Why tab is the one exception —
-       it's a separate cost-comparison model with its own WHY_INPUTS registry,
-       own results panel, and its own reset button below, because it answers a
-       different question (what does the trail cost to deliver) than the rest
-       of this tool (what does it return once it's open). -->
-
-  <!-- TAB: WHY -->
-  <div class="tab-pane" id="tab-why">
-    <p class="sec-ttl"><span class="dot" style="background:#B84C24"></span>The project</p>
-    <p class="sh" style="margin:-4px 0 10px">Applies to both options — the same trail, built to the same standard.</p>
-    <div id="sliders-why-project"></div>
-    <hr class="divider">
-    <p class="sec-ttl" style="margin-top:2px"><span class="dot" style="background:#7A4FA0"></span>The partnership</p>
-    <p class="sh" style="margin:-4px 0 10px">Option 2 only — what the non-profit brings, and what it costs the town to work with them.</p>
-    <div id="sliders-why-partner"></div>
-    <hr class="divider">
-    <button type="button" class="act-btn" id="why-reset" style="width:100%;justify-content:center">&#8635; Reset Why tab to defaults</button>
-  </div>
+       same INPUTS list automatically. (The Why/Partnerships cost-comparison
+       model is the one exception — see the why-panel above .grid, and
+       WHY_INPUTS/renderWhySliders() in the script.) -->
 
   <!-- TAB: TRAIL -->
   <div class="tab-pane active" id="tab-trail">
@@ -480,12 +500,6 @@ details[open] summary::before{content:'▼  '}
 
 <!-- RIGHT: RESULTS -->
 <main>
-<!-- ROI-RESULTS wraps the entire original calculator output (metric cards through
-     the year-by-year table) so the Why tab — an unrelated cost comparison, not a
-     view of the same model — can swap it out for its own panel below instead of
-     rendering underneath or alongside it. showTab() toggles which one is visible;
-     see WHY_INPUTS / renderWhy() for the tab this hides for. -->
-<div id="roi-results">
   <div class="ab">
     <span style="font-weight:500">Active:</span>
     <span class="at" id="ab-inflation">Inflation: 3%</span>
@@ -614,10 +628,6 @@ details[open] summary::before{content:'▼  '}
       </div>
     </div>
   </details>
-</div>
-<!-- Why tab's own results — built once by renderWhy(), hidden by default (#roi-results
-     is the visible one on load). showTab() flips which of the two is display:none. -->
-<div id="why-results" style="display:none"></div>
 </main>
 </div>
 
@@ -1232,12 +1242,21 @@ function showTab(id,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
-  // Why is a separate cost-comparison model, not another view of the ROI model —
-  // it swaps the whole right-hand results column rather than living inside it.
-  const isWhy=id==='why';
-  document.getElementById('roi-results').style.display=isWhy?'none':'';
-  document.getElementById('why-results').style.display=isWhy?'':'none';
-  if(isWhy)updateWhy();
+}
+
+/* ══ PARTNERSHIPS PANEL ══
+   Same show/hide pattern as toggleIntlPanel(). Calling updateWhy() only on open
+   (not eagerly at page load) matters: drawWhy()'s canvas sizes itself from its
+   parent's layout box via fitCanvas(), and a still-hidden (display:none) parent
+   would hand it a collapsed/zero size — draw it after the panel is visible instead. */
+function togglePartnerships(){
+  const p=document.getElementById('why-panel');
+  const b=document.getElementById('partnerships-btn');
+  const show=!p.classList.contains('show');
+  p.classList.toggle('show',show);
+  b.classList.toggle('open',show);
+  b.setAttribute('aria-expanded',String(show));
+  if(show)updateWhy();
 }
 
 /* ══ COLLAPSIBLE CARDS ══
