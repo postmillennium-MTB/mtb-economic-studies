@@ -90,7 +90,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--tp);fo
 /* INPUT CARD + TABS */
 .icard{background:var(--bg);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
 .tab-bar{display:flex;border-bottom:1px solid var(--bd);background:var(--sbg)}
-.tab{flex:1;padding:7px 4px;border:none;background:none;cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;color:var(--tm);font-weight:500;text-align:center;letter-spacing:.04em;transition:all .12s;border-bottom:2px solid transparent;margin-bottom:-1px}
+/* flex row + 5 equal-width tabs in a 300px sidebar means "Real Estate" wraps to two
+   lines at any reasonable font size (measured need: ~67px, available: ~60px) — that's
+   expected, not a bug to chase away. What WAS a bug: .tab had no display:flex, so its
+   text sat at the top of the cell; the row's default align-items:stretch then makes
+   every tab match Real Estate's 2-line height, leaving dead space under the one-line
+   labels (Why/Trail/Visitors/Modeling) and making the whole strip look uneven. Centering
+   each tab's own content fixes that regardless of which label(s) happen to wrap. */
+.tab{flex:1;display:flex;align-items:center;justify-content:center;padding:7px 4px;border:none;background:none;cursor:pointer;font-size:11px;line-height:1.25;font-family:'DM Sans',sans-serif;color:var(--tm);font-weight:500;text-align:center;letter-spacing:.04em;transition:all .12s;border-bottom:2px solid transparent;margin-bottom:-1px}
 .tab:hover{color:var(--fern)}
 .tab.active{color:var(--fern);border-bottom-color:var(--fern);background:var(--bg)}
 .tab-pane{display:none;padding:.875rem}
@@ -175,6 +182,25 @@ th:first-child{text-align:left}
 td{text-align:right;padding:5px 6px}
 td:first-child{text-align:left}
 .be-note{font-size:11px;color:var(--ts);background:var(--sbg);border-radius:5px;padding:5px 8px;margin-top:6px;display:inline-block}
+/* WHY TAB — reuses .cc/.mc/.callout/.leg/table/details everywhere it can; the
+   segmented funding bar below is the one visual this app didn't already have
+   (the highway comparison's .bt/.bf is single-fill only, not stacked). */
+.mc-row-3{grid-template-columns:repeat(3,1fr)}
+.wbar{margin-bottom:14px}
+.wbar:last-of-type{margin-bottom:0}
+.wbar-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:4px;font-size:11px}
+.wbar-name{font-weight:500;color:var(--tp)}
+.wbar-total{font-weight:500;color:var(--tm)}
+.wbar-total-note{font-weight:400;text-transform:uppercase;letter-spacing:.05em;font-size:9px;opacity:.8}
+.wbar-track{display:flex;height:26px;border-radius:3px;overflow:hidden;background:var(--parchment)}
+.wbar-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;transition:width .4s}
+.wbar-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:10px;font-size:11px;color:var(--ts)}
+.wbar-legend span{display:inline-flex;align-items:center;gap:5px}
+.wbar-legend i{width:9px;height:9px;border-radius:2px;flex:0 0 9px;display:inline-block}
+.why-ledger td.neg{color:var(--pos)}
+.why-ledger tr.sum td{font-weight:500;background:var(--sbg)}
+.why-ledger tr.total td{font-weight:600;font-size:12px;border-top:2px solid var(--forest)}
+.why-cell-note{display:block;font-size:9px;color:var(--tm);font-weight:400;margin-top:1px}
 details{margin-top:8px}
 details summary{font-size:11px;color:var(--tm);cursor:pointer;padding:6px 8px;background:var(--sbg);border-radius:6px;user-select:none;list-style:none}
 details summary::before{content:'▶  ';font-size:9px}
@@ -380,6 +406,7 @@ details[open] summary::before{content:'▼  '}
 <aside class="panel">
 <div class="icard">
   <div class="tab-bar">
+    <button class="tab" onclick="showTab('why',this)">Why</button>
     <button class="tab active" onclick="showTab('trail',this)">Trail</button>
     <button class="tab" onclick="showTab('visitors',this)">Visitors</button>
     <button class="tab" onclick="showTab('realestate',this)">Real Estate</button>
@@ -390,7 +417,24 @@ details[open] summary::before{content:'▼  '}
        script (search "renderSliders") — this is now the only place a new
        slider needs to be added; getV(), setUnit(), setCurrency(),
        decodeState(), and the report's assumption list all read from the
-       same INPUTS list automatically. -->
+       same INPUTS list automatically. The Why tab is the one exception —
+       it's a separate cost-comparison model with its own WHY_INPUTS registry,
+       own results panel, and its own reset button below, because it answers a
+       different question (what does the trail cost to deliver) than the rest
+       of this tool (what does it return once it's open). -->
+
+  <!-- TAB: WHY -->
+  <div class="tab-pane" id="tab-why">
+    <p class="sec-ttl"><span class="dot" style="background:#B84C24"></span>The project</p>
+    <p class="sh" style="margin:-4px 0 10px">Applies to both options — the same trail, built to the same standard.</p>
+    <div id="sliders-why-project"></div>
+    <hr class="divider">
+    <p class="sec-ttl" style="margin-top:2px"><span class="dot" style="background:#7A4FA0"></span>The partnership</p>
+    <p class="sh" style="margin:-4px 0 10px">Option 2 only — what the non-profit brings, and what it costs the town to work with them.</p>
+    <div id="sliders-why-partner"></div>
+    <hr class="divider">
+    <button type="button" class="act-btn" id="why-reset" style="width:100%;justify-content:center">&#8635; Reset Why tab to defaults</button>
+  </div>
 
   <!-- TAB: TRAIL -->
   <div class="tab-pane active" id="tab-trail">
@@ -436,6 +480,12 @@ details[open] summary::before{content:'▼  '}
 
 <!-- RIGHT: RESULTS -->
 <main>
+<!-- ROI-RESULTS wraps the entire original calculator output (metric cards through
+     the year-by-year table) so the Why tab — an unrelated cost comparison, not a
+     view of the same model — can swap it out for its own panel below instead of
+     rendering underneath or alongside it. showTab() toggles which one is visible;
+     see WHY_INPUTS / renderWhy() for the tab this hides for. -->
+<div id="roi-results">
   <div class="ab">
     <span style="font-weight:500">Active:</span>
     <span class="at" id="ab-inflation">Inflation: 3%</span>
@@ -564,6 +614,10 @@ details[open] summary::before{content:'▼  '}
       </div>
     </div>
   </details>
+</div>
+<!-- Why tab's own results — built once by renderWhy(), hidden by default (#roi-results
+     is the visible one on load). showTab() flips which of the two is display:none. -->
+<div id="why-results" style="display:none"></div>
 </main>
 </div>
 
@@ -768,6 +822,152 @@ function renderSliders(){
     if(el)el.innerHTML=items.map(sliderHTML).join('');
   });
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   WHY TAB — a separate cost-COMPARISON model, ported from the Trail Advocacy
+   Atlas's Why tab. It answers "what does the trail cost to deliver" (Option 1:
+   town buys a finished asset from a for-profit contractor, vs. Option 2: a
+   non-profit partner changes who pays for what) — a different question from
+   the rest of this tool, which is about what an already-built trail returns.
+   Deliberately independent of the main INPUTS/getV()/SCENARIOS system: its
+   sliders live at DOM ids "why-<key>" (not "s-<key>"), its own value object
+   is built by whyValues(), and it is USD/imperial only for now — it does not
+   participate in the unit/currency switcher above. ══════════════════════════ */
+function whyCash(n){return '$'+Math.round(n).toLocaleString()}
+function whyCashShort(n){
+  const v=Math.round(n), s=v<0?'-':'', a=Math.abs(v);
+  if(a>=1e6) return s+'$'+(a/1e6).toFixed(a>=1e7?1:2)+'M';
+  if(a>=1e4) return s+'$'+Math.round(a/1e3)+'K';
+  return s+'$'+a.toLocaleString();
+}
+function whyPct(v){return v+'%'}
+function whyNum(v){return Number(v).toLocaleString()}
+
+/* TO ADD A WHY SLIDER: add one line here. Markup, value readout, reset button,
+   and computeWhy()'s inputs all derive from this array — same pattern as the
+   main INPUTS registry above, just namespaced separately (see block comment). */
+const WHY_INPUTS=[
+  {key:'miles',     group:'project', label:'Trail length',                    min:5,     max:50,     step:1,    value:10,    fmt:v=>v+' mi'},
+  {key:'cost',      group:'project', label:'Base construction cost / mile',   min:10000, max:95000,  step:1000, value:45000, fmt:whyCash,
+   hint:'Turnkey professional singletrack, machine cut and hand finished. Contractor surveys cluster at $25K–$80K/mi; rock, bridging, and steep or wet ground push past that.'},
+  {key:'plan',      group:'project', label:'Planning, design &amp; permitting',   min:0,     max:25,     step:1,    value:12,    fmt:whyPct,
+   hint:'As a share of construction cost. Covers alignment flagging, environmental review, and municipal staff hours pulled off other duties.'},
+  {key:'maint',     group:'project', label:'Maintenance / mile / year',       min:500,   max:8000,   step:250,  value:2500,  fmt:whyCash,
+   hint:'American Trails puts routine singletrack upkeep at $1,500–$5,000/mi/yr.'},
+  {key:'grant',     group:'project', label:'Public grant funding',            min:0,     max:80,     step:5,    value:25,    fmt:whyPct,
+   hint:'RTP, RAISE, CMAQ and state programs. Applied to BOTH options — a town does not need a non-profit to apply for public money.'},
+  {key:'years',     group:'project', label:'Comparison horizon',              min:5,     max:30,     step:1,    value:20,    fmt:v=>v+' yrs'},
+  {key:'volhours',  group:'partner', label:'Volunteer construction hours',    min:0,     max:15000,  step:100,  value:2500,  fmt:whyNum,
+   hint:'Total hours the non-profit mobilizes for hand finishing across the whole build, not per year.'},
+  {key:'volrate',   group:'partner', label:'Value of one volunteer hour',     min:15,    max:60,     step:1,    value:35,    fmt:whyCash,
+   hint:"Independent Sector's national estimate is $34.79/hr (2024). State-level values run roughly $25–$50."},
+  {key:'prod',      group:'partner', label:'Volunteer productivity vs. pros', min:20,    max:100,    step:5,    value:60,    fmt:whyPct,
+   hint:'A volunteer hour does not displace a contractor hour one-for-one. This discount is the difference between an honest estimate and an advocacy number.'},
+  {key:'handshare', group:'partner', label:'Hand-finishing share of build',   min:0,     max:60,     step:5,    value:35,    fmt:whyPct,
+   hint:'The ceiling on volunteer savings — excavator time and operator wages cannot be volunteered away.'},
+  {key:'private',   group:'partner', label:'Non-profit private capital',      min:0,     max:500000, step:5000, value:75000, fmt:whyCash,
+   hint:'Donations, sponsorship, and outdoor-industry or foundation grants that municipalities are ineligible to apply for directly.'},
+  {key:'planoffset',group:'partner', label:'Planning absorbed by non-profit', min:0,     max:100,    step:5,    value:50,    fmt:whyPct,
+   hint:'Pro-bono trail planners, volunteer-led public comment, or a planning grant the non-profit secures.'},
+  {key:'adopt',     group:'partner', label:'Maintenance done by volunteers',  min:0,     max:95,     step:5,    value:70,    fmt:whyPct,
+   hint:'Capped below 100% on purpose — storm damage, drainage failures, and machine work stay municipal even under a signed adoption agreement.'},
+  {key:'coord',     group:'partner', label:'Partnership coordination / year', min:0,     max:40000,  step:1000, value:6000,  fmt:whyCash,
+   hint:'Staff time to schedule crews, train and supervise volunteers, carry insurance and waivers, and maintain tools.'},
+];
+
+function whySliderHTML(inp){
+  const hint=inp.hint?`<p class="sh">${inp.hint}</p>`:'';
+  return`<div class="sr">
+      <div class="sl">${inp.label} <span class="sv" id="whyv-${inp.key}">${inp.fmt(inp.value)}</span></div>
+      <input type="range" id="why-${inp.key}" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.value}" oninput="updateWhy()">
+      ${hint}
+    </div>`;
+}
+function renderWhySliders(){
+  ['project','partner'].forEach(g=>{
+    const el=document.getElementById('sliders-why-'+g);
+    if(el)el.innerHTML=WHY_INPUTS.filter(i=>i.group===g).map(whySliderHTML).join('');
+  });
+}
+function whyValues(){
+  const v={};
+  WHY_INPUTS.forEach(i=>{const el=document.getElementById('why-'+i.key); v[i.key]=el?parseFloat(el.value):i.value});
+  return v;
+}
+
+/* ══ computeWhy() — THE ENTIRE COST MODEL, ported unchanged from the Atlas. ══
+   Two rules it follows deliberately:
+   1. Both options get the same public grant rate. Municipalities apply for RTP,
+      RAISE, CMAQ and state trail money directly and win it all the time. The
+      partnership's funding advantage is the PRIVATE pool, which is genuinely
+      closed to them.
+   2. The partnership is allowed to lose. Volunteer labor is discounted for
+      productivity and capped at the hand-finishing share of the build, adoption
+      is capped below 100%, and coordination carries a real annual cost. Turn the
+      volunteer hours down and the coordination cost up and Option 2 comes out
+      behind — which happens in the real world and should happen here too. */
+function computeWhy(v){
+  const construction  = v.miles*v.cost;
+  const planningFull  = construction*v.plan/100;
+  const planning2     = planningFull*(1-v.planoffset/100);
+  const planningGift  = planningFull-planning2;
+
+  const handworkCost  = construction*v.handshare/100;
+  const volValueRaw   = v.volhours*v.volrate*(v.prod/100);
+  const volCredit     = Math.min(volValueRaw,handworkCost);
+  const volCapped     = volValueRaw>handworkCost;
+  const volWasted     = volValueRaw-volCredit;
+
+  const capex1        = construction+planningFull;
+  const grant1         = capex1*v.grant/100;
+  const mun1           = capex1-grant1;
+
+  const capex2        = (construction-volCredit)+planning2;
+  const grant2         = capex2*v.grant/100;
+  const privateUsed   = Math.min(v.private,Math.max(0,capex2-grant2));
+  const privateSpare  = v.private-privateUsed;
+  const mun2           = Math.max(0,capex2-grant2-privateUsed);
+
+  const grantForgone  = grant1-grant2;
+
+  const annualMaint1  = v.miles*v.maint;
+  const annualMaint2  = annualMaint1*(1-v.adopt/100)+v.coord;
+  const opex1         = annualMaint1*v.years;
+  const opex2         = annualMaint2*v.years;
+
+  const total1 = mun1+opex1, total2 = mun2+opex2;
+
+  const series=[];
+  for(let y=0;y<=v.years;y++) series.push({y, a:mun1+annualMaint1*y, b:mun2+annualMaint2*y});
+  let crossover=null;
+  for(const p of series){ if(p.b>p.a){crossover=p.y;break} }
+
+  return {construction,planningFull,planning2,planningGift,handworkCost,volValueRaw,volCredit,
+          volCapped,volWasted,capex1,grant1,mun1,capex2,grant2,privateUsed,privateSpare,mun2,
+          grantForgone,annualMaint1,annualMaint2,opex1,opex2,total1,total2,series,crossover,
+          delta:total1-total2, deltaPct:total1>0?(total1-total2)/total1*100:0};
+}
+
+/* One stacked funding/cost bar. Both options' bars share the SAME total
+   (construction + full planning burden) on purpose — they deliver the same
+   trail, and the point of the chart is that only the funding mix changes.
+   The "delivered value" caption makes that explicit on the number itself,
+   not just in the paragraph above it — a real reviewer read two identical
+   totals as a copy-paste bug before that caption existed. */
+function whyBarHTML(name,total,segs){
+  const shown=segs.filter(s=>s.val>0.5);
+  const cells=shown.map(s=>{
+    const pct=total>0?s.val/total*100:0;
+    return `<span class="wbar-seg" style="width:${pct.toFixed(2)}%;background:${s.color}"
+      title="${s.label}: ${whyCash(s.val)} (${pct.toFixed(1)}%)">${pct>=13?whyCashShort(s.val):''}</span>`;
+  }).join('');
+  return `<div class="wbar">
+    <div class="wbar-head"><span class="wbar-name">${name}</span><span class="wbar-total">${whyCash(total)} <span class="wbar-total-note">delivered value</span></span></div>
+    <div class="wbar-track">${cells||'<span class="wbar-seg" style="width:100%"></span>'}</div>
+  </div>`;
+}
+const whyLegendHTML=items=>`<div class="wbar-legend">${
+  items.map(i=>`<span><i style="background:${i.color}"></i>${i.label}</span>`).join('')}</div>`;
 
 /* ══ GET VALUES ══ */
 function getV(){
@@ -1032,6 +1232,12 @@ function showTab(id,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
+  // Why is a separate cost-comparison model, not another view of the ROI model —
+  // it swaps the whole right-hand results column rather than living inside it.
+  const isWhy=id==='why';
+  document.getElementById('roi-results').style.display=isWhy?'none':'';
+  document.getElementById('why-results').style.display=isWhy?'':'none';
+  if(isWhy)updateWhy();
 }
 
 /* ══ COLLAPSIBLE CARDS ══
@@ -1380,7 +1586,12 @@ function drawDonut(v,m){
   function render(elapsed){
     const{ctx,w,h}=fitCanvas(canvas);
     ctx.clearRect(0,0,w,h);
-    const cx=w/2,cy=h/2,outerR=Math.min(w,h)/2-6,innerR=outerR*0.6;
+    // Math.max(0,...) guards against a hidden/zero-size parent — fitCanvas() floors
+    // w/h at 1px rather than 0, so outerR's "-6" inset alone can go negative and
+    // ctx.arc() throws on a negative radius. Happens when the Why tab hides
+    // #roi-results (this canvas's ancestor): the ResizeObserver still fires once
+    // for the collapse, and without this guard that redraw crashes.
+    const cx=w/2,cy=h/2,outerR=Math.max(0,Math.min(w,h)/2-6),innerR=outerR*0.6;
     const progress=CHART_EASE(Math.min(1,elapsed/CHART_ANIM_MS));
     const sweepBudget=Math.PI*2*progress;
     fullArcs.forEach(({s,a0,a1})=>{
@@ -1581,6 +1792,185 @@ function drawTable(v,m){
   document.getElementById('tbl-body').innerHTML=buildYearRows(v,m);
 }
 
+/* ══ WHY TAB — RESULTS ══
+   Runs on every Why slider input (see whySliderHTML's oninput). Cheap enough
+   (one pass over ~20 years, a handful of DOM writes) not to need the debounce
+   the main model's recalc() uses. */
+function updateWhy(){
+  const v=whyValues();
+  WHY_INPUTS.forEach(i=>{const el=document.getElementById('whyv-'+i.key); if(el)el.textContent=i.fmt(v[i.key])});
+  const m=computeWhy(v);
+  const cheaper=m.delta>0, negligible=Math.abs(m.deltaPct)<1;
+  const stat3Cls=negligible?'mc':cheaper?'mc hi':'mc warn';
+
+  const stats=`
+  <div class="mc-row mc-row-3">
+    <div class="mc">
+      <p class="mc-lbl">Option 1 &middot; Municipal only</p>
+      <p class="mc-val">${whyCashShort(m.total1)}</p>
+      <p class="mc-sub">${v.years}-yr cost: ${whyCash(m.mun1)} capital + ${whyCash(m.opex1)} upkeep</p>
+    </div>
+    <div class="mc">
+      <p class="mc-lbl">Option 2 &middot; With a non-profit</p>
+      <p class="mc-val">${whyCashShort(m.total2)}</p>
+      <p class="mc-sub">${v.years}-yr cost: ${whyCash(m.mun2)} capital + ${whyCash(m.opex2)} upkeep</p>
+    </div>
+    <div class="${stat3Cls}">
+      <p class="mc-lbl">${negligible?'Difference':cheaper?'Partnership saves':'Partnership costs more'}</p>
+      <p class="mc-val ${negligible?'':cheaper?'good':'caution'}">${whyCashShort(Math.abs(m.delta))}</p>
+      <p class="mc-sub">${negligible?`Within 1% — a wash on these assumptions.`:`${Math.abs(m.deltaPct).toFixed(0)}% ${cheaper?'less':'more'} municipal money over ${v.years} years`}</p>
+    </div>
+  </div>`;
+
+  /* ---- funding chart: who pays to build it ---- */
+  const t=T();
+  const deliveredValue=m.construction+m.planningFull;
+  const fundingLegend=whyLegendHTML([
+    {label:'Municipal cash',color:t.cost},
+    {label:'Public grant',color:t.muni},
+    {label:'Private / non-profit capital',color:'#B84C24'},
+    {label:'Volunteer labor (in kind)',color:'#7A4FA0'},
+    {label:'Donated planning',color:t.econSolid},
+  ]);
+  let flags='';
+  if(m.volCapped)flags+=`<div class="callout" style="margin-top:10px"><p class="co-t">Volunteer hours capped</p><p class="co-b">${whyCash(m.volValueRaw)} of discounted volunteer value was offered but only ${whyCash(m.volCredit)} could be used — that's the entire hand-finishing budget at ${v.handshare}% of construction. The remaining ${whyCash(m.volWasted)} has nothing left to displace, because what's left is machine work.</p></div>`;
+  if(m.privateSpare>0)flags+=`<div class="callout" style="margin-top:10px"><p class="co-t">Raised more than needed</p><p class="co-b">The non-profit's ${whyCash(v.private)} exceeds the remaining capital gap by ${whyCash(m.privateSpare)}. Real projects would put that toward a maintenance endowment or the next phase; this model simply leaves it unspent.</p></div>`;
+  if(m.grantForgone>100)flags+=`<div class="callout" style="margin-top:10px"><p class="co-t">The catch nobody mentions</p><p class="co-b">Because the partnership shrinks the contract, the same ${v.grant}% grant rate draws ${whyCash(m.grantForgone)} less public money than Option 1 would have. It still nets out ahead here, but a town chasing a large reimbursement grant should check the arithmetic.</p></div>`;
+
+  const fundingChart=`
+  <div class="cc">
+    <p class="cc-t">Who pays to build it</p>
+    <p class="cc-s">Both bars are the same length because both deliver the same ${v.miles}-mile trail, valued at ${whyCash(deliveredValue)} including planning. The partnership doesn't make the trail cheaper to build — it changes who covers each slice.</p>
+    ${fundingLegend}
+    ${whyBarHTML('Option 1 · Traditional municipal',deliveredValue,[
+      {label:'Municipal cash',val:m.mun1,color:t.cost},
+      {label:'Public grant',val:m.grant1,color:t.muni},
+    ])}
+    ${whyBarHTML('Option 2 · Leveraged partnership',deliveredValue,[
+      {label:'Municipal cash',val:m.mun2,color:t.cost},
+      {label:'Public grant',val:m.grant2,color:t.muni},
+      {label:'Private / non-profit capital',val:m.privateUsed,color:'#B84C24'},
+      {label:'Volunteer labor (in kind)',val:m.volCredit,color:'#7A4FA0'},
+      {label:'Donated planning',val:m.planningGift,color:t.econSolid},
+    ])}
+    ${flags}
+  </div>`;
+
+  /* ---- time chart: cumulative municipal outlay ---- */
+  const timeChart=`
+  <div class="cc">
+    <p class="cc-t">What the town has spent, year by year</p>
+    <p class="cc-s">Cumulative municipal outlay. Year 0 is the capital cheque; the slope after that is annual maintenance the town still carries. ${m.crossover===null
+      ? 'The gap widens every year the non-profit keeps its crews out there — the maintenance liability, not the construction discount, is where the money actually is.'
+      : `On these assumptions the partnership costs the town more from year ${m.crossover} onward: coordination overhead has outgrown the maintenance it offsets.`} Constant dollars, no inflation.</p>
+    <div class="leg">
+      <span class="li"><svg width="18" height="10" aria-hidden="true"><line x1="0" y1="5" x2="18" y2="5" stroke="${t.cost}" stroke-width="2"/></svg>Option 1 · Municipal only</span>
+      <span class="li"><span class="ld" style="background:${t.econSolid}"></span>Option 2 · With a non-profit</span>
+    </div>
+    <div style="position:relative;height:200px">
+      <canvas id="chartWhy" role="img" aria-label="Cumulative municipal cost, both options">Cumulative cost chart</canvas>
+    </div>
+  </div>`;
+
+  /* ---- ledger ---- */
+  const row=(label,note,a,b,cls)=>`<tr${cls?` class="${cls}"`:''}>
+    <td>${label}${note?`<span class="why-cell-note">${note}</span>`:''}</td>
+    <td${typeof a==='number'&&a<0?' class="neg"':''}>${typeof a==='number'?whyCash(a):a}</td>
+    <td${typeof b==='number'&&b<0?' class="neg"':''}>${typeof b==='number'?whyCash(b):b}</td></tr>`;
+  const ledger=`
+  <div class="cc why-ledger">
+    <p class="cc-t">The arithmetic, line by line</p>
+    <p class="cc-s">Every figure above, traceable.</p>
+    <div class="tbl-wrap" style="max-height:none">
+      <table>
+        <thead><tr><th style="text-align:left">Line item</th><th>Option 1</th><th>Option 2</th></tr></thead>
+        <tbody>
+          ${row('Construction',`${v.miles} mi &times; ${whyCash(v.cost)}/mi`,m.construction,m.construction)}
+          ${row('Volunteer hand-finishing credit',`${whyNum(v.volhours)} hrs &times; ${whyCash(v.volrate)} &times; ${v.prod}% productivity${m.volCapped?', capped':''}`,'—',-m.volCredit)}
+          ${row('Planning, design &amp; permitting',`${v.plan}% of construction; non-profit absorbs ${v.planoffset}%`,m.planningFull,m.planning2)}
+          ${row('Capital project cost','',m.capex1,m.capex2,'sum')}
+          ${row('Public grant',`${v.grant}% — both options eligible`,-m.grant1,-m.grant2)}
+          ${row('Non-profit private capital','Donations, sponsorship, foundation grants','—',-m.privateUsed)}
+          ${row('Municipal capital outlay','',m.mun1,m.mun2,'sum')}
+          ${row('Annual maintenance',`${v.miles} mi &times; ${whyCash(v.maint)}/mi/yr${v.adopt>0?`; volunteers cover ${v.adopt}%`:''}`,m.annualMaint1,m.annualMaint1*(1-v.adopt/100))}
+          ${row('Annual partnership coordination','Staff time, training, insurance, tools','—',v.coord)}
+          ${row(`Operating cost &times; ${v.years} years`,'',m.opex1,m.opex2,'sum')}
+          ${row(`Total municipal cost, ${v.years} years`,'',m.total1,m.total2,'total')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+
+  const caveats=`
+  <details>
+    <summary>Where these numbers come from, and where they stop</summary>
+    <div class="src-body">
+      <strong>Cost benchmarks:</strong> professional contractor-built singletrack runs roughly $25,000–$80,000/mi; technical rock work, bridging, boardwalk and steep or wet ground push above that. Routine maintenance runs $1,500–$5,000/mi/yr. Sources: Singletracks contractor survey; American Trails cost database.<br><br>
+      <strong>Valuing volunteer labor:</strong> priced at Independent Sector's national value of volunteer time ($34.79/hr for 2024), then discounted by a productivity factor, then capped at the hand-finishing share of the build. Pricing volunteer hours at the headline rate with no discount and no cap is the single most common way these comparisons get inflated.<br><br>
+      <strong>Three things this model refuses to assume:</strong> that grants are partnership-only (the grant rate here applies to both options — what the non-profit unlocks is the private pool); that adoption eliminates maintenance (the slider caps at 95% — storm damage, drainage failures, and machine work stay municipal); that partnership is free (set coordination cost high and volunteer hours low and Option 2 loses — if a model can't produce that result, it isn't a model).<br><br>
+      <strong>Not modeled:</strong> volunteer hours often qualify as in-kind local match on public grants — a real second-order benefit, excluded here because match rules vary too much by program to model responsibly. Also excluded: schedule risk, build-quality variance, and every downstream economic effect covered by the rest of this tool (visitor spending, property values). This tab compares what a trail <em>costs</em>, not what it returns.<br><br>
+      <em>Directional planning tool for advocacy and early scoping. USD/imperial only — this tab doesn't yet participate in the unit/currency switcher above. Validate against local contractor quotes before putting any figure in front of a council.</em>
+    </div>
+  </details>`;
+
+  document.getElementById('why-results').innerHTML=`
+  <p style="font-size:12px;color:var(--tm);max-width:70ch;margin-bottom:10px">Two ways to put the same trail on the ground. In the first, the town buys a finished asset from a contractor and owns it forever. In the second, a non-profit advocacy organization joins the project and changes who pays for what. <strong style="color:var(--forest)">The trail is identical either way</strong> — what moves is the money, the labor, and the maintenance liability.</p>
+  ${stats}${fundingChart}${timeChart}${ledger}${caveats}`;
+  drawWhy(v,m);
+}
+
+/* ══ CHART: WHY TAB TIME SERIES ══ */
+function drawWhy(v,m){
+  kc('why');
+  const canvas=document.getElementById('chartWhy');
+  if(!canvas)return;
+  const t=T();
+  const labs=m.series.map(p=>'Yr '+p.y);
+  const aData=m.series.map(p=>Math.round(p.a));
+  const bData=m.series.map(p=>Math.round(p.b));
+  const series=[
+    {key:'a',label:'Option 1 · Municipal only',data:aData,color:t.cost,fill:null,dash:null,lineWidth:2.5,pointEvery:4},
+    {key:'b',label:'Option 2 · With a non-profit',data:bData,color:t.econSolid,fill:null,dash:null,lineWidth:2.5,pointEvery:4},
+  ];
+  const PAD={left:56,right:10,top:8,bottom:22};
+  let lastGeom=null;
+
+  function render(elapsed){
+    const{ctx,w,h}=fitCanvas(canvas);
+    ctx.clearRect(0,0,w,h);
+    const plot={left:PAD.left,top:PAD.top,w:w-PAD.left-PAD.right,h:h-PAD.top-PAD.bottom};
+    const maxVal=Math.max(1,...aData,...bData);
+    const{max:yMax}=niceScale(maxVal);
+    drawAxes(ctx,plot,yMax,val=>fcd(val),labs,10);
+    const xPos=i=>plot.left+(labs.length<=1?plot.w/2:plot.w*i/(labs.length-1));
+    const yPos=val=>plot.top+plot.h-(plot.h*Math.max(0,val)/yMax);
+    const progress=CHART_EASE(Math.min(1,elapsed/CHART_ANIM_MS));
+    series.forEach(s=>drawRevealedLine(ctx,s,progress,xPos,yPos,plot));
+    lastGeom={plot,xPos};
+  }
+  function onMove(e){
+    if(!lastGeom)return;
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left;
+    const{plot,xPos}=lastGeom;
+    if(mx<plot.left-10||mx>plot.left+plot.w+10){hideChartTooltip();return;}
+    let idx=Math.round((mx-plot.left)/plot.w*(labs.length-1));
+    idx=Math.max(0,Math.min(labs.length-1,idx));
+    showChartTooltip(e.clientX,e.clientY,[labs[idx]].concat(series.map(s=>'  '+s.label+': '+fcd(s.data[idx]))));
+  }
+  function onLeave(){hideChartTooltip()}
+  canvas.addEventListener('mousemove',onMove);
+  canvas.addEventListener('mouseleave',onLeave);
+
+  const anim=animateChart(render,CHART_ANIM_MS);
+  const ro=observeResize(canvas.parentElement,()=>render(FULL_REVEAL));
+  CH.why={
+    destroy(){anim.stop();ro.disconnect();canvas.removeEventListener('mousemove',onMove);canvas.removeEventListener('mouseleave',onLeave);hideChartTooltip()},
+    redraw(){render(FULL_REVEAL)},
+    finish(){render(FULL_REVEAL)}
+  };
+}
+
 /* ══ SET SCENARIO ══ */
 function setScenario(name){
   const sc=SCENARIOS[name];
@@ -1670,6 +2060,11 @@ function downloadReport(){
 /* ══ INIT ══ */
 window.addEventListener('DOMContentLoaded',async()=>{
   renderSliders(); // must run before getV()/decodeState() touch any slider element
+  renderWhySliders(); // same requirement, for the Why tab's separate slider set
+  document.getElementById('why-reset').addEventListener('click',()=>{
+    WHY_INPUTS.forEach(i=>{document.getElementById('why-'+i.key).value=i.value});
+    updateWhy();
+  });
   fetchRates(); // non-blocking, updates rates in background
   // theme: URL param wins, then saved preference, then Ore Pass default
   const p=new URLSearchParams(window.location.search);
