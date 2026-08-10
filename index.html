@@ -2000,6 +2000,16 @@ function downloadReport(){
   const msImg=document.getElementById('chartMilestones').toDataURL('image/png');
   const visImg=document.getElementById('chartVisitors').toDataURL('image/png');
 
+  // Check if Why tab is active and capture its chart if so
+  const whyTabActive=document.getElementById('tab-why').classList.contains('active');
+  let whyImg=null;
+  if(whyTabActive){
+    // Force Why chart to final state before capturing
+    if(CH.why&&CH.why.finish)CH.why.finish();
+    const whyCanvas=document.getElementById('chartWhy');
+    if(whyCanvas)whyImg=whyCanvas.toDataURL('image/png');
+  }
+
   const asmPairs=[
     ['Miles of trail',dst(v.miles)],['Construction cost/mi',cpd(v.buildcost)],['Total project cost',fcd(m.cap)],
     ['Grant funding',v.grant>0?v.grant+'% (saves '+fcd(m.cap-m.municipalCap)+')':'None'],
@@ -2020,6 +2030,27 @@ function downloadReport(){
   const grantBanner=v.grant>0?`<div class="rpt-grant-banner"><strong>Grant funding active:</strong> ${v.grant}% of construction covered — saving ${fcd(m.cap-m.municipalCap)} upfront. Municipal share: ${fcd(m.municipalCap)} of ${fcd(m.cap)} total.</div>`:'';
   const intlBanner=unitNote?`<div style="background:#EBF3FB;border:1px solid #A8C8E8;border-radius:6px;padding:7px 12px;margin-bottom:10px;font-size:8pt;color:#1A4F7A"><strong>Currency / units note:</strong>${unitNote}</div>`:'';
 
+  // Build Why/Cost Comparison page if active
+  const whyPage=whyTabActive?`
+  <div class="rpt-pg">
+    <div class="rpt-hdr"><div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Cost Comparison (Why Tab)</div><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></div>
+    <div class="rpt-section-title">Build it through partnership: cost comparison</div>
+    <p style="font-size:9pt;color:#4A4A42;margin-bottom:10px;max-width:70ch">This section compares two paths to the same trail: traditional municipal delivery versus a partnership model where a non-profit advocacy organization joins the project to reshape the funding and labor split. The trail is identical either way — what changes is who pays for what and who carries the maintenance liability.</p>
+    <div style="font-size:8pt;color:#2A2A24;margin-bottom:12px">
+      <div style="margin-bottom:8px"><strong>Option 1 · Municipal only:</strong> Town contracts with a for-profit builder, owns the finished asset and all ongoing maintenance.</div>
+      <div style="margin-bottom:8px"><strong>Option 2 · Partnership model:</strong> Non-profit brings volunteer labor, private donations, and an adopt-a-trail maintenance agreement, reshaping the municipal outlay and long-term liability.</div>
+    </div>
+    ${whyImg?`<div style="margin-bottom:12px"><img src="${whyImg}" style="max-width:100%;border:1px solid #D5CFBF;border-radius:6px" alt="Cumulative municipal cost over time"></div>`:''}
+    <div style="font-size:8pt;color:#4A4A42;line-height:1.6;background:#F7F4EE;border:1px solid #D5CFBF;border-radius:6px;padding:8px 10px">
+      <strong>Three built-in honesty constraints:</strong><br>
+      • Both options receive the same public grant rate (both are eligible; the partnership's advantage is access to the private donor pool, not grant priority).<br>
+      • Volunteer labor is priced at $34.79/hr (Independent Sector 2024 value), discounted for productivity, and capped at the hand-finishing share of construction.<br>
+      • The partnership model is allowed to lose — if coordination costs exceed maintenance savings, that outcome appears in the report (this is not a sales pitch tool).<br><br>
+      <em>This model does not assume grants are partnership-only, that adoption eliminates all maintenance, or that partnership is free. Directional planning tool — validate against local contractor quotes and non-profit partnership precedents before formal presentation.</em>
+    </div>
+    <div class="rpt-footer">Trail Investment ROI Calculator · Cost Comparison Section · For planning and advocacy · Validate assumptions with local data before formal municipal presentation</div>
+  </div>`:'';
+
   document.getElementById('rpt').innerHTML=`
   <div class="rpt-pg">
     <div class="rpt-hdr"><div><div class="rpt-title">Trail Investment ROI Calculator</div><div style="font-size:9pt;color:#7A7A70;margin-top:3px">Municipal Planning Tool · 50+ economic studies · TPL, IMBA, NAR (2025)</div></div><div class="rpt-meta"><div class="rpt-sc">${scLabel} Scenario</div><br>Generated ${now}</div></div>
@@ -2038,7 +2069,7 @@ function downloadReport(){
     <div class="rpt-footer">Trail Investment ROI Calculator · For planning and advocacy · Validate assumptions with local data before formal municipal presentation</div>
   </div>
   <div class="rpt-pg">
-    <div class="rpt-hdr"><div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Page 2 of 3</div><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></div>
+    <div class="rpt-hdr"><div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Page 2 of ${whyTabActive?4:3}</div><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></div>
     <div class="rpt-callout"><strong>Property value impact</strong>${fn(v.homes)} homes within ${halfMile()} gain a ${v.propprem.toFixed(1)}% value premium — adding ${fcd(m.propVal)} in assessed value. At ${v.proptax.toFixed(1)}% property tax: ${fcd(m.ptAnn)}/yr in new municipal revenue without raising anyone's rate. (Indianapolis Cultural Trail: +$1B within 500 ft, 2008–2014.)</div>
     <div class="rpt-section-title">Annual benefit breakdown &amp; cumulative milestones</div>
     <div class="rpt-chart-row"><img src="${dnImg}" alt="Revenue breakdown"><img src="${msImg}" alt="Milestone chart"></div>
@@ -2047,13 +2078,14 @@ function downloadReport(){
     <div class="rpt-footer">Trail Investment ROI Calculator · For planning and advocacy · Validate assumptions with local data before formal municipal presentation</div>
   </div>
   <div class="rpt-pg">
-    <div class="rpt-hdr"><div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Page 3 of 3</div><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></div>
+    <div class="rpt-hdr"><div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Page 3 of ${whyTabActive?4:3}</div><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></div>
     <div class="rpt-section-title">Year-by-year detail (first ${show} years) · ✓ = breakeven · ↗ = ramp-up</div>
     <table class="rpt-tbl"><thead><tr style="background:#F2EEE4"><th style="text-align:left;padding:4px 5px">Yr</th><th style="padding:4px 5px">Visitors</th><th style="padding:4px 5px">Maint.</th><th style="padding:4px 5px">Cumul. Cost</th><th style="padding:4px 5px">Cumul. Muni Rev.</th><th style="padding:4px 5px">Cumul. Econ. Impact</th><th style="padding:4px 5px">Net (vs. muni cost)</th></tr></thead><tbody>${tRows}</tbody></table>
     <div class="rpt-section-title" style="margin-top:16px">Methodology &amp; data sources</div>
     <div style="font-size:8pt;color:#4A4A42;line-height:1.7"><strong>Visitor spending:</strong> TPL/IMBA 2025 (50-study meta-analysis). Conservative $103/trip (Duluth, MN); Moderate $175/trip (regional avg); Optimistic $416/trip (national avg).<br><strong>Property values:</strong> Crompton &amp; Nicholls (2019); NAR Field Guide (2020). Trail build: Singletracks.com (Apr 2026). Jobs: IMBA ~$45K labor income/FTE.<br><strong>Local vs. out-of-town:</strong> Out-of-town spending gets full multiplier; local spending multiplier = 1.0 (recirculated). Per Savolt (2017) and Buning &amp; Lamont (2021).<br>${unitNote?'<strong>Units / currency:</strong> All research data is USD/imperial. '+curCurrency+' and '+curUnit+' values are conversions for directional reference only.<br>':''}<em>This report is for planning and advocacy. Validate with local data before formal municipal presentation.</em></div>
     <div class="rpt-footer">Trail Investment ROI Calculator · Generated ${now} · For planning and advocacy only</div>
-  </div>`;
+  </div>
+  ${whyPage}`;
   window.print();
 }
 
