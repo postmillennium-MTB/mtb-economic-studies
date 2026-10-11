@@ -64,6 +64,8 @@ The tool is a single self-contained HTML file. Open it in any modern web browser
 
 **Step 5 — Adjust for international presentation (optional).** Click the **€** button next to Download Report to open the International Settings panel. Choose **Metric** or **Both** to display distances in kilometres, and select a currency for local context. A disclaimer will appear reminding you that all benchmarks are from US research — adjust the visitor spending and construction cost sliders with locally sourced data before presenting formally outside the United States. See Section 4 for full details.
 
+**Step 6 — Print or save as PDF (optional).** Click **Download Report** (or use your browser's normal Print command — Ctrl/Cmd+P) and choose **Save as PDF** as the destination, or print to paper. The report is 3 pages (4 if the Partnerships panel is open): key outcomes, assumptions and the breakeven chart; benefit and visitor charts; and the year-by-year table with methodology. It prints identically whatever size your window or screen is, uses the paper size your browser selects (Letter or A4), and is designed to stay legible in black and white. In the print dialog, leave **Background graphics** on, and switch **Headers and footers** off for the cleanest result (the report carries its own footer and page numbers). The saved PDF is named after the scenario and date.
+
 ---
 
 ## 3. Input Parameters
@@ -680,6 +682,14 @@ This tool is intentionally simple: a single HTML file with no build process, no 
 
 **If you fork this for a specific community:**
 Consider replacing the default slider values with pre-populated local data (assessor median home value, current tax rates, comparable trail visitor counts from the nearest regional system). The closer the defaults are to local reality, the more credible the tool will be when presented to decision-makers.
+
+**Printing and the PDF report — notes for maintainers:**
+The printed report (the `#rpt` block, filled by `buildReport()`) is a separate document layout from the on-screen page, not a restyled copy of it. The conventions below exist because each one fixed a real failure:
+- *Charts are re-rendered offscreen, never screenshotted.* `capturePrintCharts()` re-runs each chart's own `render()` at a fixed size (`PRINT_CHART_SIZES`) and 3× resolution. Screenshotting the live canvases made chart size and text depend on the viewer's screen, and produced blank 1×1-pixel charts whenever the Partnerships panel had hidden them. Any new chart must resolve its colors **inside** `render()` (via `T()`), not once when it is created, or it will print in the screen palette; and it needs an entry in `PRINT_CHART_SIZES`.
+- *Each theme carries a print palette* (`THEMES.<name>.print`) plus three print inks in its CSS block (`--r-accent`, `--r-sky`, `--r-callout`). To add a theme, supply all of them. Print rules: report text ≥ 7:1 contrast and ≥ 8pt; every chart line and solid fill ≥ 4.5:1 against white; the three donut tones ≥ 20 CIELAB-lightness apart so they stay distinct in grayscale; faint fills (below-cost bars, ramp-up bars) must carry a dark outline.
+- *Color is never the only cue.* The three breakeven lines differ by dash pattern (`LINE_STYLE_PRINT`), bars are solid vs. hollow, and every chart has a legend and the donut a value table, so a black-and-white printout loses nothing.
+- *Pages must each fit one sheet on the smaller of both papers* (7.27 in wide × 10 in tall of usable area, after the 0.5 in `@page` margins). Adding content to a page can silently push its footer onto an extra sheet — re-check the page count with the worst case (grant banner and currency banner both showing, Partnerships open) on both Letter and A4.
+- *Ctrl/Cmd+P works* because a `beforeprint` listener builds the report on demand; previously only the button did, and everything else printed a blank page.
 
 **Updating the exchange rate fallback values:**
 The hardcoded fallback rates in the `exRates` object near the top of the JavaScript section should be refreshed whenever you fork the tool for a new deployment. Find the line:

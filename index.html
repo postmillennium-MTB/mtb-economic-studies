@@ -19,6 +19,10 @@
   --hi-bg:#F0F8F0;--warn-bg:#FBF5E8;
   --ab-bg:#EFF5EF;--ab-bd:#B5D4B8;--ab-tx:#2D5A30;
   --co-bg:#EDF5ED;--co-bd:#A8D4AE;--co-tx:#2A5A2D;
+  /* PRINT INK (read only inside #rpt, see PRINT REPORT below): the darker accent,
+     "indirect impact" and callout-body text colors the printed report swaps in so small type stays
+     >= 7:1 on white and on this theme's tinted boxes. Every theme block carries its own. */
+  --r-accent:#1F5424;--r-sky:#1B4C78;--r-callout:#2A5A2D;
 }
 /* ── THEME: GAUNTLET GOLD ── */
 :root[data-theme="gold"]{
@@ -27,6 +31,7 @@
   --bd:#DCCFA6;--bdl:#EBE2C4;--sbg:#F5EDD6;
   --hi-bg:#FBF3D9;--ab-bg:#F7EFD3;--ab-bd:#D9C270;--ab-tx:#6B5310;
   --co-bg:#F7F0D8;--co-bd:#D9C778;--co-tx:#6B5510;
+  --r-accent:#604700;--r-sky:#3F4A53;--r-callout:#4A3A00;
 }
 /* ── THEME: MYERS FLYER ── */
 :root[data-theme="myers"]{
@@ -35,6 +40,7 @@
   --bd:#E0CCC4;--bdl:#EFDFD8;--sbg:#F6EAE4;
   --hi-bg:#FBEFEA;--ab-bg:#F9ECE8;--ab-bd:#E0B4A8;--ab-tx:#7A2A1E;
   --co-bg:#F9EDE8;--co-bd:#E0B8AA;--co-tx:#7A2E20;
+  --r-accent:#8A241E;--r-sky:#2A4A62;--r-callout:#7A2E20;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--tp);font-size:13px;line-height:1.5}
 .wrap{max-width:1140px;margin:0 auto;padding:1rem 1.25rem 2.5rem}
@@ -261,45 +267,89 @@ details[open] summary::before{content:'▼  '}
 .xbtn{display:inline-flex;align-items:center;padding:5px 12px;border:1px solid var(--fern);border-radius:16px;background:var(--sbg);color:var(--fern);font-size:11px;font-weight:600;text-decoration:none;letter-spacing:.03em;transition:all .15s}
 .xbtn:hover{background:var(--fern);color:#fff}
 .xtext{display:block;font-size:10px;color:var(--tm);line-height:1.6;margin-top:7px;max-width:620px}
-/* PRINT REPORT */
-#rpt{display:none}
-.rpt-pg{padding:28px 32px;font-family:'DM Sans',sans-serif}
+/* PRINT REPORT
+   #rpt is empty and hidden on screen; buildReport() (script, "PDF / PRINT REPORT")
+   fills it, and @media print below hides everything else.
+
+   PAPER: no `size` is forced — the browser keeps whatever Letter/A4 the person's
+   printer or locale picked (this tool is used with AUD/CAD/EUR/GBP too, so forcing
+   Letter would be wrong for half its audience). Layout is therefore designed to the
+   SMALLER of both on each axis: A4's narrower width (8.27in) and Letter's shorter
+   height (11in), minus the 0.5in margins below = 7.27in x 10in of usable page.
+   Margins live in @page (not padding on .rpt-pg) so that if a page ever does run
+   long, the overflow still lands inside the margins on the next sheet.
+
+   INK RULES (why these numbers; verified by contrast script, see README "Printing"):
+     - all report text >= 7:1 against its background (WCAG AAA). Toner lightens thin
+       small type, so AA's 4.5:1 is not enough at 8pt — the screen's --tm gray is only
+       4.3:1 and is overridden here.
+     - nothing smaller than 8pt.
+     - structural borders ~3:1 so they survive an office laser; hairlines ~1.8:1.
+   The overrides are scoped to #rpt so the on-screen look is untouched. Accent colors
+   come from each theme block's --r-accent / --r-sky. */
+@page{size:auto;margin:.5in}
+#rpt{display:none;
+  --fern:var(--r-accent);--sky:var(--r-sky);--co-tx:var(--r-callout);
+  --tm:#4A4A42;--ts:#3A3A34;--pos:#0B5A24;--neg:#8A2C0C;
+  --bd:#8F8A7E;--bdl:#C4BFB3}
+.rpt-pg{font-family:'DM Sans',sans-serif;break-after:page;page-break-after:always}
+.rpt-pg:last-child{break-after:auto;page-break-after:auto}
 /* rpt-* colors use the live theme's CSS variables so Gold/Myers reports
    aren't stuck rendering in forest green. */
-.rpt-hdr{border-bottom:3px solid var(--fern);padding-bottom:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end}
-.rpt-title{font-family:'Libre Baskerville',serif;font-size:18pt;color:var(--forest);font-weight:700}
-.rpt-meta{font-size:9pt;color:var(--tm);text-align:right;line-height:1.5}
+.rpt-hdr{border-bottom:3px solid var(--fern);padding-bottom:10px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
+.rpt-title{font-family:'Libre Baskerville',serif;font-size:18pt;color:var(--forest);font-weight:700;line-height:1.2}
+.rpt-title.sm{font-size:14pt}
+.rpt-sub{font-size:9pt;color:var(--tm);margin-top:3px}
+.rpt-meta{font-size:9pt;color:var(--tm);text-align:right;line-height:1.5;flex-shrink:0}
 .rpt-sc{display:inline-block;background:var(--ab-bg);border:1px solid var(--ab-bd);border-radius:4px;padding:2px 8px;font-size:8pt;font-weight:600;color:var(--fern);text-transform:uppercase;letter-spacing:.08em}
-.rpt-section-title{font-size:10pt;font-weight:600;color:var(--forest);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--bd);padding-bottom:4px;margin:14px 0 8px}
-.rpt-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-.rpt-kpi{border:1px solid var(--bd);border-radius:6px;padding:8px 10px}
-.rpt-kpi-lbl{font-size:8pt;color:var(--tm);margin-bottom:3px;line-height:1.3}
+.rpt-section-title{font-size:10pt;font-weight:600;color:var(--forest);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--bd);padding-bottom:4px;margin:12px 0 8px;break-after:avoid;page-break-after:avoid}
+.rpt-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.rpt-kpi{border:1px solid var(--bd);border-radius:6px;padding:8px 10px;break-inside:avoid;page-break-inside:avoid}
+.rpt-kpi-lbl{font-size:8.5pt;color:var(--tm);margin-bottom:3px;line-height:1.3}
 .rpt-kpi-val{font-size:16pt;font-weight:700;color:var(--forest);line-height:1}
-.rpt-kpi-sub{font-size:7.5pt;color:var(--tm);margin-top:2px}
-.rpt-assume-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin-bottom:14px}
-.rpt-arow{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--bdl);font-size:8.5pt}
+.rpt-kpi-sub{font-size:8pt;color:var(--tm);margin-top:2px}
+.rpt-assume-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0 20px;margin-bottom:12px}
+.rpt-arow{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--bdl);font-size:8.5pt;break-inside:avoid}
 .rpt-akey{color:var(--ts)}.rpt-aval{font-weight:600;color:var(--forest)}
-.rpt-chart-full{width:100%;border:1px solid var(--bdl);border-radius:4px;margin-bottom:10px}
-.rpt-chart-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.rpt-chart-row img{width:100%;border:1px solid var(--bdl);border-radius:4px}
-.rpt-callout{background:var(--co-bg);border:1px solid var(--co-bd);border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:8.5pt;color:var(--co-tx);line-height:1.5}
-.rpt-callout strong{font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px;color:var(--fern)}
-.rpt-tbl{width:100%;border-collapse:collapse;font-size:7.5pt}
-.rpt-tbl th{text-align:right;padding:4px 5px;background:var(--sbg);color:var(--ts);border-bottom:2px solid var(--bd);font-weight:500}
+/* CHARTS: images are rendered offscreen at a fixed size by capturePrintCharts() and
+   always fill the content width, so their text prints at a known ~8pt regardless of
+   the screen the report was built on. A figure is never split across sheets. */
+.rpt-fig{margin-bottom:10px;break-inside:avoid;page-break-inside:avoid}
+.rpt-fig img{display:block;width:100%;height:auto;border:1px solid var(--bdl)}
+.rpt-chart-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;align-items:start}
+.rpt-chart-row>*{min-width:0;margin-bottom:0}
+.rpt-legend{display:flex;flex-wrap:wrap;gap:3px 14px;margin-bottom:5px;font-size:8pt;color:var(--ts);line-height:1.35}
+.rpt-legend span{display:inline-flex;align-items:center;gap:5px}
+.rpt-legend svg{flex-shrink:0}
+.rpt-note{font-size:8pt;color:var(--tm);line-height:1.4;margin-bottom:5px}
+.rpt-seg{width:100%;border-collapse:collapse;font-size:8pt;margin-top:5px}
+.rpt-seg td{padding:3px 4px;border-bottom:1px solid var(--bdl);text-align:right;vertical-align:middle;color:var(--ts)}
+.rpt-seg td:first-child{width:14px;padding-left:0}
+.rpt-seg td:nth-child(2){text-align:left}
+.rpt-seg .tag{font-size:8pt;color:var(--tm)}
+.rpt-callout{background:var(--co-bg);border:1px solid var(--co-bd);border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:8.5pt;color:var(--co-tx);line-height:1.5;break-inside:avoid;page-break-inside:avoid}
+.rpt-callout strong{font-size:8pt;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px;color:var(--fern)}
+.rpt-tbl{width:100%;border-collapse:collapse;font-size:8pt}
+.rpt-tbl thead{display:table-header-group}
+.rpt-tbl tr{break-inside:avoid;page-break-inside:avoid}
+.rpt-tbl th{text-align:right;padding:4px 5px;background:var(--sbg);color:var(--ts);border-bottom:2px solid var(--bd);font-weight:600}
 .rpt-tbl th:first-child{text-align:left}
 .rpt-tbl td{text-align:right;padding:4px 5px;border-bottom:1px solid var(--bdl)}
 .rpt-tbl td:first-child{text-align:left}
-.rpt-footer{font-size:7.5pt;color:var(--tm);border-top:1px solid var(--bd);padding-top:8px;margin-top:16px;line-height:1.6}
-/* grant banner intentionally stays amber/warning-colored regardless of theme —
-   it's a functional "money saved" callout, not a themed brand element. */
-.rpt-grant-banner{background:#FFF8EC;border:1px solid #E8D4A0;border-radius:6px;padding:7px 12px;margin-bottom:10px;font-size:8.5pt;color:#6B4C1A}
+.rpt-text{font-size:8.5pt;color:var(--ts);line-height:1.65}
+.rpt-box{font-size:8.5pt;color:var(--ts);line-height:1.6;background:var(--cream);border:1px solid var(--bd);border-radius:6px;padding:8px 10px;break-inside:avoid;page-break-inside:avoid}
+.rpt-footer{font-size:8pt;color:var(--tm);border-top:1px solid var(--bd);padding-top:8px;margin-top:14px;line-height:1.5;display:flex;justify-content:space-between;gap:16px}
+.rpt-footer span:last-child{white-space:nowrap}
+/* grant + currency banners intentionally stay amber / blue regardless of theme —
+   they're functional callouts ("money saved", "converted values"), not brand elements. */
+.rpt-grant-banner{background:#FFF8EC;border:1px solid #C9A85A;border-radius:6px;padding:7px 12px;margin-bottom:10px;font-size:8.5pt;color:#5E3E00;break-inside:avoid}
+.rpt-intl-banner{background:#EBF3FB;border:1px solid #7FA6CC;border-radius:6px;padding:7px 12px;margin-bottom:10px;font-size:8.5pt;color:#123F66;break-inside:avoid}
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body{background:#fff!important;margin:0}
+  .wrap{max-width:none;padding:0}
   .wrap>*:not(#rpt){display:none!important}
   #rpt{display:block!important}
-  .rpt-pg{page-break-after:always}
-  .rpt-pg:last-child{page-break-after:auto}
 }
 @media(max-width:820px){
   .grid{grid-template-columns:1fr}
@@ -714,16 +764,45 @@ const COPY_FEEDBACK_MS=2000;
 const MILESTONE_YEARS=[1,3,5,10,15]; // plus the current projection horizon, added at render time
 const TABLE_ROW_LIMIT=15;
 
-/* ══ COLOR THEMES (chart palettes; CSS handles the rest via data-theme) ══ */
+/* ══ COLOR THEMES (chart palettes; CSS handles the rest via data-theme) ══
+   Each theme carries TWO chart palettes: the screen one (top level) and `print`
+   (used only while the report's charts are rendered, see capturePrintCharts()).
+   They have the same keys, so chart code just calls T() and gets the right one.
+
+   TO ADD A THEME: add ONE entry here (screen + print palette), one [data-theme]
+   CSS block (with its --r-accent / --r-sky print inks), one swatch button, and
+   nothing else.
+
+   WHY A SEPARATE PRINT PALETTE: the screen colors are tuned for glowing pixels on
+   a cream background, and several fail on paper — Gold's light slice is 2.4:1 on
+   white, and in Ore/Myers the two biggest donut slices are the same lightness, so
+   on a black-and-white printer they merge. Print rules (checked numerically):
+     - every line / solid fill >= 4.5:1 against white
+     - the three donut tones differ by >= 20 L* (CIELAB lightness) so they stay
+       distinguishable in grayscale; the light one is outlined in the dark one
+     - "hollow" bars (below-cost milestones, ramp-up years) are a light tint + a dark
+       outline, so the shape is >= 4.5:1 even though the fill is faint
+     - no translucent colors (alpha lowers contrast and prints unpredictably)
+   Color is never the only cue either: see LINE_STYLE_PRINT and the report legends. */
 const THEMES={
   ore:  {cost:'#555555',costFill:'rgba(80,80,80,0.05)', muni:'#1A8C3E',muniFill:'rgba(26,140,62,0.08)', econ:'rgba(42,95,138,0.75)',econSolid:'#2A5F8A',
-         donut:['#2D6A30','#4A9951','#2A5F8A'],msMiss:'#A8C5A0',visLight:'rgba(42,95,138,0.4)',visDark:'#2A5F8A',hwy:['#A8C5A0','#2D6A30','#4A9951']},
+         donut:['#2D6A30','#4A9951','#2A5F8A'],msMiss:'#A8C5A0',visLight:'rgba(42,95,138,0.4)',visDark:'#2A5F8A',hwy:['#A8C5A0','#2D6A30','#4A9951'],
+         print:{cost:'#404040',costFill:null,muni:'#146B2D',muniFill:'rgba(20,107,45,0.10)',econ:'#1B4C78',econSolid:'#1B4C78',
+                donut:['#1B4D20','#A9D3A8','#3A78AB'],msMiss:'#E3EFE2',visLight:'#D5E3EE',visDark:'#1B4C78'}},
   gold: {cost:'#5C5344',costFill:'rgba(92,83,68,0.05)', muni:'#B8860B',muniFill:'rgba(184,134,11,0.10)', econ:'rgba(91,103,112,0.8)',econSolid:'#5B6770',
-         donut:['#9C7414','#C9A227','#5B6770'],msMiss:'#E3D08F',visLight:'rgba(156,116,20,0.35)',visDark:'#9C7414',hwy:['#E3D08F','#9C7414','#C9A227']},
+         donut:['#9C7414','#C9A227','#5B6770'],msMiss:'#E3D08F',visLight:'rgba(156,116,20,0.35)',visDark:'#9C7414',hwy:['#E3D08F','#9C7414','#C9A227'],
+         print:{cost:'#4A4036',costFill:null,muni:'#7A5800',muniFill:'rgba(122,88,0,0.10)',econ:'#3F4A53',econSolid:'#3F4A53',
+                donut:['#4F3A00','#E6CF7A','#5E7380'],msMiss:'#F3E8C0',visLight:'#F3E8C0',visDark:'#7A5800'}},
   myers:{cost:'#5A5350',costFill:'rgba(90,83,80,0.05)', muni:'#B03A2E',muniFill:'rgba(176,58,46,0.08)', econ:'rgba(49,85,110,0.8)',econSolid:'#31556E',
-         donut:['#9E2B25','#C4483C','#31556E'],msMiss:'#E5B8B0',visLight:'rgba(49,85,110,0.4)',visDark:'#31556E',hwy:['#E5B8B0','#9E2B25','#C4483C']}
+         donut:['#9E2B25','#C4483C','#31556E'],msMiss:'#E5B8B0',visLight:'rgba(49,85,110,0.4)',visDark:'#31556E',hwy:['#E5B8B0','#9E2B25','#C4483C'],
+         print:{cost:'#4A4442',costFill:null,muni:'#9A2A21',muniFill:'rgba(154,42,33,0.10)',econ:'#2A4A62',econSolid:'#2A4A62',
+                donut:['#6E1D17','#EDB5AB','#3F6E8F'],msMiss:'#F6DDD7',visLight:'#D8E1E8',visDark:'#2A4A62'}}
 };
-const T=()=>THEMES[curTheme]||THEMES.ore;
+/* printCapture is non-null only while capturePrintCharts() is running. While it is
+   set, fitCanvas() draws into an offscreen canvas instead of the live one, T()
+   returns the print palette, and the axis helpers use print inks/fonts. */
+let printCapture=null;
+const T=()=>{const th=THEMES[curTheme]||THEMES.ore;return printCapture?th.print:th};
 
 function setTheme(name,redraw=true){
   if(!THEMES[name])name='ore';
@@ -1167,6 +1246,40 @@ function kc(id){if(CH[id]){CH[id].destroy();delete CH[id]}}
 function cssVar(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim()}
 
 const CHART_FONT="10px 'DM Sans',sans-serif";
+
+/* ── Printed-chart constants ──
+   The report does NOT screenshot the live charts any more: a screenshot inherits
+   whatever size the person's window gave them (a phone-width canvas printed huge and
+   blurry, a 1920px one printed with ~5pt labels, and a chart inside a hidden panel
+   came out 1x1 pixels). capturePrintCharts() instead re-runs each chart's own
+   render() into an offscreen canvas of the fixed logical size below.
+   Sizes are CSS px at the report's content width: full-width charts ~680px wide,
+   half-width ~335px, shown at ~100% so PRINT_CHART_FONT (11px) prints at ~8.3pt.
+   If you change a size, re-check the page still fits (the README's print checklist). */
+const PRINT_DPR=3;                   // backing-store pixels per logical px: 680px wide -> 2040px = ~285 dpi on the page
+const PRINT_CHART_FONT="11px 'DM Sans',sans-serif"; // axis labels; never below ~8pt once placed on the page
+const PRINT_AXIS_INK='#3A3A34';      // axis label color, ~11:1 on white (screen --tm is only 4.3:1)
+const PRINT_PAD_LEFT_MONEY=76;       // left gutter for charts whose y labels are currency ("CA$100.00M" is ~63px at 11px; screen gutters were sized for 10px type and clip it)
+const PRINT_PAD_RIGHT_LINE=24;       // right gutter for the LINE charts: their last x label ("Yr 30") is centered on the plot edge and overhangs it by ~half its width
+const PRINT_PAD_LEFT_COUNT=58;       // same, for plain numbers ("200,000")
+const PRINT_GRID_INK='#807B70';      // drawn at 50% alpha -> ~1.8:1 gridlines that still show on an office laser
+const PRINT_CHART_SIZES={            // keyed by the live <canvas> id the chart's render() was written for
+  chartBE:       {w:680,h:250},
+  chartDonut:    {w:335,h:200},
+  chartMilestones:{w:335,h:200},
+  chartVisitors: {w:680,h:220},
+  chartWhy:      {w:680,h:240}
+};
+/* Breakeven-line dash + weight. Print gets bolder and MORE different patterns than
+   screen so the three lines still read apart in grayscale (long dashes / solid with
+   markers / round dots) — color is a second cue, not the only one. Report legends
+   draw these same arrays, so legend and chart cannot drift. */
+const LINE_STYLE_SCREEN={cost:{dash:[6,3],lw:2},   muni:{dash:null,lw:2.5},  econ:{dash:[3,3],lw:2}};
+const LINE_STYLE_PRINT ={cost:{dash:[9,4],lw:2.25},muni:{dash:null,lw:3.25}, econ:{dash:[1.5,4.5],lw:2.75}};
+const LS=()=>printCapture?LINE_STYLE_PRINT:LINE_STYLE_SCREEN;
+const chartFont=()=>printCapture?PRINT_CHART_FONT:CHART_FONT;
+const axisInk=()=>printCapture?PRINT_AXIS_INK:(cssVar('--tm')||'#7A7A70');
+const gridInk=()=>printCapture?PRINT_GRID_INK:(cssVar('--bd')||'rgba(0,0,0,0.08)');
 const CHART_ANIM_MS=550;          // entrance duration for donut/bar/combo charts
 const CHART_EASE=t=>1-Math.pow(1-t,3); // ease-out cubic, used by every chart's entrance animation
 const FULL_REVEAL=1e9;            // pass as "elapsed" to force an instant, fully-drawn render (no animation)
@@ -1176,6 +1289,16 @@ const FULL_REVEAL=1e9;            // pass as "elapsed" to force an instant, full
    device pixel ratio (crisp on retina), while all drawing code below
    keeps working in ordinary CSS-pixel coordinates. */
 function fitCanvas(canvas){
+  if(printCapture){
+    // Redirect: draw at the chart's fixed print size into an offscreen canvas that
+    // capturePrintCharts() reads back. The live canvas is never touched.
+    const size=PRINT_CHART_SIZES[canvas.id];
+    const off=printCapture.canvases[canvas.id]||(printCapture.canvases[canvas.id]=document.createElement('canvas'));
+    off.width=size.w*PRINT_DPR;off.height=size.h*PRINT_DPR;
+    const pctx=off.getContext('2d');
+    pctx.setTransform(PRINT_DPR,0,0,PRINT_DPR,0,0);
+    return{ctx:pctx,w:size.w,h:size.h};
+  }
   const dpr=window.devicePixelRatio||1;
   const rect=canvas.parentElement.getBoundingClientRect();
   const w=Math.max(1,Math.round(rect.width)),h=Math.max(1,Math.round(rect.height));
@@ -1265,13 +1388,13 @@ function drawAxesLog(ctx,plot,yMin,yMax,yFmt,xLabels,maxXLabels,xPosFn){
   const logMin=Math.log10(yMin),logMax=Math.log10(yMax);
   const yForVal=val=>top+h-(h*(Math.log10(Math.max(yMin,val))-logMin)/(logMax-logMin));
   ctx.save();
-  ctx.strokeStyle=cssVar('--bd')||'rgba(0,0,0,0.08)';
-  ctx.font=CHART_FONT;
+  ctx.strokeStyle=gridInk();
+  ctx.font=chartFont();
   niceLogTicks(yMin,yMax).forEach(val=>{
     const y=yForVal(val);
     ctx.globalAlpha=0.5;ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(left,Math.round(y)+.5);ctx.lineTo(left+w,Math.round(y)+.5);ctx.stroke();
-    ctx.globalAlpha=1;ctx.fillStyle=cssVar('--tm')||'#7A7A70';
+    ctx.globalAlpha=1;ctx.fillStyle=axisInk();
     ctx.textAlign='right';ctx.textBaseline='middle';
     ctx.fillText(yFmt(val),left-6,y);
   });
@@ -1293,10 +1416,10 @@ function drawAxesLog(ctx,plot,yMin,yMax,yFmt,xLabels,maxXLabels,xPosFn){
 function drawAxes(ctx,plot,yMax,yFmt,xLabels,maxXLabels,xPosFn){
   const{left,top,w,h}=plot;
   ctx.save();
-  ctx.strokeStyle=cssVar('--bd')||'rgba(0,0,0,0.08)';
+  ctx.strokeStyle=gridInk();
   ctx.globalAlpha=0.5;ctx.lineWidth=1;
-  ctx.font=CHART_FONT;
-  ctx.fillStyle=cssVar('--tm')||'#7A7A70';
+  ctx.font=chartFont();
+  ctx.fillStyle=axisInk();
   const ticks=5;
   for(let i=0;i<=ticks;i++){
     const val=yMax*i/ticks;
@@ -1328,13 +1451,16 @@ function roundRectTop(ctx,x,y,w,h,r){
   ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
   ctx.lineTo(x+w,y+h);ctx.closePath();
 }
-function drawBars(ctx,vals,colors,xPos,barW,yPos,plot,progress){
+function drawBars(ctx,vals,colors,xPos,barW,yPos,plot,progress,edges){
   vals.forEach((val,i)=>{
     const y0=plot.top+plot.h,targetY=yPos(val);
     const curY=y0-(y0-targetY)*progress;
     ctx.fillStyle=colors[i];
     roundRectTop(ctx,xPos(i)-barW/2,curY,barW,y0-curY,3);
     ctx.fill();
+    // `edges` (print only): a dark outline for bars whose fill is a faint tint, so
+    // the bar's shape — and the solid-vs-hollow meaning — survives a cheap printer.
+    if(edges&&edges[i]){ctx.lineWidth=1.5;ctx.strokeStyle=edges[i];ctx.stroke();}
   });
 }
 
@@ -1410,9 +1536,10 @@ function togglePartnerships(){
 /* ══ COLLAPSIBLE CARDS ══
    Generic — works for any .cc.collapsible with a .cc-toggle[data-card] button.
    Open/closed state is remembered per card in localStorage.
-   NOTE: do not collapse a card containing a <canvas> chart by default —
-   Chart.js cannot size a canvas inside display:none, and downloadReport()
-   reads those canvases via toDataURL(). */
+   NOTE: do not collapse a card containing a <canvas> chart by default — a live
+   canvas cannot size itself inside display:none. (This no longer affects the
+   printed report: its charts are rendered offscreen by capturePrintCharts(), so
+   collapsed or hidden cards still print correctly.) */
 function toggleCard(btn){
   const card=btn.closest('.cc');
   const collapsed=card.classList.toggle('collapsed');
@@ -1629,18 +1756,22 @@ function recalc(){
    see lineReveal() above for the timing. */
 function drawBE(v,m){
   kc('be');
-  const t=T();
   const labs=['Now'],costs=[m.municipalCap],muni=[0],econ=[0];
   for(let i=0;i<v.years&&i<m.rows.length;i++){
     const r=m.rows[i];
     labs.push('Yr '+r.yr);
     costs.push(Math.round(r.cCost));muni.push(Math.round(r.cMuni));econ.push(Math.round(r.cEcon));
   }
-  const series=[
-    {key:'cost',label:'Total Cost',data:costs,color:t.cost,fill:t.costFill,dash:[6,3],lineWidth:2,pointEvery:0},
-    {key:'muni',label:'Municipal Revenue',data:muni,color:t.muni,fill:t.muniFill,dash:null,lineWidth:2.5,pointEvery:4},
-    {key:'econ',label:'Economic Impact',data:econ,color:t.econ,fill:null,dash:[3,3],lineWidth:2,pointEvery:0}
-  ];
+  // A function, not a constant: colors and dash patterns depend on T()/LS(), which
+  // switch to the print palette while capturePrintCharts() re-runs render() below.
+  const seriesDef=()=>{
+    const t=T(),ls=LS();
+    return[
+      {key:'cost',label:'Total Cost',data:costs,color:t.cost,fill:t.costFill,dash:ls.cost.dash,lineWidth:ls.cost.lw,pointEvery:0},
+      {key:'muni',label:'Municipal Revenue',data:muni,color:t.muni,fill:t.muniFill,dash:ls.muni.dash,lineWidth:ls.muni.lw,pointEvery:4},
+      {key:'econ',label:'Economic Impact',data:econ,color:t.econ,fill:null,dash:ls.econ.dash,lineWidth:ls.econ.lw,pointEvery:0}
+    ];
+  };
   const canvas=document.getElementById('chartBE');
   const PAD={left:52,right:10,top:8,bottom:22};
   let lastGeom=null;
@@ -1648,7 +1779,10 @@ function drawBE(v,m){
   function render(elapsed){
     const{ctx,w,h}=fitCanvas(canvas);
     ctx.clearRect(0,0,w,h);
-    const plot={left:PAD.left,top:PAD.top,w:w-PAD.left-PAD.right,h:h-PAD.top-PAD.bottom};
+    const padL=printCapture?PRINT_PAD_LEFT_MONEY:PAD.left;
+    const padR=printCapture?PRINT_PAD_RIGHT_LINE:PAD.right;
+    const plot={left:padL,top:PAD.top,w:w-padL-padR,h:h-PAD.top-PAD.bottom};
+    const series=seriesDef();
     const vis=series.filter(s=>beVis[s.key]);
     // Y-scale only considers currently-visible series, same as Chart.js's
     // default — hiding "Economic Impact" rescales the chart to zoom in
@@ -1691,7 +1825,7 @@ function drawBE(v,m){
   canvas.addEventListener('mousemove',onMove);
   canvas.addEventListener('mouseleave',onLeave);
 
-  const nVisibleAtStart=series.filter(s=>beVis[s.key]).length;
+  const nVisibleAtStart=seriesDef().filter(s=>beVis[s.key]).length;
   const duration=Math.max(300,nVisibleAtStart*(labs.length*CHART_POINT_STAGGER_MS+CHART_LINE_GAP_MS));
   const anim=animateChart(render,duration);
   const ro=observeResize(canvas.parentElement,()=>render(FULL_REVEAL));
@@ -1745,14 +1879,21 @@ function drawRevealedLine(ctx,s,progress,xPos,yPos,plot){
 
 
 /* ══ CHART: DONUT ══ */
+/* The donut's slices, shared by the on-screen chart and the printed report's legend
+   table so their labels and numbers can never disagree. `ci` indexes T().donut
+   (kept separately because zero-value slices are dropped, which shifts positions);
+   `color` is the CURRENT palette's color, for HTML legends built at call time. */
+function donutSegs(m){
+  const mr=m.mRow;
+  return[
+    {label:'Sales tax revenue',value:Math.round(mr.stax),ci:0,type:'direct'},
+    {label:'Property tax revenue',value:Math.round(mr.ptAnn),ci:1,type:'direct'},
+    {label:'Business & labor income',value:Math.max(0,Math.round(mr.econYr-mr.muniYr)),ci:2,type:'indirect'}
+  ].filter(s=>s.value>0).map(s=>({...s,color:T().donut[s.ci]}));
+}
 function drawDonut(v,m){
   kc('donut');
-  const mr=m.mRow;
-  const segs=[
-    {label:'Sales tax revenue',value:Math.round(mr.stax),color:T().donut[0],type:'direct'},
-    {label:'Property tax revenue',value:Math.round(mr.ptAnn),color:T().donut[1],type:'direct'},
-    {label:'Business & labor income',value:Math.max(0,Math.round(mr.econYr-mr.muniYr)),color:T().donut[2],type:'indirect'}
-  ].filter(s=>s.value>0);
+  const segs=donutSegs(m);
   document.getElementById('donut-sub').textContent='Year '+(Math.max(1,v.rampup+1))+' (full capacity)';
   document.getElementById('donut-leg').innerHTML=segs.map(s=>`<span class="li"><span class="ld" style="background:${s.color}"></span>${s.label} <span class="badge bd-${s.type[0]}" style="margin-left:2px">${s.type}</span></span>`).join('');
 
@@ -1790,8 +1931,12 @@ function drawDonut(v,m){
       ctx.arc(cx,cy,outerR,a0,drawA1);
       ctx.arc(cx,cy,innerR,drawA1,a0,true);
       ctx.closePath();
-      ctx.fillStyle=s.color;ctx.fill();
-      ctx.lineWidth=3;ctx.strokeStyle='#fff';ctx.stroke();
+      ctx.fillStyle=T().donut[s.ci];ctx.fill();
+      // Screen: fat white gaps between slices. Print: a thin dark outline instead, so
+      // the pale slice (L* ~80, ~1.6:1 vs white) still has a visible edge.
+      if(printCapture){ctx.lineWidth=1.25;ctx.strokeStyle=T().donut[0];}
+      else{ctx.lineWidth=3;ctx.strokeStyle='#fff';}
+      ctx.stroke();
     });
     lastGeom={cx,cy,outerR,innerR};
   }
@@ -1826,7 +1971,6 @@ function drawMilestones(v,m){
   kc('ms');
   const yrs=[...new Set([...MILESTONE_YEARS,v.years])];
   const vals=yrs.map(yr=>{const r=m.rows[yr-1];return r?Math.round(r.cMuni):0});
-  const cols=vals.map(vl=>vl>=m.municipalCap?T().muni:T().msMiss);
   const costLine=yrs.map(()=>Math.round(m.municipalCap));
   const labs=yrs.map(y=>'Yr '+y);
   const canvas=document.getElementById('chartMilestones');
@@ -1836,7 +1980,8 @@ function drawMilestones(v,m){
   function render(elapsed){
     const{ctx,w,h}=fitCanvas(canvas);
     ctx.clearRect(0,0,w,h);
-    const plot={left:PAD.left,top:PAD.top,w:w-PAD.left-PAD.right,h:h-PAD.top-PAD.bottom};
+    const padL=printCapture?PRINT_PAD_LEFT_MONEY:PAD.left;
+    const plot={left:padL,top:PAD.top,w:w-padL-PAD.right,h:h-PAD.top-PAD.bottom};
     const maxVal=Math.max(1,...vals,m.municipalCap);
     const{max:yMax}=niceScale(maxVal);
     const n=labs.length,slot=plot.w/n;
@@ -1845,8 +1990,13 @@ function drawMilestones(v,m){
     drawAxes(ctx,plot,yMax,val=>fcd(val),labs,null,xPos);
     const progress=CHART_EASE(Math.min(1,elapsed/CHART_ANIM_MS));
     const barW=Math.min(34,slot*0.55);
-    drawBars(ctx,vals,cols,xPos,barW,yPos,plot,progress);
-    drawRevealedLine(ctx,{data:costLine,color:T().cost,fill:null,dash:[5,3],lineWidth:1.5,pointEvery:0},progress,xPos,yPos,plot);
+    // Bars that have not yet recovered the municipal cost are lighter on screen and
+    // HOLLOW (tint + dark outline) in print; recovered bars are solid either way.
+    const t=T();
+    const cols=vals.map(vl=>vl>=m.municipalCap?t.muni:t.msMiss);
+    const edges=printCapture?vals.map(vl=>vl>=m.municipalCap?null:t.muni):null;
+    drawBars(ctx,vals,cols,xPos,barW,yPos,plot,progress,edges);
+    drawRevealedLine(ctx,{data:costLine,color:t.cost,fill:null,dash:printCapture?[9,4]:[5,3],lineWidth:printCapture?2:1.5,pointEvery:0},progress,xPos,yPos,plot);
     lastGeom={plot,slot,n};
   }
 
@@ -1874,10 +2024,10 @@ function drawMilestones(v,m){
 /* ══ CHART: VISITORS ══ */
 function drawVisitors(v,m){
   kc('vis');
-  const labs=[],data=[],cols=[];
+  const labs=[],data=[],ramp=[];
   for(let i=0;i<v.years&&i<m.rows.length;i++){
     const r=m.rows[i];labs.push('Yr '+r.yr);data.push(Math.round(r.vis));
-    cols.push(r.yr<=v.rampup?T().visLight:T().visDark);
+    ramp.push(r.yr<=v.rampup);
   }
   const canvas=document.getElementById('chartVisitors');
   const PAD={left:46,right:10,top:8,bottom:20};
@@ -1886,7 +2036,8 @@ function drawVisitors(v,m){
   function render(elapsed){
     const{ctx,w,h}=fitCanvas(canvas);
     ctx.clearRect(0,0,w,h);
-    const plot={left:PAD.left,top:PAD.top,w:w-PAD.left-PAD.right,h:h-PAD.top-PAD.bottom};
+    const padL=printCapture?PRINT_PAD_LEFT_COUNT:PAD.left;
+    const plot={left:padL,top:PAD.top,w:w-padL-PAD.right,h:h-PAD.top-PAD.bottom};
     const maxVal=Math.max(1,...data);
     const{max:yMax}=niceScale(maxVal);
     const n=labs.length,slot=plot.w/n;
@@ -1895,7 +2046,11 @@ function drawVisitors(v,m){
     drawAxes(ctx,plot,yMax,val=>fn(val),labs,12,xPos);
     const progress=CHART_EASE(Math.min(1,elapsed/CHART_ANIM_MS));
     const barW=Math.min(18,slot*0.6);
-    drawBars(ctx,data,cols,xPos,barW,yPos,plot,progress);
+    // Ramp-up years: light tint on screen, HOLLOW (tint + dark outline) in print.
+    const t=T();
+    const cols=ramp.map(r=>r?t.visLight:t.visDark);
+    const edges=printCapture?ramp.map(r=>r?t.visDark:null):null;
+    drawBars(ctx,data,cols,xPos,barW,yPos,plot,progress,edges);
     lastGeom={plot,slot,n};
   }
 
@@ -2120,28 +2275,34 @@ function drawWhy(v,m){
   kc('why');
   const canvas=document.getElementById('chartWhy');
   if(!canvas)return;
-  const t=T();
   const labs=m.series.map(p=>'Yr '+p.y);
   const aData=m.series.map(p=>Math.round(p.a));
   const bData=m.series.map(p=>Math.round(p.b));
-  const series=[
-    {key:'a',label:'Option 1 · Municipal only',data:aData,color:t.cost,fill:null,dash:null,lineWidth:2.5,pointEvery:4},
-    {key:'b',label:'Option 2 · With a non-profit',data:bData,color:t.econSolid,fill:null,dash:null,lineWidth:2.5,pointEvery:4},
-  ];
+  // Per-render for the same reason as drawBE's seriesDef. In print, Option 2 is
+  // dashed: both lines are dark in grayscale, and only the pattern tells them apart.
+  const seriesDef=()=>{
+    const t=T();
+    return[
+      {key:'a',label:'Option 1 · Municipal only',data:aData,color:t.cost,fill:null,dash:null,lineWidth:2.5,pointEvery:4},
+      {key:'b',label:'Option 2 · With a non-profit',data:bData,color:t.econSolid,fill:null,dash:printCapture?LINE_STYLE_PRINT.cost.dash:null,lineWidth:printCapture?3:2.5,pointEvery:4},
+    ];
+  };
   const PAD={left:56,right:10,top:8,bottom:22};
   let lastGeom=null;
 
   function render(elapsed){
     const{ctx,w,h}=fitCanvas(canvas);
     ctx.clearRect(0,0,w,h);
-    const plot={left:PAD.left,top:PAD.top,w:w-PAD.left-PAD.right,h:h-PAD.top-PAD.bottom};
+    const padL=printCapture?PRINT_PAD_LEFT_MONEY:PAD.left;
+    const padR=printCapture?PRINT_PAD_RIGHT_LINE:PAD.right;
+    const plot={left:padL,top:PAD.top,w:w-padL-padR,h:h-PAD.top-PAD.bottom};
     const maxVal=Math.max(1,...aData,...bData);
     const{max:yMax}=niceScale(maxVal);
     drawAxes(ctx,plot,yMax,val=>fcd(val),labs,10);
     const xPos=i=>plot.left+(labs.length<=1?plot.w/2:plot.w*i/(labs.length-1));
     const yPos=val=>plot.top+plot.h-(plot.h*Math.max(0,val)/yMax);
     const progress=CHART_EASE(Math.min(1,elapsed/CHART_ANIM_MS));
-    series.forEach(s=>drawRevealedLine(ctx,s,progress,xPos,yPos,plot));
+    seriesDef().forEach(s=>drawRevealedLine(ctx,s,progress,xPos,yPos,plot));
     lastGeom={plot,xPos};
   }
   function onMove(e){
@@ -2152,7 +2313,7 @@ function drawWhy(v,m){
     if(mx<plot.left-10||mx>plot.left+plot.w+10){hideChartTooltip();return;}
     let idx=Math.round((mx-plot.left)/plot.w*(labs.length-1));
     idx=Math.max(0,Math.min(labs.length-1,idx));
-    showChartTooltip(e.clientX,e.clientY,[labs[idx]].concat(series.map(s=>'  '+s.label+': '+fcd(s.data[idx]))));
+    showChartTooltip(e.clientX,e.clientY,[labs[idx]].concat(seriesDef().map(s=>'  '+s.label+': '+fcd(s.data[idx]))));
   }
   function onLeave(){hideChartTooltip()}
   canvas.addEventListener('mousemove',onMove);
@@ -2179,33 +2340,86 @@ function setScenario(name){
   recalc();
 }
 
-/* ══ PDF / PRINT REPORT ══ */
-function downloadReport(){
+/* ══ PDF / PRINT REPORT ══
+   One pipeline serves three entry points, all of which end up printing #rpt:
+     1. the "Download Report" button  -> downloadReport()
+     2. the browser's own Ctrl/Cmd+P, File > Print, mobile "Share > Print"
+     3. "Save as PDF" in any of those dialogs (a PDF is just a print destination)
+   Entry 2 used to print a BLANK page, because #rpt was only filled by the button.
+   The `beforeprint` listener at the bottom of this section now builds it on demand.
+
+   ORDER OF OPERATIONS in buildReport():
+     capturePrintCharts() first (needs the live chart objects), then one HTML string.
+   Page numbers ("Page 2 of 4") are generated from the page list, never typed. */
+const REPORT_FRESH_MS=3000;   // a report built this recently (by downloadReport) is reused by beforeprint instead of being rebuilt; must exceed the font/image wait in downloadReport
+let reportBuiltAt=0;          // Date.now() of the last buildReport(); 0 = none/just printed
+let reportTitle='';           // becomes document.title while printing -> default PDF filename
+let titleBeforePrint=null;    // the real title, restored in afterprint
+
+/* Renders every chart at its fixed print size/DPI and returns PNG data URLs.
+   Works by flipping the `printCapture` switch and calling each chart's own
+   finish() -> render(), so the print charts can never drift from the screen ones
+   in what they show; only palette, fonts and size differ (see fitCanvas, T()). */
+function capturePrintCharts(includeWhy){
+  const ids={be:'chartBE',donut:'chartDonut',ms:'chartMilestones',vis:'chartVisitors'};
+  if(includeWhy)ids.why='chartWhy';
+  const out={};
+  printCapture={canvases:{}};
+  try{
+    Object.entries(ids).forEach(([key,canvasId])=>{
+      if(!CH[key]||!CH[key].finish)return;
+      CH[key].finish();
+      const src=printCapture.canvases[canvasId];
+      if(!src)return;
+      // Flatten onto white: canvases are transparent, and transparency in a PDF is
+      // a classic source of grey boxes / blocked-out charts on older print drivers.
+      const flat=document.createElement('canvas');
+      flat.width=src.width;flat.height=src.height;
+      const fx=flat.getContext('2d');
+      fx.fillStyle='#fff';fx.fillRect(0,0,flat.width,flat.height);
+      fx.drawImage(src,0,0);
+      out[key]=flat.toDataURL('image/png');
+    });
+  }finally{
+    printCapture=null;
+    // Re-run every live chart in screen mode: puts each chart's hover geometry
+    // (lastGeom) back, which the offscreen passes just overwrote.
+    Object.values(CH).forEach(c=>c.finish&&c.finish());
+  }
+  return out;
+}
+
+/* Legend swatches are inline SVG — vector, so they print crisp, and they take the
+   same dash arrays as the charts (LINE_STYLE_PRINT) so legend == chart. */
+function rptLineSwatch(color,style,marker){
+  const da=style.dash?` stroke-dasharray="${style.dash.join(' ')}"`:'';
+  return`<svg width="32" height="10" viewBox="0 0 32 10" aria-hidden="true"><line x1="2" y1="5" x2="30" y2="5" stroke="${color}" stroke-width="${style.lw}"${da} stroke-linecap="round"/>${marker?`<circle cx="16" cy="5" r="3.2" fill="${color}" stroke="#fff" stroke-width="1"/>`:''}</svg>`;
+}
+function rptBoxSwatch(fill,edge){
+  return`<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x=".75" y=".75" width="10.5" height="10.5" rx="1.5" fill="${fill}" stroke="${edge||fill}" stroke-width="1.5"/></svg>`;
+}
+const rptLegend=items=>`<div class="rpt-legend">${items.map(i=>`<span>${i.swatch}${i.label}</span>`).join('')}</div>`;
+const localISODate=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+
+function buildReport(){
   const v=getV(),m=buildData(v);
   const scLabel=curSc==='custom'?'Custom':curSc.charAt(0).toUpperCase()+curSc.slice(1);
-  const now=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const nowDate=new Date();
+  const now=nowDate.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
   const curSym=CUR_SYM[curCurrency]||'$';
   const unitNote=curCurrency!=='USD'||curUnit!=='imperial'?` (values shown in ${curSym}${curUnit!=='imperial'?' / '+curUnit:''} — converted from USD/imperial research data)`:'';
+  // Chrome/Edge/Firefox use document.title as the default PDF file name.
+  reportTitle='Trail Investment ROI – '+scLabel+' scenario – '+localISODate(nowDate);
 
-  // Charts may still be mid-animation (e.g. report opened right after a
-  // slider change) — force each to its final frame before reading pixels,
-  // otherwise toDataURL() could capture a half-drawn chart.
-  Object.values(CH).forEach(c=>c.finish&&c.finish());
-  const beImg=document.getElementById('chartBE').toDataURL('image/png');
-  const dnImg=document.getElementById('chartDonut').toDataURL('image/png');
-  const msImg=document.getElementById('chartMilestones').toDataURL('image/png');
-  const visImg=document.getElementById('chartVisitors').toDataURL('image/png');
-
-  // Check if Partnerships panel is visible and capture its chart + headline figures if so
+  // The Partnerships page is included whenever that panel is open. The main charts
+  // are captured regardless: the panel hides the main grid (display:none), which is
+  // exactly why screenshotting the live canvases produced 1x1-pixel charts.
   const partnershipActive=document.getElementById('why-panel').classList.contains('show');
-  let whyImg=null, wv=null, wm=null;
-  if(partnershipActive){
-    // Force Why chart to final state before capturing
-    if(CH.why&&CH.why.finish)CH.why.finish();
-    const whyCanvas=document.getElementById('chartWhy');
-    if(whyCanvas)whyImg=whyCanvas.toDataURL('image/png');
-    wv=whyValues(); wm=computeWhy(wv);
-  }
+  const img=capturePrintCharts(partnershipActive);
+  let wv=null,wm=null;
+  if(partnershipActive){wv=whyValues();wm=computeWhy(wv);}
+  const P=(THEMES[curTheme]||THEMES.ore).print;   // print palette, for the legends
+  const totalPages=partnershipActive?4:3;
 
   const asmPairs=[
     ['Miles of trail',dst(v.miles)],['Construction cost/mi',cpd(v.buildcost)],['Total project cost',fcd(m.cap)],
@@ -2222,75 +2436,159 @@ function downloadReport(){
 
   const show=Math.min(TABLE_ROW_LIMIT,v.years,m.rows.length);
   const tRows=buildYearRows(v,m,{print:true});
-
   const be=m.be;
-  const grantBanner=v.grant>0?`<div class="rpt-grant-banner"><strong>Grant funding active:</strong> ${v.grant}% of construction covered — saving ${fcd(m.cap-m.municipalCap)} upfront. Municipal share: ${fcd(m.municipalCap)} of ${fcd(m.cap)} total.</div>`:'';
-  const intlBanner=unitNote?`<div style="background:#EBF3FB;border:1px solid #A8C8E8;border-radius:6px;padding:7px 12px;margin-bottom:10px;font-size:8pt;color:#1A4F7A"><strong>Currency / units note:</strong>${unitNote}</div>`:'';
+  const lastRow=m.rows[Math.min(v.years,m.rows.length)-1];
 
-  // Build Partnerships page if active
+  const grantBanner=v.grant>0?`<div class="rpt-grant-banner"><strong>Grant funding active:</strong> ${v.grant}% of construction covered — saving ${fcd(m.cap-m.municipalCap)} upfront. Municipal share: ${fcd(m.municipalCap)} of ${fcd(m.cap)} total.</div>`:'';
+  const intlBanner=unitNote?`<div class="rpt-intl-banner"><strong>Currency / units note:</strong>${unitNote}</div>`:'';
+
+  const footer=n=>`<footer class="rpt-footer"><span>Trail Investment ROI Calculator · For planning and advocacy · Validate with local data before formal presentation</span><span>Page ${n} of ${totalPages}</span></footer>`;
+  const pageHdr=title=>`<header class="rpt-hdr"><h1 class="rpt-title sm">${title}</h1><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></header>`;
+
+  /* ---- chart legends: built from the same data the charts draw ---- */
+  const LP=LINE_STYLE_PRINT;
+  const beLegend=rptLegend([
+    beVis.cost&&{swatch:rptLineSwatch(P.cost,LP.cost,false),label:'Total cost (construction + inflating maintenance)'},
+    beVis.muni&&{swatch:rptLineSwatch(P.muni,LP.muni,true),label:'Cumulative municipal revenue <em>(direct)</em>'},
+    beVis.econ&&{swatch:rptLineSwatch(P.econ,LP.econ,false),label:'Economic impact <em>(indirect)</em>'}
+  ].filter(Boolean));
+  const beScaleNote=beScale==='log'
+    ?'Vertical axis is logarithmic (1-2-5 steps): equal vertical distance = equal multiple. Read values from the gridlines.'
+    :'Vertical axis is linear.';
+  const msLegend=rptLegend([
+    {swatch:rptBoxSwatch(P.muni),label:'Revenue has recovered the municipal cost'},
+    {swatch:rptBoxSwatch(P.msMiss,P.muni),label:'Not yet recovered'},
+    {swatch:rptLineSwatch(P.cost,{dash:[9,4],lw:2},false),label:`Municipal cost (${fcd(m.municipalCap)})`}
+  ]);
+  const visLegend=rptLegend([
+    {swatch:rptBoxSwatch(P.visLight,P.visDark),label:'Ramp-up years'},
+    {swatch:rptBoxSwatch(P.visDark),label:'Full-capacity &amp; growth years'}
+  ]);
+  const segs=donutSegs(m);
+  const segTotal=segs.reduce((a,s)=>a+s.value,0)||1;
+  const donutTable=`<table class="rpt-seg"><tbody>${segs.map(s=>`<tr><td>${rptBoxSwatch(P.donut[s.ci],P.donut[0])}</td><td>${s.label} <span class="tag">(${s.type})</span></td><td>${fcd(s.value)}/yr</td><td>${(s.value/segTotal*100).toFixed(0)}%</td></tr>`).join('')}</tbody></table>`;
+
+  /* ---- alt text: also what a screen reader / tagged-PDF reader gets for each chart ---- */
+  const beAlt=`Line chart of cumulative values over ${v.years} years on a ${beScale==='log'?'logarithmic':'linear'} vertical axis. Municipal cost ${fcd(m.municipalCap)}. `+
+    (be?`Cumulative municipal revenue passes the cost in year ${be}. `:`Cumulative municipal revenue does not reach the cost within ${BREAKEVEN_SEARCH_YEARS} years. `)+
+    (lastRow?`By year ${lastRow.yr}: municipal revenue ${fcd(lastRow.cMuni)}, economic impact ${fcd(lastRow.cEcon)}, total cost ${fcd(lastRow.cCost)}.`:'');
+  const donutAlt='Donut chart of annual benefits at full capacity: '+segs.map(s=>`${s.label} ${fcd(s.value)} per year (${(s.value/segTotal*100).toFixed(0)}%)`).join('; ')+'.';
+  const msAlt=`Bar chart of cumulative municipal revenue at selected years against the municipal cost of ${fcd(m.municipalCap)}. Solid bars have recovered the cost; hollow bars have not.`;
+  const visAlt=`Bar chart of annual visitors by year${m.rows[0]&&lastRow?`, rising from ${fn(m.rows[0].vis)} in year 1 to ${fn(lastRow.vis)} in year ${lastRow.yr}`:''}. ${v.rampup>0?`Years 1 to ${v.rampup} are the ramp-up period, shown hollow.`:'There is no ramp-up period.'}`;
+
+  /* ---- Partnerships page (only when that panel is open) ---- */
   const whyYrsLabel=wv&&wv.years===0?'Build only':wv?`${wv.years}-yr`:'';
+  const whyLegend=rptLegend([
+    {swatch:rptLineSwatch(P.cost,{dash:null,lw:2.5},true),label:'Option 1 · Municipal only'},
+    {swatch:rptLineSwatch(P.econSolid,{dash:LP.cost.dash,lw:3},true),label:'Option 2 · With a non-profit'}
+  ]);
   const partnershipPage=partnershipActive?`
-  <div class="rpt-pg">
-    <div class="rpt-hdr"><div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Partnerships & Delivery Models</div><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></div>
-    <div class="rpt-section-title">Build it through partnership: cost comparison</div>
-    <p style="font-size:9pt;color:#4A4A42;margin-bottom:10px;max-width:70ch">This section compares two paths to the same trail: traditional municipal delivery versus a partnership model where a non-profit advocacy organization joins the project to reshape the funding and labor split. The trail is identical either way — what changes is who pays for what and who carries the maintenance liability.</p>
+  <section class="rpt-pg">
+    <header class="rpt-hdr"><h1 class="rpt-title sm">Trail Investment ROI — Partnerships &amp; Delivery Models</h1><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></header>
+    <h2 class="rpt-section-title">Build it through partnership: cost comparison</h2>
+    <p class="rpt-text" style="margin-bottom:10px;max-width:70ch">This section compares two paths to the same trail: traditional municipal delivery versus a partnership model where a non-profit advocacy organization joins the project to reshape the funding and labor split. The trail is identical either way — what changes is who pays for what and who carries the maintenance liability.</p>
     <div class="rpt-kpi-row" style="grid-template-columns:1fr 1fr">
       <div class="rpt-kpi"><div class="rpt-kpi-lbl">Option 1 &middot; Municipal only</div><div class="rpt-kpi-val">${whyCashShort(wm.total1)}</div><div class="rpt-kpi-sub">${whyYrsLabel} cost: ${whyCash(wm.mun1)} capital + ${whyCash(wm.opex1)} upkeep</div></div>
       <div class="rpt-kpi"><div class="rpt-kpi-lbl">Option 2 &middot; With a non-profit</div><div class="rpt-kpi-val">${whyCashShort(wm.total2)}</div><div class="rpt-kpi-sub">${whyYrsLabel} cost: ${whyCash(wm.mun2)} capital + ${whyCash(wm.opex2)} upkeep</div></div>
     </div>
-    <div style="font-size:8pt;color:#2A2A24;margin-bottom:12px">
+    <div class="rpt-text" style="margin-bottom:12px">
       <div style="margin-bottom:8px"><strong>Option 1 · Municipal only:</strong> Town contracts with a for-profit builder, owns the finished asset and all ongoing maintenance.</div>
       <div style="margin-bottom:8px"><strong>Option 2 · Partnership model:</strong> Non-profit brings volunteer labor, private donations, and an adopt-a-trail maintenance agreement, reshaping the municipal outlay and long-term liability.</div>
       ${wv.years===0?'<div><strong>Build-only comparison:</strong> horizon slider is at 0 — totals above are construction cost only, with no ongoing maintenance, coordination, or adoption savings included.</div>':wv.inflation>0?`<div><strong>Maintenance inflation:</strong> ${wv.inflation}%/yr, compounding on the maintenance line for both options over ${wv.years} years.</div>`:''}
     </div>
-    ${whyImg?`<div style="margin-bottom:12px"><img src="${whyImg}" style="max-width:100%;border:1px solid #D5CFBF;border-radius:6px" alt="Cumulative municipal cost over time"></div>`:''}
-    <div style="font-size:8pt;color:#4A4A42;line-height:1.6;background:#F7F4EE;border:1px solid #D5CFBF;border-radius:6px;padding:8px 10px">
+    ${img.why?`<figure class="rpt-fig"><figcaption class="rpt-note"><strong>Cumulative municipal cost over time</strong> — Year 0 is the capital cheque; the slope after that is annual maintenance the town still carries.</figcaption>${whyLegend}<img src="${img.why}" alt="Line chart of cumulative municipal cost over ${wv.years} years for Option 1 (municipal only), ending at ${whyCashShort(wm.total1)}, and Option 2 (with a non-profit), ending at ${whyCashShort(wm.total2)}."></figure>`:''}
+    <div class="rpt-box">
       <strong>Three built-in honesty constraints:</strong><br>
       • Both options receive the same public grant rate (both are eligible; the partnership's advantage is access to the private donor pool, not grant priority).<br>
       • Volunteer labor is priced at $34.79/hr (Independent Sector 2024 value), discounted for productivity, and capped at the hand-finishing share of construction.<br>
       • The partnership model is allowed to lose — if coordination costs exceed maintenance savings, that outcome appears in the report (this is not a sales pitch tool).<br><br>
       <em>This model does not assume grants are partnership-only, that adoption eliminates all maintenance, or that partnership is free. Directional planning tool — validate against local contractor quotes and non-profit partnership precedents before formal presentation.</em>
     </div>
-    <div class="rpt-footer">Trail Investment ROI Calculator · Partnerships Section · For planning and advocacy · Validate assumptions with local data before formal municipal presentation</div>
-  </div>`:'';
+    ${footer(4)}
+  </section>`:'';
 
   document.getElementById('rpt').innerHTML=`
-  <div class="rpt-pg">
-    <div class="rpt-hdr"><div><div class="rpt-title">Trail Investment ROI Calculator</div><div style="font-size:9pt;color:#7A7A70;margin-top:3px">Municipal Planning Tool · 50+ economic studies · TPL, IMBA, NAR (2025)</div></div><div class="rpt-meta"><div class="rpt-sc">${scLabel} Scenario</div><br>Generated ${now}</div></div>
+  <section class="rpt-pg">
+    <header class="rpt-hdr"><div><h1 class="rpt-title">Trail Investment ROI Calculator</h1><div class="rpt-sub">Municipal Planning Tool · 50+ economic studies · TPL, IMBA, NAR (2025)</div></div><div class="rpt-meta"><div class="rpt-sc">${scLabel} Scenario</div><div style="margin-top:6px">Generated ${now}</div></div></header>
     ${grantBanner}${intlBanner}
-    <div class="rpt-section-title">Key outcomes</div>
+    <h2 class="rpt-section-title" style="margin-top:0">Key outcomes</h2>
     <div class="rpt-kpi-row">
       <div class="rpt-kpi"><div class="rpt-kpi-lbl">Breakeven year (municipal revenue)</div><div class="rpt-kpi-val" style="${be&&be<=10?'color:var(--pos)':''}">${be?be+' years':'> '+BREAKEVEN_SEARCH_YEARS+' years'}</div><div class="rpt-kpi-sub">vs. ${fcd(m.municipalCap)} municipal cost</div></div>
       <div class="rpt-kpi"><div class="rpt-kpi-lbl">10-year return on construction cost</div><div class="rpt-kpi-val">${fp(m.roi10)}</div><div class="rpt-kpi-sub">municipal tax revenue</div></div>
       <div class="rpt-kpi"><div class="rpt-kpi-lbl">10-year economic impact</div><div class="rpt-kpi-val" style="color:var(--sky)">${m.r10?fcd(m.r10.cEcon):'—'}</div><div class="rpt-kpi-sub">local economy (w/ multiplier)</div></div>
       <div class="rpt-kpi"><div class="rpt-kpi-lbl">Jobs supported (mature year)</div><div class="rpt-kpi-val">${fn(m.jobs)}</div><div class="rpt-kpi-sub">annual FTEs at full capacity</div></div>
     </div>
-    <div class="rpt-section-title">Active assumptions</div>
-    <div class="rpt-assume-grid">${asmPairs.map(([k,v])=>`<div class="rpt-arow"><span class="rpt-akey">${k}</span><span class="rpt-aval">${v}</span></div>`).join('')}</div>
-    <div class="rpt-section-title">Cumulative investment vs. return</div>
-    <img src="${beImg}" class="rpt-chart-full" alt="Breakeven chart">
-    <div class="rpt-footer">Trail Investment ROI Calculator · For planning and advocacy · Validate assumptions with local data before formal municipal presentation</div>
-  </div>
-  <div class="rpt-pg">
-    <div class="rpt-hdr"><div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Page 2 of ${partnershipActive?4:3}</div><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></div>
+    <h2 class="rpt-section-title">Active assumptions</h2>
+    <div class="rpt-assume-grid">${asmPairs.map(([k,val])=>`<div class="rpt-arow"><span class="rpt-akey">${k}</span><span class="rpt-aval">${val}</span></div>`).join('')}</div>
+    <h2 class="rpt-section-title">Cumulative investment vs. return — ${v.years}-year projection</h2>
+    <figure class="rpt-fig">
+      ${beLegend}
+      <img src="${img.be}" alt="${beAlt}">
+      <figcaption class="rpt-note" style="margin:5px 0 0">${beScaleNote}</figcaption>
+    </figure>
+    ${footer(1)}
+  </section>
+  <section class="rpt-pg">
+    ${pageHdr('Trail Investment ROI — Benefits &amp; visitors')}
     <div class="rpt-callout"><strong>Property value impact</strong>${fn(v.homes)} homes within ${halfMile()} gain a ${v.propprem.toFixed(1)}% value premium — adding ${fcd(m.propVal)} in assessed value. At ${v.proptax.toFixed(1)}% property tax: ${fcd(m.ptAnn)}/yr in new municipal revenue without raising anyone's rate. (Indianapolis Cultural Trail: +$1B within 500 ft, 2008–2014.)</div>
-    <div class="rpt-section-title">Annual benefit breakdown &amp; cumulative milestones</div>
-    <div class="rpt-chart-row"><img src="${dnImg}" alt="Revenue breakdown"><img src="${msImg}" alt="Milestone chart"></div>
-    <div class="rpt-section-title">Annual visitors (ramp-up &amp; growth)</div>
-    <img src="${visImg}" class="rpt-chart-full" alt="Visitor growth chart">
-    <div class="rpt-footer">Trail Investment ROI Calculator · For planning and advocacy · Validate assumptions with local data before formal municipal presentation</div>
-  </div>
-  <div class="rpt-pg">
-    <div class="rpt-hdr"><div class="rpt-title" style="font-size:14pt">Trail Investment ROI — Page 3 of ${partnershipActive?4:3}</div><div class="rpt-meta"><div class="rpt-sc">${scLabel}</div></div></div>
-    <div class="rpt-section-title">Year-by-year detail (first ${show} years) · ✓ = breakeven · ↗ = ramp-up</div>
-    <table class="rpt-tbl"><thead><tr style="background:#F2EEE4"><th style="text-align:left;padding:4px 5px">Yr</th><th style="padding:4px 5px">Visitors</th><th style="padding:4px 5px">Maint.</th><th style="padding:4px 5px">Cumul. Cost</th><th style="padding:4px 5px">Cumul. Muni Rev.</th><th style="padding:4px 5px">Cumul. Econ. Impact</th><th style="padding:4px 5px">Net (vs. muni cost)</th></tr></thead><tbody>${tRows}</tbody></table>
-    <div class="rpt-section-title" style="margin-top:16px">Methodology &amp; data sources</div>
-    <div style="font-size:8pt;color:#4A4A42;line-height:1.7"><strong>Visitor spending:</strong> TPL/IMBA 2025 (50-study meta-analysis). Conservative $103/trip (Duluth, MN); Moderate $175/trip (regional avg); Optimistic $416/trip (national avg).<br><strong>Property values:</strong> Crompton &amp; Nicholls (2019); NAR Field Guide (2020). Trail build: Singletracks.com (Apr 2026). Jobs: IMBA ~$45K labor income/FTE.<br><strong>Local vs. out-of-town:</strong> Out-of-town spending gets full multiplier; local spending multiplier = 1.0 (recirculated). Per Savolt (2017) and Buning &amp; Lamont (2021).<br>${unitNote?'<strong>Units / currency:</strong> All research data is USD/imperial. '+curCurrency+' and '+curUnit+' values are conversions for directional reference only.<br>':''}<em>This report is for planning and advocacy. Validate with local data before formal municipal presentation.</em></div>
-    <div class="rpt-footer">Trail Investment ROI Calculator · Generated ${now} · For planning and advocacy only</div>
-  </div>
+    <h2 class="rpt-section-title">Annual benefit breakdown &amp; cumulative milestones</h2>
+    <div class="rpt-chart-row">
+      <figure class="rpt-fig">
+        <figcaption class="rpt-note"><strong>Annual benefit breakdown</strong> — Year ${Math.max(1,v.rampup+1)} (full capacity)</figcaption>
+        <img src="${img.donut}" alt="${donutAlt}">
+        ${donutTable}
+      </figure>
+      <figure class="rpt-fig">
+        <figcaption class="rpt-note"><strong>Cumulative municipal revenue</strong> at milestones vs. municipal cost</figcaption>
+        ${msLegend}
+        <img src="${img.ms}" alt="${msAlt}">
+      </figure>
+    </div>
+    <h2 class="rpt-section-title">Annual visitors (ramp-up &amp; growth)</h2>
+    <figure class="rpt-fig">
+      ${visLegend}
+      <img src="${img.vis}" alt="${visAlt}">
+    </figure>
+    ${footer(2)}
+  </section>
+  <section class="rpt-pg">
+    ${pageHdr('Trail Investment ROI — Year-by-year detail')}
+    <h2 class="rpt-section-title">Year-by-year detail (first ${show} years) · ✓ = breakeven · ↗ = ramp-up</h2>
+    <table class="rpt-tbl"><thead><tr><th scope="col">Yr</th><th scope="col">Visitors</th><th scope="col">Maint.</th><th scope="col">Cumul. Cost</th><th scope="col">Cumul. Muni Rev.</th><th scope="col">Cumul. Econ. Impact</th><th scope="col">Net (vs. muni cost)</th></tr></thead><tbody>${tRows}</tbody></table>
+    <h2 class="rpt-section-title" style="margin-top:16px">Methodology &amp; data sources</h2>
+    <div class="rpt-text"><strong>Visitor spending:</strong> TPL/IMBA 2025 (50-study meta-analysis). Conservative $103/trip (Duluth, MN); Moderate $175/trip (regional avg); Optimistic $416/trip (national avg).<br><strong>Property values:</strong> Crompton &amp; Nicholls (2019); NAR Field Guide (2020). Trail build: Singletracks.com (Apr 2026). Jobs: IMBA ~$45K labor income/FTE.<br><strong>Local vs. out-of-town:</strong> Out-of-town spending gets full multiplier; local spending multiplier = 1.0 (recirculated). Per Savolt (2017) and Buning &amp; Lamont (2021).<br>${unitNote?'<strong>Units / currency:</strong> All research data is USD/imperial. '+curCurrency+' and '+curUnit+' values are conversions for directional reference only.<br>':''}<em>This report is for planning and advocacy. Validate with local data before formal municipal presentation.</em></div>
+    ${footer(3)}
+  </section>
   ${partnershipPage}`;
+  reportBuiltAt=Date.now();
+}
+
+/* "Download Report" button. Builds, then waits for web fonts and every chart image
+   to decode BEFORE opening the print dialog: browsers snapshot the page the moment
+   the dialog opens, and an undecoded data-URL image prints as a blank box. */
+async function downloadReport(){
+  buildReport();
+  try{
+    const imgs=[...document.querySelectorAll('#rpt img')].map(i=>i.decode?i.decode():null);
+    await Promise.all([document.fonts&&document.fonts.ready,...imgs]);
+  }catch(e){}
+  reportBuiltAt=Date.now();   // restart the freshness window: the awaits above may have taken a moment
   window.print();
 }
+
+/* Ctrl/Cmd+P, File > Print, and mobile print menus never touch our button, so build
+   the report on demand. Skipped when downloadReport() just built (and decoded) one —
+   rebuilding would swap in brand-new, not-yet-decoded images mid-print.
+   The title swap names the saved PDF "Trail Investment ROI – Moderate scenario –
+   2026-10-11.pdf" instead of the generic page title. */
+window.addEventListener('beforeprint',()=>{
+  if(Date.now()-reportBuiltAt>=REPORT_FRESH_MS)buildReport();
+  if(titleBeforePrint===null){titleBeforePrint=document.title;document.title=reportTitle;}
+});
+window.addEventListener('afterprint',()=>{
+  reportBuiltAt=0;
+  if(titleBeforePrint!==null){document.title=titleBeforePrint;titleBeforePrint=null;}
+});
 
 /* ══ INIT ══ */
 window.addEventListener('DOMContentLoaded',async()=>{
