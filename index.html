@@ -202,6 +202,8 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .callout{background:var(--co-bg);border:1px solid var(--co-bd);border-radius:8px;padding:.6rem .875rem;margin-bottom:10px}
 .co-t{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:500;color:var(--fern);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
 .co-ico{flex-shrink:0}
+/* Print button icon (Lucide "printer"): stroke follows the button's text color, so it works on every theme. */
+.btn-ico{flex-shrink:0}
 .co-b{font-size:11px;color:var(--co-tx);line-height:1.5}
 .c3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
 .c3>*{min-width:0}
@@ -413,7 +415,7 @@ details[open] summary::before{content:'▼  '}
     <div class="act-btns">
       <button class="act-btn partner" id="partnerships-btn" onclick="togglePartnerships()" aria-expanded="false" aria-controls="why-panel">🤝 Partnerships</button>
       <button class="act-btn" onclick="copyLink()" id="copy-btn">🔗 Copy Link</button>
-      <button class="act-btn dl" onclick="printReport()" title="Opens your print dialog — choose 'Save as PDF' as the destination to get a PDF file">📄 Print / Save PDF</button>
+      <button class="act-btn dl" onclick="printReport()" title="Opens your print dialog — choose 'Save as PDF' as the destination to get a PDF file"><svg class="btn-ico" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>Print / Save PDF</button>
       <button class="act-btn intl" id="intl-btn" onclick="toggleIntlPanel()" title="Units &amp; currency">€</button>
       <span class="theme-dots" role="group" aria-label="Color scheme">
         <button class="theme-dot active" id="th-ore" style="background:#2D6A30" onclick="setTheme('ore')" title="Ore Pass (default)" aria-label="Ore Pass color scheme"></button>
