@@ -270,8 +270,10 @@ td:first-child{text-align:left}
 .info-ico:hover .info-tip,.info-ico:focus .info-tip{opacity:1;visibility:visible}
 details{margin-top:8px}
 details summary{font-size:11px;color:var(--tm);cursor:pointer;padding:6px 8px;background:var(--sbg);border-radius:6px;user-select:none;list-style:none}
-details summary::before{content:'▶  ';font-size:9px}
-details[open] summary::before{content:'▼  '}
+details summary::-webkit-details-marker{display:none}
+.sum-chev{width:12px;height:12px;vertical-align:-2px;margin-right:6px;transition:transform .15s}
+details[open] .sum-chev{transform:rotate(90deg)}
+.ico-ramp{width:12px;height:12px;vertical-align:-2px}
 .src-body{font-size:10px;color:var(--tm);padding:8px;line-height:1.65;border:1px solid var(--bdl);border-top:none;border-radius:0 0 6px 6px}
 .src-body strong{color:var(--ts)}
 /* RELATED-TOOL CROSS-LINK */
@@ -426,8 +428,8 @@ details[open] summary::before{content:'▼  '}
       <button class="sc-btn custom" id="btn-custom" style="display:none" disabled>● Custom</button>
     </div>
     <div class="act-btns">
-      <button class="act-btn partner" id="partnerships-btn" onclick="togglePartnerships()" aria-expanded="false" aria-controls="why-panel">🤝 Partnerships</button>
-      <button class="act-btn" onclick="copyLink()" id="copy-btn">🔗 Copy Link</button>
+      <button class="act-btn partner" id="partnerships-btn" onclick="togglePartnerships()" aria-expanded="false" aria-controls="why-panel"><svg class="btn-ico lucide lucide-handshake" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>Partnerships</button>
+      <button class="act-btn" onclick="copyLink()" id="copy-btn"><svg class="btn-ico lucide lucide-link" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Copy Link</button>
       <button class="act-btn dl" onclick="printReport()" title="Opens your print dialog — choose 'Save as PDF' as the destination to get a PDF file"><svg class="btn-ico" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>Print / Save PDF</button>
       <button class="act-btn intl" id="intl-btn" onclick="toggleIntlPanel()" title="Units &amp; currency">€</button>
       <span class="theme-dots" role="group" aria-label="Color scheme">
@@ -760,7 +762,7 @@ details[open] summary::before{content:'▼  '}
 
   <div class="cc" style="margin-top:10px">
     <p class="cc-t">Year-by-year detail (first 15 years)</p>
-    <p class="cc-s">↗ = ramp-up phase · ✓ = breakeven year · scroll for more</p>
+    <p class="cc-s"><span style="white-space:nowrap"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right ico-ramp" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg> = ramp-up phase</span> · ✓ = breakeven year · scroll for more</p>
     <div class="tbl-wrap">
       <table>
         <thead><tr>
@@ -774,7 +776,7 @@ details[open] summary::before{content:'▼  '}
   </div>
 
   <details>
-    <summary>Data sources &amp; methodology notes</summary>
+    <summary><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right sum-chev" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg>Data sources &amp; methodology notes</summary>
     <div class="src-body">
       <strong>Visitor spending:</strong> TPL/IMBA <em>Economic Benefits of Mountain Biking</em> (2025), 50-study meta-analysis. Conservative $103/trip = Duluth, MN; moderate $175/trip = regional avg; optimistic $416/trip = TPL national avg.<br><br>
       <strong>Property value premiums:</strong> Crompton &amp; Nicholls (2019); NAR Field Guide (2020). Typical: 3–5%. Indianapolis Cultural Trail: $1B added within 500 ft, 2008–2014.<br><br>
@@ -2156,6 +2158,8 @@ const INFRASTRUCTURE_COSTS=[
                                  (lo: small urbanized $5,562K x 6; hi: major urbanized normal $16,315K x 6)
    The road rows are NOT inflated to today's dollars: no index was verified, so they understate current road costs.
    lo/hi are used only by the Range view, which is switched off (HWY_RANGE_ENABLED). */
+/* Lucide arrow-up-right, path data unedited: marks ramp-up years in the year-by-year table and its legend. */
+const RAMP_ICON='<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right ico-ramp" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
 const HWY_RANGE_ENABLED=false;               // flip to true to show the Typical / Range switch again
 const HWY_RANGE_KEY='pmr-roi-hwy-range';    // per-viewer preference only
 const HWY_RANGE_NOTE='Range view: each bar spans the low-to-high cost for that type, and the dark tick marks the typical value the Typical view uses. The current project has one value, so it shows as a tick only.';
@@ -2263,9 +2267,9 @@ function buildYearRows(v,m,{print=false}={}){
     const nc=(net>=0?'color:var(--pos)':'color:var(--neg)')+(cellStyle?';'+cellStyle:'');
     const td=cellStyle?` style="text-align:right;${cellStyle}"`:'';
     const tdFirst=cellStyle?` style="text-align:left;${cellStyle}"`:'';
-    const flag=isBE?' ✓':isR?' ↗':'';
+    const flag=isBE?' ✓':isR?' '+RAMP_ICON:'';
     const netStr=(net>=0?'+':'-')+fcd(Math.abs(net));
-    html+=`<tr style="${bg}"><td${tdFirst}>${r.yr}${flag}</td><td${td}>${fn(r.vis)}</td><td${td}>${fcd(r.maintYr)}</td><td${td}>${fcd(r.cCost)}</td><td${td}>${fcd(r.cMuni)}</td><td${td}>${fcd(r.cEcon)}</td><td style="text-align:right;${nc}">${netStr}</td></tr>`;
+    html+=`<tr style="${bg}"><td${tdFirst}><span style="white-space:nowrap">${r.yr}${flag}</span></td><td${td}>${fn(r.vis)}</td><td${td}>${fcd(r.maintYr)}</td><td${td}>${fcd(r.cCost)}</td><td${td}>${fcd(r.cMuni)}</td><td${td}>${fcd(r.cEcon)}</td><td style="text-align:right;${nc}">${netStr}</td></tr>`;
   }
   return html;
 }
@@ -2428,7 +2432,7 @@ function updateWhy(){
 
   const caveats=`
   <details>
-    <summary>${WHY_CAVEATS_TITLE}</summary>
+    <summary><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right sum-chev" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg>${WHY_CAVEATS_TITLE}</summary>
     <div class="src-body">
       ${WHY_CAVEATS_HTML}
     </div>
@@ -2984,7 +2988,7 @@ function buildReport(){
   </section>
   <section class="rpt-pg">
     ${pageHdr('Trail Investment ROI — Year-by-year detail')}
-    <h2 class="rpt-section-title">Year-by-year detail (first ${show} years) · ✓ = breakeven · ↗ = ramp-up</h2>
+    <h2 class="rpt-section-title">Year-by-year detail (first ${show} years) · ✓ = breakeven · ${RAMP_ICON} = ramp-up</h2>
     <table class="rpt-tbl"><thead><tr><th scope="col">Yr</th><th scope="col">Visitors</th><th scope="col">Maint.</th><th scope="col">Cumul. Cost</th><th scope="col">Cumul. Muni Rev.</th><th scope="col">Cumul. Econ. Impact</th><th scope="col">Net (vs. muni cost)</th></tr></thead><tbody>${tRows}</tbody></table>
     <h2 class="rpt-section-title" style="margin-top:16px">Methodology &amp; data sources</h2>
     <div class="rpt-text"><strong>Visitor spending:</strong> TPL/IMBA 2025 (50-study meta-analysis). Conservative $103/trip (Duluth, MN); Moderate $175/trip (regional avg); Optimistic $416/trip (national avg).<br><strong>Property values:</strong> Crompton &amp; Nicholls (2019); NAR Field Guide (2020). Trail build: Singletracks.com (Apr 2026). Jobs: IMBA ~$45K labor income/FTE.<br><strong>Local vs. out-of-town:</strong> Out-of-town spending gets full multiplier; local spending multiplier = 1.0 (recirculated). Per Savolt (2017) and Buning &amp; Lamont (2021).<br>${unitNote?'<strong>Units / currency:</strong> All research data is USD/imperial. '+curCurrency+' and '+curUnit+' values are conversions for directional reference only.<br>':''}<em>This report is for planning and advocacy. Validate with local data before formal municipal presentation.</em></div>
