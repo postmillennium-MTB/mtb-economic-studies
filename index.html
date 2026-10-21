@@ -793,7 +793,6 @@ details[open] .sum-chev{transform:rotate(90deg)}
   <div class="xlink">
     <span class="xlabel">Related tool</span>
     <a class="xbtn" href="https://www.postmillenniumrenaissance.com/pump-track/" target="_top"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor" class="material-symbol material-symbol-skateboarding" aria-hidden="true" focusable="false"><path d="M269-9q-9-9-9-21t9-21q9-9 21-9t21 9q9 9 9 21t-9 21q-9 9-21 9t-21-9Zm340 0q-9-9-9-21t9-21q9-9 21-9t21 9q9 9 9 21t-9 21q-9 9-21 9t-21-9ZM270-80q-45 0-83-19.5T124-152q-3-5-4.5-9t-1.5-9q0-12 8-21t22-9q8 0 13.5 3t10.5 9q12 17 30.5 28.5T242-143l125-151-53-166q-5-17-3-34t11-32l96-154h-94l-76 122-68-42 100-160h228q27 0 43.5 15t22.5 28l21 48q20 48 64.5 78.5T760-560v80q-70 0-128-33.5T539-602l-72 115 173 107v240h12q29 0 54-13t42-35q5-6 10.5-9t13.5-3q13 0 21.5 9t8.5 21q0 5-1.5 9t-4.5 9q-25 33-62 52.5T652-80H270Zm74-60h216v-184l-140-88 40 132-116 140Zm256-620q-33 0-56.5-23.5T520-840q0-33 23.5-56.5T600-920q33 0 56.5 23.5T680-840q0 33-23.5 56.5T600-760Z"/></svg>Skatepark and Pump Track ROI Calculator&nbsp;&rarr;</a>
-    <span class="xtext">The same economic logic applied to wheeled-sport facilities. Two separate estimates &mdash; what riders gain and what out-of-town visitors spend &mdash; with the sources shown, for when the ask in front of council is a pump track or skatepark rather than singletrack.</span>
   </div>
 </main>
 </div>
@@ -902,8 +901,19 @@ function setBEScale(s){
 const UNIT_KEYS=['imperial','metric','both'];
 let curUnit='imperial';
 let curCurrency='USD';  // key into CUR_SYM / exRates, set below
-let exRates={USD:1,AUD:1.546,CAD:1.362,EUR:0.918,GBP:0.783};
-let ratesDate=null;
+/* Built-in fallback rates, used only when the live feed (fetchRates below) cannot be reached. They are a
+   snapshot, so the page says so wherever it shows a converted figure's rate: update the numbers and the date together. */
+const FALLBACK_RATES_DATE='2026-10-21';
+let exRates={USD:1,AUD:1.4259,CAD:1.4062,EUR:0.8906,GBP:0.7476};
+let ratesDate=null;      // set only when live rates loaded
+let ratesLive=false;
+/* One sentence naming the rate in force and when it is from, for the panel and the printed report. */
+function rateSentence(){
+  if(curCurrency==='USD')return '';
+  const r=(exRates[curCurrency]||1).toFixed(4);
+  return ratesLive?`Rate used: 1 USD = ${r} ${curCurrency} (live rate as of ${ratesDate}).`
+                  :`Rate used: 1 USD = ${r} ${curCurrency} (approximate built-in rate as of ${FALLBACK_RATES_DATE}; live rates could not be loaded).`;
+}
 
 /* ══ SCENARIOS ══ */
 const SCENARIOS={
@@ -1674,6 +1684,8 @@ function openMethods(){
 
 /* ══ EXCHANGE RATES (daily update via jsdelivr CDN) ══ */
 async function fetchRates(){
+  const note=document.getElementById('rate-note');
+  if(note)note.textContent='· approximate rates as of '+FALLBACK_RATES_DATE+' until live rates load';
   try{
     const r=await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
     const d=await r.json();
@@ -1683,10 +1695,13 @@ async function fetchRates(){
       if(d.usd.eur)exRates.EUR=d.usd.eur;
       if(d.usd.gbp)exRates.GBP=d.usd.gbp;
       ratesDate=d.date||null;
-      const note=document.getElementById('rate-note');
-      if(note&&ratesDate)note.textContent='· rates as of '+ratesDate;
-    }
-  }catch(e){/* use fallback rates */}
+      ratesLive=!!ratesDate;
+      if(note)note.textContent=ratesLive?'· rates as of '+ratesDate:'· approximate rates as of '+FALLBACK_RATES_DATE+' (live date unavailable)';
+      if(ratesLive&&curCurrency!=='USD')setCurrency(curCurrency);   // rates arrived after a currency was picked: redraw at the live rate
+    }else if(note)note.textContent='· approximate rates as of '+FALLBACK_RATES_DATE+' (live rates unavailable)';
+  }catch(e){
+    if(note)note.textContent='· approximate rates as of '+FALLBACK_RATES_DATE+' (live rates unavailable)';
+  }
 }
 
 /* ══ CUSTOM SCENARIO DETECTION ══ */
@@ -2795,7 +2810,7 @@ function buildReport(){
   const nowDate=new Date();
   const now=nowDate.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
   const curSym=CUR_SYM[curCurrency]||'$';
-  const unitNote=curCurrency!=='USD'||curUnit!=='imperial'?` (values shown in ${curSym}${curUnit!=='imperial'?' / '+curUnit:''} — converted from USD/imperial research data)`:'';
+  const unitNote=curCurrency!=='USD'||curUnit!=='imperial'?` (values shown in ${curSym}${curUnit!=='imperial'?' / '+curUnit:''} — converted from USD/imperial research data${curCurrency!=='USD'?'. '+rateSentence():''})`:'';
   // Chrome/Edge/Firefox use document.title as the default PDF file name.
   reportTitle='Trail Investment ROI – '+scLabel+' scenario – '+localISODate(nowDate);
 
