@@ -181,7 +181,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .cc-s{font-size:11px;color:var(--tm);margin-bottom:10px}
 /* Log/linear switch on the infrastructure comparison. The button is 40px tall to touch;
    the Lucide toggle icon swaps left (log) to right (linear). */
-.scale-row{margin-bottom:6px}
+.scale-row{margin-bottom:6px;display:flex;flex-wrap:wrap;gap:8px}
 .scale-sw{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--bd);border-radius:20px;background:var(--sbg);color:var(--tm);font-family:inherit;font-size:11px;cursor:pointer}
 .scale-sw:hover{border-color:var(--fern)}
 .scale-sw:focus-visible{outline:2px solid var(--fern);outline-offset:2px}
@@ -218,9 +218,11 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .c3>*{min-width:0}
 /* HIGHWAY BARS */
 .ci{margin-bottom:8px}.ci:last-child{margin-bottom:0}
-.ci-lr{display:flex;justify-content:space-between;font-size:11px;color:var(--ts);margin-bottom:3px}
+.ci-lr{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--ts);margin-bottom:3px}
 .ci-v{font-weight:500;color:var(--tp)}
-.bt{height:18px;background:var(--parchment);border-radius:3px;overflow:hidden}
+.bt{height:18px;background:var(--parchment);border-radius:3px;overflow:hidden;position:relative}
+.bpt{position:absolute;top:0;bottom:0;width:3px;margin-left:-1px;background:var(--tp);box-shadow:0 0 0 1px #fff}
+.ci-typ{display:block;text-align:right;font-weight:400;font-size:10px;color:var(--tm)}
 .bf{height:100%;border-radius:3px;transition:width .4s;display:flex;align-items:center;padding-left:6px}
 .bfl{font-size:9px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden}
 /* TABLE */
@@ -733,7 +735,7 @@ details[open] summary::before{content:'▼  '}
     <button type="button" class="cc-toggle" data-card="hwy" aria-expanded="true" aria-controls="hwy-body" onclick="toggleCard(this)">
       <span>
         <span class="cc-t" id="hwy-title">Infrastructure cost comparison — per mile (log scale)</span>
-        <span class="cc-s">Your trail vs. conventional road infrastructure</span>
+        <span class="cc-s">Current project vs. conventional road infrastructure</span>
       </span>
       <svg class="cc-chev" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
     </button>
@@ -744,10 +746,15 @@ details[open] summary::before{content:'▼  '}
           <span id="sw-ico" aria-hidden="true"></span>
           <span class="scale-opt" id="sw-lin">Linear</span>
         </button>
+        <button type="button" class="scale-sw" id="hwy-rsw" role="switch" aria-checked="false" aria-label="Show low-to-high range" onclick="toggleHwyRange()">
+          <span class="scale-opt on" id="rsw-typ">Typical</span>
+          <span id="rsw-ico" aria-hidden="true"></span>
+          <span class="scale-opt" id="rsw-rng">Range</span>
+        </button>
       </div>
       <p class="hwy-note" id="hwy-note"></p>
       <div id="hwy-cmp"></div>
-      <p style="font-size:10px;color:var(--tm);margin-top:6px">Sources: FHWA/DOT 2020–2024 · Singletracks.com contractor survey April 2026 · American Trails database</p>
+      <p style="font-size:10px;color:var(--tm);margin-top:6px">Sources: Singletracks.com contractor survey April 2026 (professional build) · American Trails database (volunteer build) · road ranges are rounded secondary-source estimates, not FHWA figures — see README §10</p>
     </div>
   </div>
 
@@ -1057,7 +1064,7 @@ function whyNum(v){return Number(v).toLocaleString()}
 const WHY_INPUTS=[
   {key:'miles',     group:'project', label:'Trail length',                    min:5,     max:50,     step:1,    value:10,    fmt:v=>v+' mi'},
   {key:'cost',      group:'project', label:'Base construction cost / mile',   min:10000, max:95000,  step:1000, value:45000, fmt:whyCash,
-   hint:'Turnkey professional singletrack, machine cut and hand finished. Contractor surveys cluster at $25K–$80K/mi; rock, bridging, and steep or wet ground push past that.'},
+   hint:'Turnkey professional singletrack, machine cut and hand finished. The Singletracks 2026 contractor survey puts it at $60K–$80K/mi; rock, bridging, and steep or wet ground push past that.'},
   {key:'plan',      group:'project', label:'Planning, design &amp; permitting',   min:0,     max:25,     step:1,    value:12,    fmt:whyPct,
    hint:'As a share of construction cost. Covers alignment flagging, environmental review, and municipal staff hours pulled off other duties.'},
   {key:'maint',     group:'project', label:'Maintenance / mile / year',       min:500,   max:8000,   step:250,  value:1500,  fmt:whyCash,
@@ -2128,12 +2135,19 @@ function drawVisitors(v,m){
    contractor survey — cited again in the card footer. Adding a new
    comparison point is a one-line entry here; the scale rescales itself. */
 const INFRASTRUCTURE_COSTS=[
-  {label:'Volunteer-built singletrack',pm:10000,themeColor:'hwy0'},
-  {label:'Pro-built singletrack (2026)',pm:70000,themeColor:'hwy2'},
-  {label:'2-lane rural road',pm:4000000,color:'#AAA090'},
-  {label:'4-lane suburban highway',pm:25000000,color:'#7A7068'},
-  {label:'Urban 6-lane interstate',pm:80000000,color:'#3D3830'}
+  {label:'Volunteer-built singletrack',pm:10000,lo:2000,hi:15000,themeColor:'hwy0'},
+  {label:'Pro-built singletrack (2026)',pm:70000,lo:60000,hi:80000,themeColor:'hwy2'},
+  {label:'2-lane rural road',pm:4000000,lo:3000000,hi:10000000,color:'#AAA090'},
+  {label:'4-lane suburban highway',pm:25000000,lo:10000000,hi:40000000,color:'#7A7068'},
+  {label:'Urban 6-lane interstate',pm:80000000,lo:40000000,hi:150000000,color:'#3D3830'}
 ];
+/* pm = the single "typical" value the Typical view draws; lo/hi = the range the Range view
+   draws. pm is a judgment pick inside the range, NOT a sourced midpoint (README §10). The
+   pro-built range is the Singletracks survey's printed $60,000–$80,000; the road ranges come from
+   unverified secondary compilations (README §10 audit), so treat them as order-of-magnitude. */
+const HWY_RANGE_KEY='pmr-roi-hwy-range';    // per-viewer preference only
+const HWY_RANGE_NOTE='Range view: each bar spans the low-to-high cost for that type, and the dark tick marks the typical value the Typical view uses. The current project has one value, so it shows as a tick only.';
+let hwyRange=false;
 
 /* Scale options for the comparison bars. The switch is a Lucide toggle icon: toggle-left
    is the default (log), toggle-right is linear. `note` is the one-line plain-language
@@ -2155,6 +2169,12 @@ const HWY_TOGGLE_ICONS={                   // Lucide toggle-left / toggle-right,
 let hwyScale='log', lastHwy=null;
 function restoreHwyScale(){
   try{const sv=localStorage.getItem(HWY_SCALE_KEY);if(sv&&HWY_SCALES[sv])hwyScale=sv;}catch(e){}
+  try{hwyRange=localStorage.getItem(HWY_RANGE_KEY)==='1';}catch(e){}
+}
+function toggleHwyRange(){
+  hwyRange=!hwyRange;
+  try{localStorage.setItem(HWY_RANGE_KEY,hwyRange?'1':'0')}catch(e){}
+  if(lastHwy)drawHwy(...lastHwy);
 }
 function toggleHwyScale(){
   hwyScale=hwyScale==='log'?'linear':'log';
@@ -2166,30 +2186,49 @@ function drawHwy(v,m){
   lastHwy=[v,m];
   const t=T();
   const items=[
-    {label:'Volunteer-built singletrack',pm:INFRASTRUCTURE_COSTS[0].pm,color:t.hwy[0]},
-    {label:`Your project (${cpd(v.buildcost)} · ${v.miles} mi total)`,pm:v.buildcost,color:t.hwy[1],bold:true},
-    {label:'Pro-built singletrack (2026)',pm:INFRASTRUCTURE_COSTS[1].pm,color:t.hwy[2]},
-    ...INFRASTRUCTURE_COSTS.slice(2).map(it=>({label:it.label,pm:it.pm,color:it.color}))
+    {label:'Volunteer-built singletrack',pm:INFRASTRUCTURE_COSTS[0].pm,lo:INFRASTRUCTURE_COSTS[0].lo,hi:INFRASTRUCTURE_COSTS[0].hi,color:t.hwy[0]},
+    {label:`Current project (${cpd(v.buildcost)} · ${v.miles} mi total)`,pm:v.buildcost,color:t.hwy[1],bold:true},
+    {label:'Pro-built singletrack (2026)',pm:INFRASTRUCTURE_COSTS[1].pm,lo:INFRASTRUCTURE_COSTS[1].lo,hi:INFRASTRUCTURE_COSTS[1].hi,color:t.hwy[2]},
+    ...INFRASTRUCTURE_COSTS.slice(2).map(it=>({label:it.label,pm:it.pm,lo:it.lo,hi:it.hi,color:it.color}))
   ];
   // Scale bounds derive from the actual data (with a little headroom) so a
   // new highest/lowest reference point can't silently fall off the bar.
-  const allPm=[...items.map(i=>i.pm)];
+  const allPm=items.flatMap(i=>hwyRange?[i.pm,i.lo??i.pm,i.hi??i.pm]:[i.pm]);
   const maxPm=Math.max(...allPm);
   const maxL=Math.log10(maxPm),minL=Math.log10(Math.min(...allPm,5000));
   const linear=hwyScale==='linear';
   // Keep the card chrome in step with the scale: title, switch state, icon, note.
   document.getElementById('hwy-title').textContent='Infrastructure cost comparison — per mile ('+HWY_SCALES[hwyScale].word+')';
-  document.getElementById('hwy-note').textContent=HWY_SCALES[hwyScale].note;
+  document.getElementById('hwy-note').textContent=HWY_SCALES[hwyScale].note+(hwyRange?' '+HWY_RANGE_NOTE:'');
+  document.getElementById('hwy-rsw').setAttribute('aria-checked',String(hwyRange));
+  document.getElementById('rsw-ico').innerHTML=HWY_TOGGLE_ICONS[hwyRange?'linear':'log'];
+  document.getElementById('rsw-typ').classList.toggle('on',!hwyRange);
+  document.getElementById('rsw-rng').classList.toggle('on',hwyRange);
   document.getElementById('hwy-sw').setAttribute('aria-checked',String(linear));
   document.getElementById('sw-ico').innerHTML=HWY_TOGGLE_ICONS[hwyScale];
   document.getElementById('sw-log').classList.toggle('on',!linear);
   document.getElementById('sw-lin').classList.toggle('on',linear);
+  const pos=pm=>linear
+    ?(pm/maxPm)*100
+    :((Math.log10(pm)-minL)/(maxL-minL))*100;
   document.getElementById('hwy-cmp').innerHTML=items.map(it=>{
+    const nameHtml=`<span style="${it.bold?'font-weight:600;color:var(--forest)':''}">${it.label}</span>`;
+    if(hwyRange){
+      const hasR=it.lo!=null&&it.hi!=null;
+      const lo=hasR?it.lo:it.pm, hi=hasR?it.hi:it.pm;
+      const minW=linear?HWY_MIN_BAR_LINEAR:HWY_MIN_BAR_LOG;
+      const w=Math.max(minW,pos(hi)-pos(lo));
+      const left=Math.min(Math.max(0,pos(lo)),100-w);
+      const tick=Math.min(100,Math.max(0,pos(it.pm)));
+      const val=hasR?`${cpd(lo).replace('/mi','')}–${cpd(hi)}<span class="ci-typ">typical ${cpd(it.pm)}</span>`:cpd(it.pm);
+      const band=hasR?`<div class="bf" style="margin-left:${left.toFixed(1)}%;width:${w.toFixed(1)}%;background:${it.color}"></div>`:'';
+      return`<div class="ci"><div class="ci-lr">${nameHtml}<span class="ci-v">${val}</span></div><div class="bt">${band}<div class="bpt" style="left:${tick.toFixed(1)}%"></div></div></div>`;
+    }
     const pct=linear
-      ?Math.max(HWY_MIN_BAR_LINEAR,(it.pm/maxPm)*100)
-      :Math.max(HWY_MIN_BAR_LOG,((Math.log10(it.pm)-minL)/(maxL-minL))*100);
+      ?Math.max(HWY_MIN_BAR_LINEAR,pos(it.pm))
+      :Math.max(HWY_MIN_BAR_LOG,pos(it.pm));
     const label=cpd(it.pm);
-    return`<div class="ci"><div class="ci-lr"><span style="${it.bold?'font-weight:600;color:var(--forest)':''}">${it.label}</span><span class="ci-v">${label}</span></div><div class="bt"><div class="bf" style="width:${pct.toFixed(1)}%;background:${it.color}">${pct>14?`<span class="bfl">${label}</span>`:''}</div></div></div>`;
+    return`<div class="ci"><div class="ci-lr">${nameHtml}<span class="ci-v">${label}</span></div><div class="bt"><div class="bf" style="width:${pct.toFixed(1)}%;background:${it.color}">${pct>14?`<span class="bfl">${label}</span>`:''}</div></div></div>`;
   }).join('');
 }
 
@@ -2281,7 +2320,7 @@ function whyLedgerRows(v,m){
 }
 
 const WHY_CAVEATS_TITLE='Where these numbers come from, and where they stop';
-const WHY_CAVEATS_HTML=`<strong>Cost benchmarks:</strong> professional contractor-built singletrack runs roughly $25,000–$80,000/mi; technical rock work, bridging, boardwalk and steep or wet ground push above that. Routine maintenance runs $1,500–$5,000/mi/yr. Sources: Singletracks contractor survey; American Trails cost database.<br><br>
+const WHY_CAVEATS_HTML=`<strong>Cost benchmarks:</strong> professional contractor-built singletrack runs roughly $60,000–$80,000/mi; technical rock work, bridging, boardwalk and steep or wet ground push above that. Routine maintenance runs $1,500–$5,000/mi/yr. Sources: Singletracks contractor survey; American Trails cost database.<br><br>
       <strong>Valuing volunteer labor:</strong> priced at Independent Sector's national value of volunteer time ($34.79/hr for 2024), then discounted by a productivity factor, then capped at the hand-finishing share of the build. Pricing volunteer hours at the headline rate with no discount and no cap is the single most common way these comparisons get inflated.<br><br>
       <strong>Maintenance inflation:</strong> when enabled, compounds only the per-mile trail maintenance line, for both options, at the rate selected above — construction, planning, private capital, and partnership coordination costs are all treated as fixed today's-dollar figures for the length of the comparison horizon. Off by default; the six-way switch (Off/1/2/3/4/5%) sits right below the maintenance slider.<br><br>
       <strong>Three things this model refuses to assume:</strong> that grants are partnership-only (the grant rate here applies to both options — what the non-profit unlocks is the private pool); that adoption eliminates maintenance (the slider caps at 95% — storm damage, drainage failures, and machine work stay municipal); that partnership is free (set coordination cost high and volunteer hours low and Option 2 loses — if a model can't produce that result, it isn't a model).<br><br>

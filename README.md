@@ -656,15 +656,24 @@ If you are working on a major trail project (over $1 million in public investmen
 
 The highway cost comparison is included to give decision-makers a sense of proportionality. Trail infrastructure is extremely inexpensive compared to road infrastructure, yet it is often treated as a discretionary luxury rather than essential public infrastructure.
 
-The bars can be drawn on a **log scale** (the default) or a **linear scale**, using the switch at the top of the card. On the log axis each step along the bar multiplies the cost, which keeps a $70K trail mile and a $4M road mile on one chart but makes the trail look about 40% as long as the road when it costs about 2% as much. The linear axis is true to proportion; the singletrack bars become slivers (a 0.4% minimum width is drawn so they stay visible, so the slivers are not to scale against each other). The choice is remembered in the browser only (`pmr-roi-hwy-scale`); the chart works with it empty. The scale labels and reading notes live in the `HWY_SCALES` registry in `index.html`.
+The bars can be drawn on a **log scale** (the default) or a **linear scale**, using the switch at the top of the card. On the log axis each step along the bar multiplies the cost, which keeps a $70K trail mile and a $4M road mile on one chart but makes the trail look about 40% as long as the road when it costs about 2% as much. The linear axis is true to proportion; the singletrack bars become slivers (a 0.4% minimum width is drawn so they stay visible, so the slivers are not to scale against each other). A second switch, **Typical / Range**, changes what each row draws. *Typical* draws one value per type. *Range* draws a floating bar from the low to the high figure in the table below, with a dark tick at the typical value; the current project has a single value, so it shows as a tick only. A floating range claims only a position, not a length from zero, which makes it the more honest of the two on the log axis. Both choices are remembered in the browser only (`pmr-roi-hwy-scale`, `pmr-roi-hwy-range`); the chart works with them empty. The scale labels and reading notes live in the `HWY_SCALES` registry and the lows, highs and typical values in `INFRASTRUCTURE_COSTS`, both in `index.html`.
 
 | Infrastructure type | Cost per mile (USD) | Source |
 |---|---|---|
 | Volunteer-built singletrack | $2,000–$15,000 | American Trails database; MTBR forum surveys |
-| Professional contractor-built singletrack | $25,000–$80,000 | Singletracks.com contractor survey, April 2026 |
+| Professional contractor-built singletrack | $60,000–$80,000 | Singletracks.com contractor survey, April 2026 (range as printed in the article's headline answer; full article not re-read when this was changed) |
 | 2-lane rural road (new construction) | $3,000,000–$10,000,000 | FHWA / DOT compiled data, 2020–2024 |
 | 4-lane suburban highway | $10,000,000–$40,000,000 | FHWA / DOT compiled data |
 | Urban 6-lane interstate | $40,000,000–$150,000,000 | FHWA / DOT compiled data |
+
+**How reliable are these rows? (audit, October 2026)**
+
+- **Typical values are judgment picks, not sourced midpoints.** The chart's single values ($10K, $70K, $4M, $25M, $80M) sit inside the ranges above but are not their midpoints and no source prints them.
+- **Trail rows.** The $60K–$80K professional range matches the Singletracks headline figure. The earlier $25K lower bound could not be traced to it and was removed. Other published figures run lower (for example Shimano's Trail Born Fund cites roughly $10K–$45K per mile; a 2025 Lead, SD cost opinion works out to roughly $32K–$45K per mile), so the professional range is a *survey figure*, not a floor. The volunteer range ($2K–$15K) could not be found in the American Trails database or any forum survey; treat it as an unverified estimate.
+- **Road rows are the weak link.** They come from a Quora answer and a vendor blog, not from FHWA, and the two disagree by roughly an order of magnitude: the vendor blog gives $4–6M per mile for a 4-lane highway and $7–11M for a 6-lane interstate, against the $10–40M and $40–150M used here. Neither document gives a lane count, ROW inclusion or dollar year. The one primary anchor found is Brooks & Liscow (2023), which puts mean US Interstate construction at about $11.5M per mile (2016 dollars, 1956–1993 build-out). That is far below the $80M typical value for an urban interstate, though urban segments sit well above the national mean. Read the road rows as order-of-magnitude.
+- **Dollar years are mixed** (trail 2026, roads 2020–2024 at best) and the chart does not inflation-adjust.
+- **A trail mile and a road mile are not the same product** (capacity, design life, right-of-way, utilities). The chart shows proportion, not equivalence.
+- **Open item:** replace the Quora and vendor rows with state DOT bid-price or FHWA cost-per-lane-mile figures with a named table and year.
 
 The bar chart uses a logarithmic scale because the actual dollar differences span five orders of magnitude (roughly 10,000× from volunteer trail to urban interstate). Linear scaling would render trail costs invisible on the chart. The logarithmic transformation preserves the relative visual proportions while making all bars legible.
 
@@ -814,7 +823,7 @@ The following studies, reports, and data sources directly informed the assumptio
 - Context for understanding why trail infrastructure provides exceptional value per dollar
 
 **Midwest Industrial Supply (2018).** "How Much Does It Cost to Build a Mile of Road?" blog.midwestind.com.
-- 4-lane rural/suburban highway: $4–6M/mile; 6-lane interstate: $7–11M/mile
+- 4-lane rural/suburban highway: $4–6M/mile; 6-lane interstate: $7–11M/mile (disagrees with the Quora-derived ranges used in §10 by about 4–10×; see the audit there)
 
 **Quora / DOT compiled data (various contributors, 2020–2024).** "How much does it cost to build a freeway per mile?"
 - Rural low-complexity freeway: $3–10M/mile
