@@ -656,6 +656,8 @@ If you are working on a major trail project (over $1 million in public investmen
 
 The highway cost comparison is included to give decision-makers a sense of proportionality. Trail infrastructure is extremely inexpensive compared to road infrastructure, yet it is often treated as a discretionary luxury rather than essential public infrastructure.
 
+The bars can be drawn on a **log scale** (the default) or a **linear scale**, using the switch at the top of the card. On the log axis each step along the bar multiplies the cost, which keeps a $70K trail mile and a $4M road mile on one chart but makes the trail look about 40% as long as the road when it costs about 2% as much. The linear axis is true to proportion; the singletrack bars become slivers (a 0.4% minimum width is drawn so they stay visible, so the slivers are not to scale against each other). The choice is remembered in the browser only (`pmr-roi-hwy-scale`); the chart works with it empty. The scale labels and reading notes live in the `HWY_SCALES` registry in `index.html`.
+
 | Infrastructure type | Cost per mile (USD) | Source |
 |---|---|---|
 | Volunteer-built singletrack | $2,000–$15,000 | American Trails database; MTBR forum surveys |

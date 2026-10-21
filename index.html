@@ -179,6 +179,15 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .cc-t{font-size:13px;font-weight:500;color:var(--tp);margin-bottom:2px}
 .cc-t-lg{font-size:15px}
 .cc-s{font-size:11px;color:var(--tm);margin-bottom:10px}
+/* Log/linear switch on the infrastructure comparison. The button is 40px tall to touch;
+   the Lucide toggle icon swaps left (log) to right (linear). */
+.scale-row{margin-bottom:6px}
+.scale-sw{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--bd);border-radius:20px;background:var(--sbg);color:var(--tm);font-family:inherit;font-size:11px;cursor:pointer}
+.scale-sw:hover{border-color:var(--fern)}
+.scale-sw:focus-visible{outline:2px solid var(--fern);outline-offset:2px}
+.scale-sw svg{width:26px;height:26px;color:var(--fern);flex-shrink:0}
+.scale-opt.on{color:var(--tp);font-weight:600}
+.hwy-note{font-size:10px;color:var(--tm);margin:0 0 8px;line-height:1.5}
 /* COLLAPSIBLE CARD — reusable. Add class "collapsible" to any .cc,
    wrap its title in a .cc-toggle button and its content in a .cc-body div. */
 .cc-toggle{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;padding:0;margin:0;border:none;background:none;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;color:inherit}
@@ -723,12 +732,20 @@ details[open] summary::before{content:'▼  '}
   <div class="cc collapsible" style="margin-top:10px">
     <button type="button" class="cc-toggle" data-card="hwy" aria-expanded="true" aria-controls="hwy-body" onclick="toggleCard(this)">
       <span>
-        <span class="cc-t">Infrastructure cost comparison — per mile (log scale)</span>
+        <span class="cc-t" id="hwy-title">Infrastructure cost comparison — per mile (log scale)</span>
         <span class="cc-s">Your trail vs. conventional road infrastructure</span>
       </span>
       <svg class="cc-chev" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
     </button>
     <div class="cc-body" id="hwy-body">
+      <div class="scale-row">
+        <button type="button" class="scale-sw" id="hwy-sw" role="switch" aria-checked="false" aria-label="Linear scale" onclick="toggleHwyScale()">
+          <span class="scale-opt on" id="sw-log">Log</span>
+          <span id="sw-ico" aria-hidden="true"></span>
+          <span class="scale-opt" id="sw-lin">Linear</span>
+        </button>
+      </div>
+      <p class="hwy-note" id="hwy-note"></p>
       <div id="hwy-cmp"></div>
       <p style="font-size:10px;color:var(--tm);margin-top:6px">Sources: FHWA/DOT 2020–2024 · Singletracks.com contractor survey April 2026 · American Trails database</p>
     </div>
@@ -2118,7 +2135,35 @@ const INFRASTRUCTURE_COSTS=[
   {label:'Urban 6-lane interstate',pm:80000000,color:'#3D3830'}
 ];
 
+/* Scale options for the comparison bars. The switch is a Lucide toggle icon: toggle-left
+   is the default (log), toggle-right is linear. `note` is the one-line plain-language
+   reading guide shown above the bars. TO ADD A SCALE: one entry here, then give
+   drawHwy() a position rule for it. */
+const HWY_SCALES={
+  log:{word:'log scale',
+       note:'Log scale: each step along the bar multiplies the cost, so a bar twice as long is many times the cost. Bar lengths are not proportional to dollars. Switch to linear for true proportions.'},
+  linear:{word:'linear scale',
+       note:'Linear scale: bar length is proportional to cost. The singletrack bars are slivers next to a highway because they cost a small fraction as much. A minimum width is drawn so they stay visible, so the slivers are not to scale against each other; read their dollar values.'}
+};
+const HWY_SCALE_KEY='pmr-roi-hwy-scale';   // per-viewer preference only; the chart works with it empty
+const HWY_MIN_BAR_LINEAR=0.4;              // % — floor so a bar that is truly tiny still shows as a sliver, not nothing
+const HWY_MIN_BAR_LOG=2;                   // % — floor on the log axis
+const HWY_TOGGLE_ICONS={                   // Lucide toggle-left / toggle-right, path data unedited
+  log:'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-toggle-left" aria-hidden="true" focusable="false"><circle cx="9" cy="12" r="3"/><rect width="20" height="14" x="2" y="5" rx="7"/></svg>',
+  linear:'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-toggle-right" aria-hidden="true" focusable="false"><circle cx="15" cy="12" r="3"/><rect width="20" height="14" x="2" y="5" rx="7"/></svg>'
+};
+let hwyScale='log', lastHwy=null;
+function restoreHwyScale(){
+  try{const sv=localStorage.getItem(HWY_SCALE_KEY);if(sv&&HWY_SCALES[sv])hwyScale=sv;}catch(e){}
+}
+function toggleHwyScale(){
+  hwyScale=hwyScale==='log'?'linear':'log';
+  try{localStorage.setItem(HWY_SCALE_KEY,hwyScale)}catch(e){}
+  if(lastHwy)drawHwy(...lastHwy);
+}
+
 function drawHwy(v,m){
+  lastHwy=[v,m];
   const t=T();
   const items=[
     {label:'Volunteer-built singletrack',pm:INFRASTRUCTURE_COSTS[0].pm,color:t.hwy[0]},
@@ -2129,9 +2174,20 @@ function drawHwy(v,m){
   // Scale bounds derive from the actual data (with a little headroom) so a
   // new highest/lowest reference point can't silently fall off the bar.
   const allPm=[...items.map(i=>i.pm)];
-  const maxL=Math.log10(Math.max(...allPm)),minL=Math.log10(Math.min(...allPm,5000));
+  const maxPm=Math.max(...allPm);
+  const maxL=Math.log10(maxPm),minL=Math.log10(Math.min(...allPm,5000));
+  const linear=hwyScale==='linear';
+  // Keep the card chrome in step with the scale: title, switch state, icon, note.
+  document.getElementById('hwy-title').textContent='Infrastructure cost comparison — per mile ('+HWY_SCALES[hwyScale].word+')';
+  document.getElementById('hwy-note').textContent=HWY_SCALES[hwyScale].note;
+  document.getElementById('hwy-sw').setAttribute('aria-checked',String(linear));
+  document.getElementById('sw-ico').innerHTML=HWY_TOGGLE_ICONS[hwyScale];
+  document.getElementById('sw-log').classList.toggle('on',!linear);
+  document.getElementById('sw-lin').classList.toggle('on',linear);
   document.getElementById('hwy-cmp').innerHTML=items.map(it=>{
-    const pct=Math.max(2,((Math.log10(it.pm)-minL)/(maxL-minL))*100);
+    const pct=linear
+      ?Math.max(HWY_MIN_BAR_LINEAR,(it.pm/maxPm)*100)
+      :Math.max(HWY_MIN_BAR_LOG,((Math.log10(it.pm)-minL)/(maxL-minL))*100);
     const label=cpd(it.pm);
     return`<div class="ci"><div class="ci-lr"><span style="${it.bold?'font-weight:600;color:var(--forest)':''}">${it.label}</span><span class="ci-v">${label}</span></div><div class="bt"><div class="bf" style="width:${pct.toFixed(1)}%;background:${it.color}">${pct>14?`<span class="bfl">${label}</span>`:''}</div></div></div>`;
   }).join('');
@@ -2938,6 +2994,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   if(p.has('hide'))p.get('hide').split(',').forEach(k=>{if(k in beVis)beVis[k]=false});
   syncBELegend();
   restoreCards();
+  restoreHwyScale();
   const restored=decodeState();
   if(!restored) setScenario('moderate');
   else recalc();
