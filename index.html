@@ -746,7 +746,7 @@ details[open] summary::before{content:'▼  '}
           <span id="sw-ico" aria-hidden="true"></span>
           <span class="scale-opt" id="sw-lin">Linear</span>
         </button>
-        <button type="button" class="scale-sw" id="hwy-rsw" role="switch" aria-checked="false" aria-label="Show low-to-high range" onclick="toggleHwyRange()">
+        <button type="button" class="scale-sw" id="hwy-rsw" style="display:none" role="switch" aria-checked="false" aria-label="Show low-to-high range" onclick="toggleHwyRange()">
           <span class="scale-opt on" id="rsw-typ">Typical</span>
           <span id="rsw-ico" aria-hidden="true"></span>
           <span class="scale-opt" id="rsw-rng">Range</span>
@@ -754,7 +754,7 @@ details[open] summary::before{content:'▼  '}
       </div>
       <p class="hwy-note" id="hwy-note"></p>
       <div id="hwy-cmp"></div>
-      <p style="font-size:10px;color:var(--tm);margin-top:6px">Sources: Singletracks.com contractor survey April 2026 (professional build) · American Trails database (volunteer build) · road ranges are rounded secondary-source estimates, not FHWA figures — see README §10</p>
+      <p style="font-size:10px;color:var(--tm);margin-top:6px">Sources: Singletracks.com contractor survey, April 2026 (professional singletrack) · NJDOT TAP 2024 cost guidelines (paved path) · FHWA HERS typical costs per lane mile, 2012 dollars, flat terrain / large urbanized areas, not inflated (roads) · volunteer range is an unverified estimate — see README §10</p>
     </div>
   </div>
 
@@ -778,7 +778,7 @@ details[open] summary::before{content:'▼  '}
     <div class="src-body">
       <strong>Visitor spending:</strong> TPL/IMBA <em>Economic Benefits of Mountain Biking</em> (2025), 50-study meta-analysis. Conservative $103/trip = Duluth, MN; moderate $175/trip = regional avg; optimistic $416/trip = TPL national avg.<br><br>
       <strong>Property value premiums:</strong> Crompton &amp; Nicholls (2019); NAR Field Guide (2020). Typical: 3–5%. Indianapolis Cultural Trail: $1B added within 500 ft, 2008–2014.<br><br>
-      <strong>Trail build &amp; maintenance costs:</strong> Singletracks.com contractor survey (Apr 2026); American Trails database ($1,500–$5,000/mi/yr). <strong>Highway costs:</strong> FHWA / DOT data (2020–2024). <strong>Jobs:</strong> IMBA ~$45,000 labor income per FTE.<br><br>
+      <strong>Trail build &amp; maintenance costs:</strong> Singletracks.com contractor survey (Apr 2026); American Trails database ($1,500–$5,000/mi/yr). <strong>Road and path costs:</strong> FHWA Highway Economic Requirements System typical costs per lane mile (2012 dollars, not inflated; new alignment, normal cost, multiplied by lane count) and NJDOT Transportation Alternatives Program 2024 cost guidelines ($150/ft, 10-ft asphalt path). <strong>Jobs:</strong> IMBA ~$45,000 labor income per FTE.<br><br>
       <strong>Local vs. out-of-town:</strong> Out-of-town visitors bring new money — full multiplier applied. Local visitors recirculate existing spending — multiplier = 1.0. Per Savolt (2017) Duluth study and Buning &amp; Lamont (2021).<br><br>
       <strong>Grants:</strong> RTP (Recreational Trails Program) up to 80% · RAISE · CMAQ · state programs. Grant % reduces municipal capital contribution for ROI and breakeven calculations.<br><br>
       <strong>Units &amp; currency:</strong> All research benchmarks are USD/imperial. Metric and foreign-currency displays are conversions for directional reference only. Exchange rates fetched daily from fawazahmed0/currency-api (jsdelivr CDN); fallback rates used if unavailable.<br><br>
@@ -2137,14 +2137,26 @@ function drawVisitors(v,m){
 const INFRASTRUCTURE_COSTS=[
   {label:'Volunteer-built singletrack',pm:10000,lo:2000,hi:15000,themeColor:'hwy0'},
   {label:'Pro-built singletrack (2026)',pm:70000,lo:60000,hi:80000,themeColor:'hwy2'},
-  {label:'2-lane rural road',pm:4000000,lo:3000000,hi:10000000,color:'#AAA090'},
-  {label:'4-lane suburban highway',pm:25000000,lo:10000000,hi:40000000,color:'#7A7068'},
-  {label:'Urban 6-lane interstate',pm:80000000,lo:40000000,hi:150000000,color:'#3D3830'}
+  {label:'Paved multi-use path',pm:792000,color:'#C9BFA8'},
+  {label:'2-lane rural road',pm:3932000,lo:3932000,hi:11800000,color:'#AAA090'},
+  {label:'4-lane suburban highway',pm:22036000,lo:16052000,hi:75216000,color:'#7A7068'},
+  {label:'Urban 6-lane interstate',pm:48948000,lo:33372000,hi:97890000,color:'#3D3830'}
 ];
-/* pm = the single "typical" value the Typical view draws; lo/hi = the range the Range view
-   draws. pm is a judgment pick inside the range, NOT a sourced midpoint (README §10). The
-   pro-built range is the Singletracks survey's printed $60,000–$80,000; the road ranges come from
-   unverified secondary compilations (README §10 audit), so treat them as order-of-magnitude. */
+/* HOW THESE ARE SOURCED (full arithmetic in README section 10).
+   Singletrack: pm = a judgment pick inside the range; the pro range is the Singletracks survey's $60,000-$80,000.
+   Paved multi-use path: NJDOT TAP 2024 Cost Estimate Guidelines, 10 ft asphalt w/ stone base, $150 per linear foot
+     x 5,280 ft = $792,000/mi, a conceptual-level typical cost. Real projects run higher in urban or constrained settings.
+   Roads: FHWA HERS "Typical Costs per Lane Mile", new alignment, normal cost, in 2012 DOLLARS (reproduced as Tables 15-16
+     of the NJDOT/Rutgers report FHWA-NJ-2019-005, pp. 29-30), multiplied by the lane count. Terrain and city size drive
+     the spread, which is why a flat Ohio corridor and a mountainous Hawaii one differ so much.
+       2-lane rural road       = rural minor arterial, flat,  $1,966K x 2 lanes = $3.932M  (hi: mountainous $5,900K x 2 = $11.8M)
+       4-lane suburban highway = urban other principal arterial, large urbanized, $5,509K x 4 = $22.036M
+                                 (lo: small urbanized $4,013K x 4; hi: large urbanized high-cost $18,804K x 4)
+       Urban 6-lane interstate = urban freeway, large urbanized, $8,158K x 6 = $48.948M
+                                 (lo: small urbanized $5,562K x 6; hi: major urbanized normal $16,315K x 6)
+   The road rows are NOT inflated to today's dollars: no index was verified, so they understate current road costs.
+   lo/hi are used only by the Range view, which is switched off (HWY_RANGE_ENABLED). */
+const HWY_RANGE_ENABLED=false;               // flip to true to show the Typical / Range switch again
 const HWY_RANGE_KEY='pmr-roi-hwy-range';    // per-viewer preference only
 const HWY_RANGE_NOTE='Range view: each bar spans the low-to-high cost for that type, and the dark tick marks the typical value the Typical view uses. The current project has one value, so it shows as a tick only.';
 let hwyRange=false;
@@ -2169,9 +2181,10 @@ const HWY_TOGGLE_ICONS={                   // Lucide toggle-left / toggle-right,
 let hwyScale='log', lastHwy=null;
 function restoreHwyScale(){
   try{const sv=localStorage.getItem(HWY_SCALE_KEY);if(sv&&HWY_SCALES[sv])hwyScale=sv;}catch(e){}
-  try{hwyRange=localStorage.getItem(HWY_RANGE_KEY)==='1';}catch(e){}
+  try{hwyRange=HWY_RANGE_ENABLED&&localStorage.getItem(HWY_RANGE_KEY)==='1';}catch(e){}
 }
 function toggleHwyRange(){
+  if(!HWY_RANGE_ENABLED)return;
   hwyRange=!hwyRange;
   try{localStorage.setItem(HWY_RANGE_KEY,hwyRange?'1':'0')}catch(e){}
   if(lastHwy)drawHwy(...lastHwy);
@@ -2200,6 +2213,7 @@ function drawHwy(v,m){
   // Keep the card chrome in step with the scale: title, switch state, icon, note.
   document.getElementById('hwy-title').textContent='Infrastructure cost comparison — per mile ('+HWY_SCALES[hwyScale].word+')';
   document.getElementById('hwy-note').textContent=HWY_SCALES[hwyScale].note+(hwyRange?' '+HWY_RANGE_NOTE:'');
+  document.getElementById('hwy-rsw').style.display=HWY_RANGE_ENABLED?'':'none';
   document.getElementById('hwy-rsw').setAttribute('aria-checked',String(hwyRange));
   document.getElementById('rsw-ico').innerHTML=HWY_TOGGLE_ICONS[hwyRange?'linear':'log'];
   document.getElementById('rsw-typ').classList.toggle('on',!hwyRange);
