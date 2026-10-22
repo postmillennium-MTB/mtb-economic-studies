@@ -1689,26 +1689,41 @@ function openMethods(){
   try{const d=document.querySelector('details');if(d){d.open=true;setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),50);}}catch(e){}
 }
 
-/* ══ EXCHANGE RATES (daily update via jsdelivr CDN) ══ */
+/* ══ EXCHANGE RATES (daily snapshots from the jsdelivr CDN) ══
+   This feed publishes ONE npm version per day, named for its date (2026.10.21), and a published version never changes. So the
+   request is pinned to an exact dated version, never "@latest": it asks for today's (UTC) version, and if that is not published
+   yet, yesterday's, then the day before. A pinned version can't be swapped for something else after the fact, and the date the
+   page shows is the date of the snapshot it actually used.
+   Plausibility check: a rate more than 30% away from the built-in snapshot is treated as bad data and the whole response is
+   rejected (the page then falls back to the built-in rates and says so). */
+const RATES_PKG='https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@';
+const RATES_DAYS_BACK=3;
+const RATES_SANITY=0.30;
+function ratesVersion(daysBack){
+  const d=new Date(Date.now()-daysBack*86400000);
+  return d.getUTCFullYear()+'.'+(d.getUTCMonth()+1)+'.'+d.getUTCDate();   // no zero padding: the feed's versions are 2026.10.21, 2026.9.5
+}
+function ratesPlausible(usd){
+  return ['AUD','CAD','EUR','GBP'].every(c=>{const r=usd[c.toLowerCase()];return typeof r==='number'&&Math.abs(r/exRates[c]-1)<=RATES_SANITY;});
+}
 async function fetchRates(){
   const note=document.getElementById('rate-note');
+  const fallbackNote=why=>{if(note)note.textContent='· approximate rates as of '+FALLBACK_RATES_DATE+' ('+why+')';};
   if(note)note.textContent='· approximate rates as of '+FALLBACK_RATES_DATE+' until live rates load';
-  try{
-    const r=await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
-    const d=await r.json();
-    if(d&&d.usd){
-      if(d.usd.aud)exRates.AUD=d.usd.aud;
-      if(d.usd.cad)exRates.CAD=d.usd.cad;
-      if(d.usd.eur)exRates.EUR=d.usd.eur;
-      if(d.usd.gbp)exRates.GBP=d.usd.gbp;
-      ratesDate=d.date||null;
-      ratesLive=!!ratesDate;
-      if(note)note.textContent=ratesLive?'· rates as of '+ratesDate:'· approximate rates as of '+FALLBACK_RATES_DATE+' (live date unavailable)';
-      if(ratesLive&&curCurrency!=='USD')setCurrency(curCurrency);   // rates arrived after a currency was picked: redraw at the live rate
-    }else if(note)note.textContent='· approximate rates as of '+FALLBACK_RATES_DATE+' (live rates unavailable)';
-  }catch(e){
-    if(note)note.textContent='· approximate rates as of '+FALLBACK_RATES_DATE+' (live rates unavailable)';
+  for(let i=0;i<RATES_DAYS_BACK;i++){
+    try{
+      const r=await fetch(RATES_PKG+ratesVersion(i)+'/v1/currencies/usd.json');
+      if(!r.ok)continue;                         // that day's version is not published yet: try the day before
+      const d=await r.json();
+      if(!d||!d.usd||!d.date||!ratesPlausible(d.usd)){fallbackNote('live rates failed a sanity check');return;}
+      ['AUD','CAD','EUR','GBP'].forEach(c=>{exRates[c]=d.usd[c.toLowerCase()];});
+      ratesDate=d.date;ratesLive=true;
+      if(note)note.textContent='· rates as of '+ratesDate;
+      if(curCurrency!=='USD')setCurrency(curCurrency);   // rates arrived after a currency was picked: redraw at the live rate
+      return;
+    }catch(e){break;}                            // network blocked or offline: no point retrying older days
   }
+  fallbackNote('live rates unavailable');
 }
 
 /* ══ CUSTOM SCENARIO DETECTION ══ */

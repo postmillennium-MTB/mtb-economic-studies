@@ -165,15 +165,15 @@ Selecting a currency multiplies every displayed monetary value by the current ex
 
 ### 4.3 Exchange Rates — Source and Reliability
 
-Exchange rates are fetched on page load from:
+Exchange rates are fetched on page load from a **pinned, dated version** of this feed:
 
 ```
-https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json
+https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@2026.10.21/v1/currencies/usd.json     (example: the version dated 21 Oct 2026)
 ```
 
-This is a free, no-registration currency feed published as an npm package and served via the jsdelivr content delivery network (a global file-distribution infrastructure). It updates daily. When rates load successfully, the panel displays a "rates as of [date]" confirmation.
+This is a free, no-registration currency feed published as an npm package and served via the jsdelivr content delivery network. It publishes one version per day, named for its date, and a published version never changes. The tool therefore asks for today's (UTC) version, then yesterday's, then the day before (`RATES_DAYS_BACK`), and uses the first one that exists; it never requests `@latest`. The panel shows "rates as of [date]" using the date inside the snapshot it actually used. A response whose AUD, CAD, EUR or GBP rate is more than 30% from the built-in snapshot (`RATES_SANITY`) is rejected as bad data.
 
-**Fallback rates** are used silently if the fetch fails (offline use, CDN outage, or any network error). The tool functions normally; only the precision of the currency conversion is affected.
+**Fallback rates** (`exRates` and `FALLBACK_RATES_DATE` in `index.html`) are used if the fetch fails (offline use, CDN outage, or a rejected response). The panel then says "approximate rates as of [date]" and the printed report says the rate is an approximate built-in one. The tool functions normally; only the precision of the currency conversion is affected.
 
 | Currency | Fallback rate (1 USD =) | As of |
 |---|---|---|
