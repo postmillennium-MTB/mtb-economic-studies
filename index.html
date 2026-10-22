@@ -216,6 +216,11 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .co-b{font-size:11px;color:var(--co-tx);line-height:1.5}
 .c3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
 .c3>*{min-width:0}
+/* Cards in a row stretch to the tallest one (the donut card has a legend). The chart wrapper takes the spare height and the canvas is
+   absolute so it never props the wrapper open; fitCanvas() sizes the canvas to the wrapper, so it fills the card bottom. */
+.c3>.cc{display:flex;flex-direction:column}
+.c3-fill{position:relative;flex:1 1 auto;min-height:175px}
+.c3-fill canvas{position:absolute;top:0;left:0}
 /* HIGHWAY BARS */
 .ci{margin-bottom:8px}.ci:last-child{margin-bottom:0}
 .ci-lr{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--ts);margin-bottom:3px}
@@ -420,8 +425,8 @@ details[open] .sum-chev{transform:rotate(90deg)}
   </div>
   <div class="hdr-r">
     <div class="pmr-row"><a class="pmr-link" href="https://www.postmillenniumrenaissance.com" target="_top" rel="noopener">&#9666; PMR Home</a></div>
-    <p class="sc-lbl">Projection scenario</p>
-    <div class="sc-btns">
+    <p class="sc-lbl" id="sc-lbl">Projection scenario</p>
+    <div class="sc-btns" id="sc-btns">
       <button class="sc-btn" id="btn-conservative" onclick="setScenario('conservative')">Conservative</button>
       <button class="sc-btn active" id="btn-moderate" onclick="setScenario('moderate')">Moderate</button>
       <button class="sc-btn" id="btn-optimistic" onclick="setScenario('optimistic')">Optimistic</button>
@@ -429,8 +434,8 @@ details[open] .sum-chev{transform:rotate(90deg)}
     </div>
     <div class="act-btns">
       <button class="act-btn partner" id="partnerships-btn" onclick="togglePartnerships()" aria-expanded="false" aria-controls="why-panel"><svg class="btn-ico lucide lucide-handshake" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>Partnerships</button>
-      <button class="act-btn" onclick="copyLink()" id="copy-btn"><svg class="btn-ico lucide lucide-link" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Copy Link</button>
-      <button class="act-btn dl" onclick="printReport()" title="Opens your print dialog — choose 'Save as PDF' as the destination to get a PDF file"><svg class="btn-ico" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>Print / Save PDF</button>
+      <button class="act-btn" onclick="copyLink()" id="copy-btn" aria-label="Copy link" title="Copy link"><svg class="btn-ico lucide lucide-send" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></button>
+      <button class="act-btn dl" onclick="printReport()" aria-label="Print / Save PDF" title="Print / Save PDF. Opens your print dialog; choose 'Save as PDF' as the destination to get a PDF file"><svg class="btn-ico lucide lucide-send" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg><svg class="btn-ico lucide lucide-file-text" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></button>
       <button class="act-btn intl" id="intl-btn" onclick="toggleIntlPanel()" title="Units &amp; currency">€</button>
       <span class="theme-dots" role="group" aria-label="Color scheme">
         <button class="theme-dot active" id="th-ore" style="background:#2D6A30" onclick="setTheme('ore')" title="Ore Pass (default)" aria-label="Ore Pass color scheme"></button>
@@ -720,14 +725,14 @@ details[open] .sum-chev{transform:rotate(90deg)}
     <div class="cc" style="margin-bottom:0">
       <p class="cc-t">Cumulative muni revenue</p>
       <p class="cc-s">At milestones vs. municipal cost</p>
-      <div style="position:relative;height:175px">
+      <div class="c3-fill">
         <canvas id="chartMilestones" role="img" aria-label="Milestone bar chart">Milestones</canvas>
       </div>
     </div>
     <div class="cc" style="margin-bottom:0">
       <p class="cc-t">Annual visitors</p>
       <p class="cc-s">Ramp-up (light) + growth (dark)</p>
-      <div style="position:relative;height:175px">
+      <div class="c3-fill">
         <canvas id="chartVisitors" role="img" aria-label="Visitor growth chart">Visitors</canvas>
       </div>
     </div>
@@ -1000,14 +1005,14 @@ const INPUTS=[
   {key:'grant',tab:'trail',label:'Grant funding',min:0,max:80,step:5,value:0,extra:'grant-derived',
     hint:'RTP grants cover up to 80% · RAISE, CMAQ &amp; state programs also available'},
   {key:'visitors',tab:'visitors',label:'Annual visitors / mile (at full capacity)',min:100,max:5000,step:50,value:1000},
-  {key:'spend',tab:'visitors',label:'Avg spending / visit',min:50,max:600,step:5,value:175,
+  {key:'spend',tab:'visitors',label:'Avg spending / visit',min:50,max:600,step:1,value:175,
     hint:'Research range: $103–$416/trip (TPL/IMBA 2025)'},
   {key:'overnight',tab:'visitors',label:'Overnight visitors',min:0,max:80,step:5,value:30,
     hint:'Overnight visitors spend ~2× more than day-trippers'},
   {key:'nonlocal',tab:'visitors',label:'Out-of-town visitors',min:0,max:100,step:5,value:60,extra:'nl-note'},
   {key:'salestax',tab:'visitors',label:'City sales tax rate (city share)',min:0.25,max:8.0,step:0.25,value:4.25},
   {key:'homes',tab:'realestate',label:'Homes within ½ mile of trail',min:0,max:1500,step:25,value:100,round:true},
-  {key:'homeval',tab:'realestate',label:'Average home value',min:100000,max:1200000,step:25000,value:350000},
+  {key:'homeval',tab:'realestate',label:'Average home value',min:100000,max:1200000,step:10000,value:350000},
   {key:'propprem',tab:'realestate',label:'Property value premium',min:0,max:15,step:0.5,value:5,
     hint:'Studies: 3–5% typical, up to 15% (NAR / Crompton &amp; Nicholls 2019)'},
   {key:'proptax',tab:'realestate',label:'Property tax rate',min:0.3,max:3.5,step:0.1,value:1.2},
@@ -1596,6 +1601,8 @@ function togglePartnerships(){
   b.classList.toggle('open',show);
   b.setAttribute('aria-expanded',String(show));
   if(grid)grid.style.display=show?'none':'';
+  // The Partnerships comparison has its own sliders and does not read the projection scenario, so the scenario buttons are hidden while it is open.
+  ['sc-lbl','sc-btns'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=show?'none':'';});
   if(show)updateWhy();
 }
 
@@ -1747,16 +1754,17 @@ function decodeState(){
   return true;
 }
 
+const COPIED_ICON='<svg class="btn-ico lucide lucide-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>';   // Lucide check, shown for a moment after Copy link succeeds
 function copyLink(){
   encodeState();
   const url=window.location.href;
   const doFallback=()=>{
     try{const ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}catch(e){}
-    const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;btn.innerHTML='✓ Copied!';setTimeout(()=>{btn.innerHTML=orig;},COPY_FEEDBACK_MS);
+    const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;btn.innerHTML=COPIED_ICON;setTimeout(()=>{btn.innerHTML=orig;},COPY_FEEDBACK_MS);
   };
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(url).then(()=>{
-      const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;btn.innerHTML='✓ Copied!';btn.style.color='var(--fern)';setTimeout(()=>{btn.innerHTML=orig;btn.style.color='';},COPY_FEEDBACK_MS);
+      const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;btn.innerHTML=COPIED_ICON;btn.style.color='var(--fern)';setTimeout(()=>{btn.innerHTML=orig;btn.style.color='';},COPY_FEEDBACK_MS);
     }).catch(doFallback);
   }else{doFallback();}
 }
