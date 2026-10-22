@@ -687,6 +687,22 @@ The bar chart uses a logarithmic scale because the actual dollar differences spa
 
 ---
 
+
+### Background textures
+
+Each color theme also has its own background texture (the colors themselves are unchanged). The textures are masks hosted at `postmillenniumrenaissance.com/textures/masks/` (served with open CORS, so they work from a github.io iframe) and tinted with `--tex-ink`; two empty `<div class="texture">` / `<div class="texture-2">` elements sit at the top of `<body>` and the CSS lives in the "PMR BACKGROUND TEXTURES" block at the end of the stylesheet. The generator's declarations are unchanged and only scoped per theme.
+
+| Theme | Texture | Source patent(s) |
+|---|---|---|
+| Ore Pass (default) | `day-1927-74141`, one seamless layer | US 74,141 (Day, 1927) |
+| Gauntlet Gold | `fisher-1882-13110` fading left to right, `fisher-1882-13108` fading right to left | US 13,110 and 13,108 (Fisher, 1882) |
+| Myers Flyer | `us-d268339` fading top to bottom, `crowe-1882-13106` fading bottom to top | US D268,339 (Inae and Fukuchi, Mitsuboshi Belting, 1983); US 13,106 (Crowe, 1882) |
+
+- `isolation:isolate` on `<body>` is load-bearing: without it the body's own background paints over the `z-index:-1` texture and it disappears.
+- Textures are hidden in print. The credit lines for the active theme's texture are shown in the line under the page content, after the related-tool button (`.tex-credit`); keep them when editing.
+- **To give a new theme a texture:** copy a block in that CSS section, change the theme selector, `--tex-ink` and the mask files, and add its credit to `.tex-credit`. Keep opacity low; the text sits on top.
+- The mask files load from the web, so with the page opened as a local file the textures appear only while online.
+
 ## 11. Contributing and Forking
 
 This tool is intentionally simple: a single HTML file with no build process, no dependencies to install, and no server required. As of the June 2026 rebuild, that includes the charts — earlier versions loaded Chart.js from a CDN, which meant the four charts (and the printed report, which captures them as images) would silently fail if that CDN was ever blocked, down, or unreachable offline. All charting is now hand-written directly in the file: look for the "NO-DEPENDENCY CHART ENGINE" comment block in the JavaScript section. If you're forking this and want to add a new chart, that block has the shared pieces (canvas sizing, tooltip, entrance animation, axis gridlines) — you shouldn't need to touch a charting library's API, because there isn't one. Contributions are welcome.

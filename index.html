@@ -411,9 +411,91 @@ details[open] .sum-chev{transform:rotate(90deg)}
   .hdr-r{text-align:left}
   .pmr-row,.sc-btns,.act-btns{justify-content:flex-start;flex-wrap:wrap}
 }
+/* ══ PMR BACKGROUND TEXTURES — one texture per color theme ══
+   Textures are masks loaded from postmillenniumrenaissance.com/textures/masks/ (served with CORS open), tinted with --tex-ink.
+   The declarations are the generator's, unchanged; they are only scoped per theme so each theme gets its own texture.
+   TO ADD A THEME'S TEXTURE: copy one of the blocks below, change the theme selector, --tex-ink and the mask files, and add its
+   credit line to .tex-credit in the markup. Keep opacity low: this sits behind body text. Hidden in print. */
+body{position:relative;isolation:isolate}   /* isolation makes the body a stacking context, so the z-index:-1 texture sits above the body background and below the content */
+.texture,.texture-2{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background-color:var(--tex-ink,#2D6A4F);
+}
+/* Ore Pass (default): texture "day-1927-74141 (adapted from US Design Patent 74,141)" */
+:root:not([data-theme]){ --tex-ink:#2D6A4F; --tex-opacity:0.055; --tex-2-opacity:0.055; }
+:root:not([data-theme]) .texture{
+  opacity:var(--tex-opacity,0.055);
+  -webkit-mask-image:url("https://www.postmillenniumrenaissance.com/textures/masks/day-1927-74141.webp");
+  mask-image:url("https://www.postmillenniumrenaissance.com/textures/masks/day-1927-74141.webp");
+  -webkit-mask-size:900px auto;
+  mask-size:900px auto;
+  -webkit-mask-repeat:repeat;
+  mask-repeat:repeat;
+}
+:root:not([data-theme]) .texture-2{ display:none }
+/* Gauntlet Gold: texture "fisher-1882-13110 + fisher-1882-13108" */
+:root[data-theme="gold"]{ --tex-ink:#9C7414; --tex-opacity:0.14; --tex-2-opacity:0.15; }
+:root[data-theme="gold"] .texture{
+  opacity:var(--tex-opacity,0.14);
+  -webkit-mask-image:linear-gradient(to right, #000 0%, rgba(0,0,0,0) 100%), url("https://www.postmillenniumrenaissance.com/textures/masks/fisher-1882-13110.webp");
+  mask-image:linear-gradient(to right, #000 0%, rgba(0,0,0,0) 100%), url("https://www.postmillenniumrenaissance.com/textures/masks/fisher-1882-13110.webp");
+  -webkit-mask-size:100% 100%, 400px auto;
+  mask-size:100% 100%, 400px auto;
+  -webkit-mask-repeat:no-repeat, repeat;
+  mask-repeat:no-repeat, repeat;
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+}
+:root[data-theme="gold"] .texture-2{
+  opacity:var(--tex-2-opacity,0.15);
+  -webkit-mask-image:linear-gradient(to left, #000 0%, rgba(0,0,0,0) 100%), url("https://www.postmillenniumrenaissance.com/textures/masks/fisher-1882-13108.webp");
+  mask-image:linear-gradient(to left, #000 0%, rgba(0,0,0,0) 100%), url("https://www.postmillenniumrenaissance.com/textures/masks/fisher-1882-13108.webp");
+  -webkit-mask-size:100% 100%, 716px auto;
+  mask-size:100% 100%, 716px auto;
+  -webkit-mask-repeat:no-repeat, repeat;
+  mask-repeat:no-repeat, repeat;
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+}
+/* Myers Flyer: texture "us-d268339 + crowe-1882-13106" */
+:root[data-theme="myers"]{ --tex-ink:#9E2B25; --tex-opacity:0.135; --tex-2-opacity:0.135; }
+:root[data-theme="myers"] .texture{
+  opacity:var(--tex-opacity,0.135);
+  -webkit-mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 100%), url("https://www.postmillenniumrenaissance.com/textures/masks/us-d268339.webp");
+  mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 100%), url("https://www.postmillenniumrenaissance.com/textures/masks/us-d268339.webp");
+  -webkit-mask-size:100% 100%, 160px auto;
+  mask-size:100% 100%, 160px auto;
+  -webkit-mask-repeat:no-repeat, repeat;
+  mask-repeat:no-repeat, repeat;
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+}
+:root[data-theme="myers"] .texture-2{
+  opacity:var(--tex-2-opacity,0.135);
+  -webkit-mask-image:linear-gradient(to top, #000 0%, rgba(0,0,0,0) 100%), url("https://www.postmillenniumrenaissance.com/textures/masks/crowe-1882-13106.webp");
+  mask-image:linear-gradient(to top, #000 0%, rgba(0,0,0,0) 100%), url("https://www.postmillenniumrenaissance.com/textures/masks/crowe-1882-13106.webp");
+  -webkit-mask-size:100% 100%, 68px auto;
+  mask-size:100% 100%, 68px auto;
+  -webkit-mask-repeat:no-repeat, repeat;
+  mask-repeat:no-repeat, repeat;
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+}
+.tex-credit{font-size:10px;line-height:1.5;color:var(--tm);margin:14px 0 0}
+.tex-credit span{display:none}
+.tex-credit span+span{margin-top:2px}
+:root:not([data-theme]) .tex-credit .tc-day{ display:block }
+:root[data-theme="gold"] .tex-credit .tc-fisher{ display:block }
+:root[data-theme="myers"] .tex-credit .tc-belt{ display:block }
+@media print{ .texture,.texture-2{display:none !important} }
 </style>
 </head>
 <body>
+<div class="texture" aria-hidden="true"></div>
+<div class="texture-2" aria-hidden="true"></div>
 <div class="wrap">
 
 <!-- HEADER -->
@@ -800,6 +882,7 @@ details[open] .sum-chev{transform:rotate(90deg)}
     <a class="xbtn" href="https://www.postmillenniumrenaissance.com/pump-track/" target="_top"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor" class="material-symbol material-symbol-skateboarding" aria-hidden="true" focusable="false"><path d="M269-9q-9-9-9-21t9-21q9-9 21-9t21 9q9 9 9 21t-9 21q-9 9-21 9t-21-9Zm340 0q-9-9-9-21t9-21q9-9 21-9t21 9q9 9 9 21t-9 21q-9 9-21 9t-21-9ZM270-80q-45 0-83-19.5T124-152q-3-5-4.5-9t-1.5-9q0-12 8-21t22-9q8 0 13.5 3t10.5 9q12 17 30.5 28.5T242-143l125-151-53-166q-5-17-3-34t11-32l96-154h-94l-76 122-68-42 100-160h228q27 0 43.5 15t22.5 28l21 48q20 48 64.5 78.5T760-560v80q-70 0-128-33.5T539-602l-72 115 173 107v240h12q29 0 54-13t42-35q5-6 10.5-9t13.5-3q13 0 21.5 9t8.5 21q0 5-1.5 9t-4.5 9q-25 33-62 52.5T652-80H270Zm74-60h216v-184l-140-88 40 132-116 140Zm256-620q-33 0-56.5-23.5T520-840q0-33 23.5-56.5T600-920q33 0 56.5 23.5T680-840q0 33-23.5 56.5T600-760Z"/></svg>Skatepark and Pump Track ROI Calculator&nbsp;&rarr;</a>
   </div>
 </main>
+<p class="tex-credit"><span class="tc-day">Background pattern adapted from US Design Patent No. 74,141 (Harry S. Day, 1927); the patent has long expired.</span><span class="tc-fisher">Background pattern adapted from US Design Patent No. 13,110 (John Fisher, 1882); the patent has long expired.<br>Background pattern adapted from US Design Patent No. 13,108 (Edwin Fisher, 1882); the patent has long expired.</span><span class="tc-belt">Background pattern from US Design Patent No. 268,339 (Syoji Inae and Eiji Fukuchi, Mitsuboshi Belting Ltd., 1983); the patent has long expired.<br>Background pattern adapted from US Design Patent No. 13,106 (Eugene A. Crowe, 1882); the patent has long expired.</span></p>
 </div>
 
 <div id="rpt"></div>
