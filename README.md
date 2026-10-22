@@ -469,23 +469,26 @@ This is expressed as a percentage return on the municipality's construction outl
 ### 5.12 Jobs Estimate
 
 ```
-jobs = round(econYr[matureYear] / 45,000)
+jobs = round(econYr[matureYear] / 87,500)
 ```
 
-**Source status: the $45,000 divisor is a rule of thumb, not a sourced figure.** Earlier versions of this README attributed it to IMBA regional studies and to the TPL/IMBA 2025 report. Checked in October 2026 against the full TPL Green Paper (*Economic Benefits of Mountain Biking*, 2025) and IMBA's 2025 Annual Report: neither states a $45,000 figure. The annual report only repeats the headline ("up to 1,626 jobs and $54.1 million in labor income each year", 13 communities).
+`econYr` is annual economic impact: out-of-town visitor spending times the multiplier, plus local spending. The divisor is **$87,500 of economic output per job**.
 
-What the Green Paper's own site tables imply (computed from the tables, 19 site entries):
+**Where $87,500 comes from.** The TPL/IMBA 2025 Green Paper (*Economic Benefits of Mountain Biking*) reports, for each site it summarizes, jobs supported and economic output. Dividing output by jobs gives a ratio per site. The Green Paper does not state this ratio itself; the figure here is our calculation from its tables (October 2026), using 20 site-level entries (Duluth's range counted once, at the midpoint of its low and high):
 
-| Ratio | Range across sites | Typical |
-|---|---|---|
-| Labor income per job | about $24,000 to $40,000 | about $32,000 (all-sites aggregate: $54.1M / 1,626 = $33,300) |
-| Economic output per job | about $75,000 to $128,000 | about $85,000 to $90,000 |
-| Value added per job | about $39,000 to $81,000 | about $52,000 |
+| Statistic (output per job) | Value |
+|---|---|
+| Median | $87,548 (rounded to $87,500 in the tool) |
+| Middle half of sites | $81,154 to $101,205 |
+| Full range | $75,389 (Livingston / Paradise Valley / Crazy Mountains, MT) to $128,426 (Ouray, CO) |
+| Mean | $92,704 |
+| Output-weighted aggregate | about $93,700 |
 
-The tool divides **annual economic impact** (visitor spending including the multiplier, not labor income) by $45,000. The closest like-for-like ratio in the Green Paper is economic output per job, roughly $75,000 to $128,000, so the tool's job count is likely high by a factor of about 1.7 to 2.8 against TPL's own ratios. It is shown as indicative on the page. **Open decision:** replace the divisor with a TPL-derived output-per-job figure (and name the source), or relabel the headline as "jobs, rule-of-thumb basis".
+Sites in the calculation: Grand Junction, Crested Butte, West Slope, Ouray, Duluth, Mt. Ascension/Mt. Helena, Bozeman/Big Sky, Livingston, Red Lodge, Sioux and Ashland ranger districts, West Yellowstone, Grandfather, Appalachian, Pisgah, Cheoah, Tusquitee, Nantahala (study region), Chattanooga, Manti-La Sal and Chequamegon. Several are small rural study areas supporting a handful of jobs, which is why the ratios vary.
 
-where `matureYear = rampup + 1` (first year at full capacity, before growth).
+**Why output, not labor income.** The tool's `econYr` is spending including the multiplier, which is the same kind of quantity as the Green Paper's economic output (direct, indirect and induced sales). The earlier divisor of $45,000 was neither labor income per job (about $24,000 to $40,000 in the Green Paper tables; $54.1 million over 1,626 jobs is $33,300) nor output per job, and no source for it was found in the TPL Green Paper or IMBA's 2025 Annual Report. Replacing it roughly halves the job count (the default Moderate scenario drops from about 68 to about 35 jobs at maturity).
 
+**Limits.** The ratio mixes study years (2014 to 2022), regions and methods (IMPLAN and others), in nominal dollars. Rural sites with few jobs swing the range. Treat the job count as an estimate, not a forecast.
 ### 5.13 Mature Year (for Donut Chart)
 
 The donut chart shows the annual benefit breakdown for the "mature year" — the first year the trail reaches full capacity, before growth compounds further. This provides a representative annual snapshot.
