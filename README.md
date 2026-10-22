@@ -734,7 +734,7 @@ The printed report (the `#rpt` block, filled by `buildReport()`) is a separate d
 The hardcoded fallback rates in the `exRates` object near the top of the JavaScript section should be refreshed whenever you fork the tool for a new deployment. Find the line:
 
 ```javascript
-let exRates={USD:1,AUD:1.546,CAD:1.362,EUR:0.918,GBP:0.783};
+let exRates={USD:1,AUD:1.4259,CAD:1.4062,EUR:0.8906,GBP:0.7476};   // plus FALLBACK_RATES_DATE just above it
 ```
 
 Replace the values with current rates from any reliable source (Google Finance, XE.com, or the ECB). This ensures the fallback is reasonably accurate for users who open the tool offline or if the live rate feed becomes unavailable.
@@ -752,18 +752,18 @@ The following studies, reports, and data sources directly informed the assumptio
 
 ### Meta-Analyses and Literature Reviews
 
-**Horn, J.T., et al. (2025).** *Economic Benefits of Mountain Biking.* Trust for Public Land (TPL) in partnership with the International Mountain Bicycling Association (IMBA). Washington, D.C.: Trust for Public Land.
+**Horn, J.T., et al. (2025).** *Economic Benefits of Mountain Biking.* Trust for Public Land (TPL) in partnership with the International Mountain Bicycling Association (IMBA). Washington, D.C.: Trust for Public Land. Link: https://nemba.org/sites/default/files/2025-04/green-paper-mtb.pdf (full PDF, hosted by NEMBA; opened October 2026)
 - Primary source for visitor spending benchmarks ($103–$1,107/trip range; $416/trip national average)
 - Source for labor income estimates (1,626 jobs / $54.1M labor income across 13 locations)
 - Source for new resident attraction data (25% migration influence in Break O'Day Council, Tasmania)
 - Meta-analysis of 50 individual studies across 13 trail systems
 
-**Buning, R.J. & Lamont, M. (2021).** "Mountain bike tourism economic impacts: A critical analysis of academic and practitioner studies." *Tourism Economics*, 27(3), 500–509. DOI: 10.1177/1354816620901955.
+**Buning, R.J. & Lamont, M. (2021).** "Mountain bike tourism economic impacts: A critical analysis of academic and practitioner studies." *Tourism Economics*, 27(3), 500–509. DOI: 10.1177/1354816620901955. Link: https://doi.org/10.1177/1354816620901955 (publisher blocks automated checks; resolves from the DOI)
 - Source for methodological critique of local vs. non-local spending conflation
 - Reviewed 33 academic and practitioner studies; identified widespread inconsistency in variable measurement
 - Informed the decision to separate local and out-of-town multiplier effects in this tool
 
-**Crompton, J.L. & Nicholls, S. (2019).** "The Impact of Greenways and Trails on Proximate Property Values: An Updated Review." *Journal of Park and Recreation Administration*.
+**Crompton, J.L. & Nicholls, S. (2019).** "The Impact of Greenways and Trails on Proximate Property Values: An Updated Review." *Journal of Park and Recreation Administration*. Link: https://doi.org/10.18666/JPRA-2019-9906 (opened October 2026)
 - Source for 3–5% property value premium as "most widespread outcome" for homes near trails
 - Review of 20+ property value studies using hedonic price models
 - Cited by NAR Field Guide on Trails and Property Values (2020)
@@ -772,12 +772,12 @@ The following studies, reports, and data sources directly informed the assumptio
 
 ### Regional and Destination-Specific Studies
 
-**Savolt, A. (2017).** *Economic Impact of Off Road Cycling in Duluth: An Expenditures Approach.* University of Minnesota Duluth, University Honors Capstone Project / Undergraduate Research Opportunities Program. Faculty Advisor: Christopher McIntosh.
+**Savolt, A. (2017).** *Economic Impact of Off Road Cycling in Duluth: An Expenditures Approach.* University of Minnesota Duluth, University Honors Capstone Project / Undergraduate Research Opportunities Program. Faculty Advisor: Christopher McIntosh. Link: https://conservancy.umn.edu/items/ae2b41c8-92a4-4bde-9124-6ce2403e92a5 (University of Minnesota Digital Conservancy; blocks automated checks, found via search)
 - Source for $103/day minimum spending benchmark (conservative scenario)
 - Source for local vs. non-local separation methodology ($10.9–14.5M local; $25.8–34.4M non-local)
 - Found total annual economic impact of $36.6–48.9M on a 70-mile network costing $6.1–7M to build
 
-**Anderson, A., Harmsen, T. & Mahler, E. (2025).** *Maximising the Value of Mountain Biking Tourism to the Tasmanian Economy.* Episteme Consulting for Mountain Biking Network Tasmania (MTB-N). October 2025.
+**Anderson, A., Harmsen, T. & Mahler, E. (2025).** *(Author list unverified: a search found Anderson and Harmsen named on the report and no "Mahler".)* *Maximising the Value of Mountain Biking Tourism to the Tasmanian Economy.* Episteme Consulting for Mountain Biking Network Tasmania (MTB-N). October 2025.
 - Source for ramp-up period calibration (Blue Derby, Maydena Bike Park growth trajectories)
 - Source for 25% migration influence data (Break O'Day Council survey)
 - MTB visitors spend 26% more than regular holiday visitors to Tasmania
@@ -827,12 +827,13 @@ The following studies, reports, and data sources directly informed the assumptio
 
 ### Trail Construction and Maintenance Costs
 
-**Singletracks.com (April 2026).** "You don't want to know how much it costs to build a mile of mountain bike trail in 2026." Singletracks Mountain Bike News.
-- Source for $60,000–$80,000/mile professional contractor-built singletrack benchmark (2026 dollars)
-- Discusses regional variation in labor and equipment costs
+**Singletracks.com (April 2026).** Heil, G., "How much does it cost to build a mountain bike trail?" Singletracks Mountain Bike News, first published April 15, 2026. https://www.singletracks.com/mtb-trails/how-much-does-it-cost-to-build-a-mountain-bike-trail/
+- Verified against the page (October 2026): "$60,000-$80,000 per mile for a professionally-built trail in 2026. But it could be much, much more."
+- Also gives a maintenance rule of thumb: budget 5% of the total installed cost per year (at least $4,000 per mile per year on an $80,000 build)
+- An earlier version of this entry quoted a different article title; the title above is the one on the page
 
 **American Trails (multiple years).** *Construction and Maintenance Costs for Trails.* americantrails.org.
-- Source for $1,500–$5,000/mile/year maintenance cost range
+- Cited for the $1,500–$5,000/mile/year maintenance range. **Not re-verified:** the page could not be opened automatically in October 2026 and a search summary describes it as paved-trail construction costs. Treat the range as unconfirmed against this source; the Singletracks 5%-of-build-cost-per-year rule of thumb ($3,000–$4,000 at $60K–$80K) is consistent with it. URL: https://www.americantrails.org/resources/construction-and-maintenance-costs-for-trails
 - Source for asphalt trail construction costs ($176,000–$224,000/mile) for comparison
 
 **IMBA Trail Solutions / Rock Solid Trail Contracting (various projects, cited in Singletracks 2026).**
@@ -888,6 +889,9 @@ The following studies, reports, and data sources directly informed the assumptio
 ---
 
 ### Additional References Cited in the Tool
+
+**Independent Sector (2025).** *Value of Volunteer Time* (2024 national figure: $34.79 per hour, released April 2025 with the University of Maryland Do Good Institute). https://independentsector.org/volunteer_time (publisher blocks automated checks; found via search)
+- Source for the volunteer-labor rate in the Partnerships panel
 
 **National Association of Homebuilders (2016), cited in Trail Impact Series: Economies, University of Connecticut CLEAR.**
 - Study of 4,300 home buyers: proximity to parks and walking/jogging trails among most desired amenities across age groups
