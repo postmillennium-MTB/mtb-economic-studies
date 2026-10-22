@@ -468,11 +468,21 @@ This is expressed as a percentage return on the municipality's construction outl
 
 ### 5.12 Jobs Estimate
 
-The labor income benchmark of approximately $45,000 per FTE is drawn from IMBA regional studies (cited in the TPL/IMBA 2025 meta-analysis, which found trail networks across 13 locations generated up to $54.1 million in labor income supporting up to 1,626 jobs — a ratio of approximately $33,000–$45,000 per job). The tool uses the upper end of this range as a more current figure.
-
 ```
 jobs = round(econYr[matureYear] / 45,000)
 ```
+
+**Source status: the $45,000 divisor is a rule of thumb, not a sourced figure.** Earlier versions of this README attributed it to IMBA regional studies and to the TPL/IMBA 2025 report. Checked in October 2026 against the full TPL Green Paper (*Economic Benefits of Mountain Biking*, 2025) and IMBA's 2025 Annual Report: neither states a $45,000 figure. The annual report only repeats the headline ("up to 1,626 jobs and $54.1 million in labor income each year", 13 communities).
+
+What the Green Paper's own site tables imply (computed from the tables, 19 site entries):
+
+| Ratio | Range across sites | Typical |
+|---|---|---|
+| Labor income per job | about $24,000 to $40,000 | about $32,000 (all-sites aggregate: $54.1M / 1,626 = $33,300) |
+| Economic output per job | about $75,000 to $128,000 | about $85,000 to $90,000 |
+| Value added per job | about $39,000 to $81,000 | about $52,000 |
+
+The tool divides **annual economic impact** (visitor spending including the multiplier, not labor income) by $45,000. The closest like-for-like ratio in the Green Paper is economic output per job, roughly $75,000 to $128,000, so the tool's job count is likely high by a factor of about 1.7 to 2.8 against TPL's own ratios. It is shown as indicative on the page. **Open decision:** replace the divisor with a TPL-derived output-per-job figure (and name the source), or relabel the headline as "jobs, rule-of-thumb basis".
 
 where `matureYear = rampup + 1` (first year at full capacity, before growth).
 
@@ -660,7 +670,7 @@ The bars can be drawn on a **log scale** (the default) or a **linear scale**, us
 
 | Infrastructure type | Chart value (per mile) | How it is derived | Source |
 |---|---|---|---|
-| Volunteer-built singletrack | $10,000 (range $2,000–$15,000) | Judgment pick inside the range | **Unverified estimate**: no per-mile volunteer figure was found in the American Trails database or any forum survey |
+| Volunteer-built singletrack | $10,000 (range $2,000–$15,000) | Judgment pick inside the range | **Partly supported, mostly an estimate.** The San Luis Valley Great Outdoors toolkit ("Developing Trail Systems", pp. 61-68) says natural-surface singletrack construction is typically $15,000-$40,000 per mile, can cost "less than $5,000 per mile" in the easiest scenario with copious skilled volunteers, and can exceed $100,000 per mile in difficult terrain. Estimates are construction only, excluding planning, design and permits. The $2,000-$15,000 range itself is not printed in any source found |
 | Professional contractor-built singletrack | $70,000 (range $60,000–$80,000) | Judgment pick inside the printed range | Singletracks.com contractor survey, April 2026 |
 | Paved multi-use path | $792,000 | $150 per linear foot × 5,280 ft | NJDOT Transportation Alternatives Program, *2024 Cost Estimate Guidelines and Recommendations for Pedestrian, Bicycle and Traffic Calming Projects*: 10-ft shared use path, asphalt on a dense-graded aggregate base, conceptual-level typical cost |
 | 2-lane rural road | $3,932,000 | $1,966K per lane mile × 2 lanes | FHWA HERS, rural minor arterial, flat terrain, new alignment |
@@ -813,8 +823,10 @@ The following studies, reports, and data sources directly informed the assumptio
 - Source for 5–10% premium finding in multiple study sites
 - Foundational peer-reviewed source for trail-property value relationship
 
-**Indianapolis Cultural Trail (various, 2014).** Assessed property values within 500 feet of the trail increased by $1 billion from 2008 to 2014.
-- Cited in multiple secondary sources including Lakelinks (2025) and American Trails
+**Majors, J. & Burow, S. (2015).** *Assessment of the Impact of the Indianapolis Cultural Trail: A Legacy of Gene and Marilyn Glick.* Indiana University Public Policy Institute, report 15-C02, March 2015. https://archives.indianapolis.iu.edu/server/api/core/bitstreams/e2424f48-5496-420c-979e-4c91b85370fb/content (opened October 2026; coverage also at indystar.com and planetizen.com)
+- Verified (pp. 24-26): gross assessed value of the 1,747 parcels within 500 feet of the 8-mile trail rose $1,013,544,460 from 2008 to 2014, a 148% increase.
+- The authors caution that part of the rise is a return to pre-recession values that "likely would have occurred regardless of the Trail construction", and that some owners added amenities because of the trail. Read it as assessed value near a trail, not as a measured trail premium.
+- Also reports average expected trail-user expenditure of $53 and that 95% of surveyed users feel safe
 
 **Seattle Engineering Department (1987).** *Evaluation of the Burke-Gilman Trail's Effect on Property Values and Crime.*
 - Properties near (not adjacent to) the Burke-Gilman Trail sell for ~6% more; adjacent properties show 0–0.5% premium
@@ -832,9 +844,10 @@ The following studies, reports, and data sources directly informed the assumptio
 - Also gives a maintenance rule of thumb: budget 5% of the total installed cost per year (at least $4,000 per mile per year on an $80,000 build)
 - An earlier version of this entry quoted a different article title; the title above is the one on the page
 
-**American Trails (multiple years).** *Construction and Maintenance Costs for Trails.* americantrails.org.
-- Cited for the $1,500–$5,000/mile/year maintenance range. **Not re-verified:** the page could not be opened automatically in October 2026 and a search summary describes it as paved-trail construction costs. Treat the range as unconfirmed against this source; the Singletracks 5%-of-build-cost-per-year rule of thumb ($3,000–$4,000 at $60K–$80K) is consistent with it. URL: https://www.americantrails.org/resources/construction-and-maintenance-costs-for-trails
-- Source for asphalt trail construction costs ($176,000–$224,000/mile) for comparison
+**American Trails (2007).** *Construction and Maintenance Costs for Trails*, excerpted from the Draft Milwaukee County Trails Network Plan (Milwaukee County Department of Parks, Recreation, and Culture, January 2007). https://www.americantrails.org/resources/construction-and-maintenance-costs-for-trails (page text checked October 2026 from a copy supplied by Jon)
+- **Maintenance (routine, per mile per year):** $1,500 (Iowa DOT Iowa Trails 2000 plan, mixed surfaces); $2,525 (Milwaukee County Parks, all asphalt); $1,200 as an absolute minimum and $2,077 for government-run trails (Rails-to-Trails Conservancy maintenance manual); $2,042 per mile of unpaved trail (Wisconsin DNR draft cost model). So the page's range is about **$1,200 to $2,525**, mostly paved or mixed-surface trails. It does **not** give $5,000, and it is not a singletrack figure.
+- **Construction (10-ft asphalt, Milwaukee area):** $149,206 to $301,014 per mile (Honey Creek, Root River, Kinnickinnic, Hank Aaron State Trail estimates: $149,206; $301,014; $176,470; $224,307).
+- An earlier version of this README, and the tool, cited this page for "$1,500–$5,000/mile/year". The $5,000 upper bound was not on the page; the tool text now states the page's actual figures
 
 **IMBA Trail Solutions / Rock Solid Trail Contracting (various projects, cited in Singletracks 2026).**
 - Informed the understanding of variable cost drivers: terrain, features, rock armoring, drainage
@@ -889,6 +902,12 @@ The following studies, reports, and data sources directly informed the assumptio
 ---
 
 ### Additional References Cited in the Tool
+
+**San Luis Valley Great Outdoors (SLV GO) toolkit (c. 2021).** "C. Developing Trail Systems," pp. 61-68, including "Costs estimating for trail development." https://material-civet.files.svdcdn.com/production/images/documents/Developing-Trail-Systems.pdf?dm=1620062839 (supplied by Jon; read in full October 2026)
+- Planning-level, Colorado San Luis Valley conditions, construction only: natural-surface singletrack typically $15,000-$40,000 per mile; under $5,000 per mile in the easiest case with skilled volunteers; over $100,000 per mile in difficult rocky terrain or with blasting; planning and design $1,500-$5,000 per mile. Purpose-built MTB: flow trail $25,000-$40,000, flow trail with features $35,000-$70,000, downhill $20,000-$40,000. Pump tracks $12,000-$60,000 depending on size (relevant to the pump-track tool). Asphalt trail $13.50 per square yard (2 in.), concrete shared-use path $40 per square yard
+- Shows the Singletracks $60,000-$80,000 figure is the high end of published professional-build costs, not the whole range
+
+**Next Level Trails Real Estate Guidelines & Procedures Handbook (Indiana DNR, April 2020).** Supplied by Jon while looking for the NAR Field Guide. It is a land-acquisition handbook for a grant program and contains no property-value findings, so it does **not** support the 3-5% property premium and is not cited for it. The NAR *Field Guide to the Effects of Trails and Greenways on Property Values* (2020) is still not located; the 3-5% range rests on Crompton & Nicholls (2019).
 
 **Independent Sector (2025).** *Value of Volunteer Time* (2024 national figure: $34.79 per hour, released April 2025 with the University of Maryland Do Good Institute). https://independentsector.org/volunteer_time (publisher blocks automated checks; found via search)
 - Source for the volunteer-labor rate in the Partnerships panel
